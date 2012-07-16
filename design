@@ -1,0 +1,12 @@
+* Sprites
+  * Platform
+  * Player
+  * Enemy
+    * Guard
+    * ...
+  * Item
+  * Background
+* Level
+* InGameState
+* PauseState
+* Game
