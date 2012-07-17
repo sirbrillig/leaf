@@ -2,7 +2,7 @@ module Leaf
 
   class Platform < Chingu::GameObject
     trait :collision_detection
-    trait :bounding_box, :scale => 1, :debug => true
+    trait :bounding_box, :scale => 1#, :debug => true
 
     def setup
       @image = Gosu::Image["platform.png"]
@@ -14,7 +14,7 @@ module Leaf
 
 
   class Player < Chingu::GameObject
-    trait :bounding_box, :scale => 0.7, :debug => true
+    trait :bounding_box, :scale => 0.8#, :debug => true
     traits :collision_detection, :timer, :velocity
 
     def setup
@@ -27,6 +27,7 @@ module Leaf
 
       @jumps = 0
       @speed = 4
+      @walking = false
 
       self.zorder = 1000
       self.acceleration_y = 0.5
@@ -48,16 +49,22 @@ module Leaf
       self.velocity_y < 0
     end
 
+    def walking?
+      @walking
+    end
+
     def holding_left
+      @walking = true unless jumping?
       move(-(@speed), 0)
     end
 
     def holding_right
+      @walking = true unless jumping?
       move(@speed, 0)
     end
 
     def jump
-      #return if @jumps == 1
+      return if @jumps == 1
       @jumps += 1
       self.velocity_y = -11
     end
@@ -65,35 +72,28 @@ module Leaf
     def land
       @jumps = 0
     end
-
-    def land_on(platform)
-      self.y = platform.bb.top - 1
-      land
-    end
     
     def hit_something?
-      game_state.game_object_map.at(self.bb.centerx, self.bb.centery)
+      game_state.game_object_map.from_game_object(self)
     end
 
     def move(x, y)
-      #self.factor_x = self.factor_x.abs if x > 0
-      #self.factor_x = -self.factor_x.abs if x < 0
-      @image = @animation.next  if @animation # FIXME: only animate when moving.
+      @image = @animation.next if @animation and walking?
 
       self.x += x
       if block = hit_something?
         self.x = previous_x
       end
+      @walking = false
 
       self.y += y
-      if block = hit_something? #FIXME: this only seems to compare the top-left of each Platform
+      if hit_something?
         self.y = previous_y
+        land if falling?
         self.velocity_y = 0
       end
     end
 
-    def update
-    end
   end # Player
 
 end # Leaf
