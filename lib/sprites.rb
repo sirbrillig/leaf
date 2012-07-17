@@ -7,6 +7,7 @@ module Leaf
     def setup
       @image = Gosu::Image["platform.png"]
       self.zorder = 10
+      self.rotation_center = :top_right # FIXME: where the heck would be a good spot?
     end
 
   end # Platform
@@ -56,7 +57,7 @@ module Leaf
     end
 
     def jump
-      return if @jumps == 1
+      #return if @jumps == 1
       @jumps += 1
       self.velocity_y = -11
     end
@@ -74,32 +75,19 @@ module Leaf
       game_state.game_object_map.at(self.bb.centerx, self.bb.centery)
     end
 
-    def hit_something_x?
-      game_state.game_object_map.at(self.bb.centerx, self.bb.centery - 10) #FIXME
-    end
-
-    def hit_something_y?
-      game_state.game_object_map.at(self.bb.centerx - 10, self.bb.centery) #FIXME
-    end
-
     def move(x, y)
       #self.factor_x = self.factor_x.abs if x > 0
       #self.factor_x = -self.factor_x.abs if x < 0
       @image = @animation.next  if @animation # FIXME: only animate when moving.
 
       self.x += x
-      if block = hit_something_x?
+      if block = hit_something?
         self.x = previous_x
       end
 
       self.y += y
-      if block = hit_something_y?
-        if rising?
-          puts "hit something going up: player = #{self.x},#{self.y}; block = #{block.x},#{block.y}"
-          self.y = block.bb.bottom + self.height
-        elsif falling?
-          land_on(block)
-        end
+      if block = hit_something? #FIXME: this only seems to compare the top-left of each Platform
+        self.y = previous_y
         self.velocity_y = 0
       end
     end
