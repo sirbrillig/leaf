@@ -17,7 +17,7 @@ module Leaf
 
       @player = Leaf::Player.create(:x => 40, :y => 200)
 
-      @grid = [25, 25]
+      @grid = [50, 50]
       self.viewport.lag = 0.95
     end
 
@@ -26,7 +26,7 @@ module Leaf
     end
 
     def edit
-      push_game_state(Chingu::GameStates::Edit.new(:grid => @grid, :file => @file))
+      push_game_state(Chingu::GameStates::Edit.new(:grid => @grid, :file => @file, :snap_to_grid => true, :except => [Player]))
     end
 
     def draw
