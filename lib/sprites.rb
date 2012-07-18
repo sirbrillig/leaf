@@ -7,7 +7,7 @@ module Leaf
     def setup
       @image = Gosu::Image["platform.png"]
       self.zorder = 10
-      self.rotation_center = :top_right # FIXME: where the heck would be a good spot?
+      self.rotation_center = :top_right 
     end
 
   end # Platform
@@ -20,10 +20,12 @@ module Leaf
     def setup
       @animation = Animation.new(:file => "player.png", :size => 50)
       @image = @animation.first
+      #self.alpha = 100
+
 
       on_input([:holding_left, :holding_a], :holding_left)
       on_input([:holding_right, :holding_d], :holding_right)
-      on_input([:up, :w], :jump)
+      on_input([:holding_up, :holding_w], :jump)
 
       @jumps = 0
       @speed = 4
@@ -33,8 +35,6 @@ module Leaf
       self.acceleration_y = 0.5
       self.max_velocity = 20
       self.rotation_center = :bottom_center
-
-      #self.factor = 0.5
     end
 
     def jumping?
@@ -81,9 +81,7 @@ module Leaf
       @image = @animation.next if @animation and walking?
 
       self.x += x
-      if block = hit_something?
-        self.x = previous_x
-      end
+      self.x = previous_x if hit_something?
       @walking = false
 
       self.y += y
@@ -91,6 +89,11 @@ module Leaf
         self.y = previous_y
         land if falling?
         self.velocity_y = 0
+      end
+
+      if game_state.viewport.outside?(self)
+        #$window.pop_game_state
+        exit
       end
     end
 
