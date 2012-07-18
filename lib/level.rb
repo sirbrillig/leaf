@@ -15,7 +15,7 @@ module Leaf
       @file = File.join("#{self.class.name.split('::').last.to_s.downcase}.yml")
       load_game_objects(:file => @file, :debug => true)
 
-      @player = Leaf::Player.create(:x => 40, :y => 200)
+      @player = Leaf::Player.create(:x => 70, :y => 200)
 
       @grid = [50, 50]
       self.viewport.lag = 0.95

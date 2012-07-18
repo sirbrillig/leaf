@@ -20,7 +20,6 @@ module Leaf
     def setup
       @animation = Animation.new(:file => "player.png", :size => 50)
       @image = @animation.first
-      #self.alpha = 100
 
 
       on_input([:holding_left, :holding_a], :holding_left)
@@ -42,7 +41,7 @@ module Leaf
     end
 
     def falling?
-      self.velocity_y > 0
+      self.velocity_y > 0.5
     end
 
     def rising?
@@ -65,11 +64,14 @@ module Leaf
 
     def jump
       return if @jumps == 1
+      @image = @animation[1]
       @jumps += 1
       self.velocity_y = -11
     end
 
     def land
+      return unless falling?
+      @image = @animation[0]
       @jumps = 0
     end
     
