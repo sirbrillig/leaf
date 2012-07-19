@@ -4,7 +4,7 @@ module Leaf
     traits :collision_detection, :timer, :velocity
 
     def setup
-      @animation = Animation.new(:file => "media/enemy.png", :size => 50)
+      @animation = Animation.new(:file => "media/blank.png", :size => 50)
       @image = @animation.first
 
       @jumps = 0
@@ -109,7 +109,7 @@ module Leaf
       self.x = previous_x if hit_something?
       if fallen_off_platform?(x) 
         fell_off_platform
-        self.x = previous_x if @prevent_falling
+        #self.x = previous_x if @prevent_falling
       end
       @walking = false
 

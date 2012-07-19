@@ -52,7 +52,7 @@ module Leaf
     end
 
     def update
-      self.each_collision(Enemy) do |area, enemy|
+      self.each_collision(Guard, Walker) do |area, enemy|
         enemy.show!
       end
     end

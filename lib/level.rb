@@ -30,7 +30,7 @@ module Leaf
     end
 
     def edit
-      push_game_state(Chingu::GameStates::Edit.new(:grid => @grid, :file => @file, :snap_to_grid => true, :except => [Player]))
+      push_game_state(Chingu::GameStates::Edit.new(:grid => @grid, :file => @file, :snap_to_grid => true, :except => [Player, Creature, Enemy, VisibleArea]))
     end
 
     def draw

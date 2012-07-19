@@ -2,11 +2,10 @@ module Leaf
   class Enemy < Creature
     def setup
       super
-      @animation = Animation.new(:file => "media/enemy.png", :size => 50)
-      @image = @animation.first
+      load_animation
 
       @speed = 1
-      @stop = false
+      @stop = true
       @headed_left = true
       start_movement
     end
@@ -39,6 +38,13 @@ module Leaf
       end
     end
 
+    # Override to set @animation and @image.
+    def load_animation
+      @animation = Animation.new(:file => "media/blank.png", :size => 50)
+      @image = @animation.first
+    end
+
+    # Override to provide custom walking code.
     def start_movement
     end
 
@@ -53,5 +59,34 @@ module Leaf
     def stop
       @stop = true
     end
+
+    def go
+      @stop = false
+    end
   end # Enemy
+
+  class Guard < Enemy
+    def load_animation
+      @animation = Animation.new(:file => "media/enemy.png", :size => 50)
+      @image = @animation.first
+    end
+
+    def start_movement
+      go
+    end
+  end # Guard
+
+  class Walker < Enemy
+    def load_animation
+      @animation = Animation.new(:file => "media/walker.png", :size => 50)
+      @image = @animation.first
+    end
+
+    def start_movement
+      go
+    end
+
+    def fell_off_platform
+    end
+  end # Walker
 end # Leaf

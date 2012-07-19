@@ -495,35 +495,43 @@
     :x: 1600.0
     :factor_y: 1.0
     :angle: 0
-- Leaf::Enemy: 
+- Leaf::Guard: 
     :zorder: 100
-    :y: 699.5
+    :y: 549.5
     :alpha: 255
     :factor_x: 1.0
-    :x: 220.0
+    :x: 505.0
     :factor_y: 1.0
     :angle: 0
-- Leaf::Enemy: 
+- Leaf::Guard: 
     :zorder: 100
-    :y: 699.5
+    :y: 650.0
     :alpha: 255
     :factor_x: 1.0
-    :x: 470.0
+    :x: 574.0
     :factor_y: 1.0
     :angle: 0
-- Leaf::Enemy: 
+- Leaf::Guard: 
     :zorder: 100
-    :y: 548.5
+    :y: 549.5
     :alpha: 255
     :factor_x: 1.0
-    :x: 764.0
+    :x: 609.0
     :factor_y: 1.0
     :angle: 0
-- Leaf::Enemy: 
+- Leaf::Guard: 
     :zorder: 100
-    :y: 350.0
+    :y: 399.5
+    :alpha: 255
+    :factor_x: 1.0
+    :x: 1850.0
+    :factor_y: 1.0
+    :angle: 0
+- Leaf::Walker: 
+    :zorder: 100
+    :y: 500.0
     :alpha: 255
     :factor_x: 1
-    :x: 1850.0
+    :x: 450.0
     :factor_y: 1
     :angle: 0
