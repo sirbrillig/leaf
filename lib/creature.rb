@@ -45,10 +45,12 @@ module Leaf
 
     def jump
       return if @jumps == 1
-      # FIXME: add a jump timer so you can't jump more frequently than 0.2 sec.
+      return if @jump_delay
       @image = @animation[1]
       @jumps += 1
       self.velocity_y = -11
+      @jump_delay = true
+      after(700) { @jump_delay = false }
     end
 
     def land

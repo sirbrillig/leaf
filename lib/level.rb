@@ -24,7 +24,7 @@ module Leaf
       @file = File.join("maps/#{self.class.name.split('::').last.to_s.downcase}.yml")
       load_game_objects(:file => @file, :debug => Leaf::DEBUG)
 
-      @background = Leaf::Background.create
+      @background = Leaf::Background.create(:x => 900, :y => 200)
 
       @player = Leaf::Player.create(:x => 70, :y => 100)
 
