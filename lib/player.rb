@@ -27,7 +27,7 @@ module Leaf
     trait :collision_detection
     trait :bounding_circle, :scale => 1.1, :debug => Leaf::DEBUG
     def setup
-      self.zorder = Leaf::Level::BACKGROUND_LAYER
+      self.zorder = Leaf::Level::LIGHTED_LAYER
       self.rotation_center = :center
       @image = Gosu::Image["media/visiblearea.png"]
       self.alpha = 40

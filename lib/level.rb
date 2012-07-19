@@ -4,7 +4,8 @@ module Leaf
     attr_reader :player, :game_object_map
 
     SPRITES_LAYER = 100
-    PLATFORM_LAYER = 10
+    PLATFORM_LAYER = 15
+    LIGHTED_LAYER = 10
     BACKGROUND_LAYER = 5
 
     FAR_OBJECT_ALPHA = 50
@@ -23,6 +24,8 @@ module Leaf
       @file = File.join("maps/#{self.class.name.split('::').last.to_s.downcase}.yml")
       load_game_objects(:file => @file, :debug => Leaf::DEBUG)
 
+      @background = Leaf::Background.create
+
       @player = Leaf::Player.create(:x => 70, :y => 100)
 
       @grid = [50, 50]
@@ -38,7 +41,7 @@ module Leaf
     end
 
     def draw
-      fill(Gosu::Color::BLACK)
+      #fill(Gosu::Color::BLACK)
       super
     end
 
@@ -49,7 +52,6 @@ module Leaf
     end
 
     def died
-      puts "you died"
       push_game_state(Leaf::GameOver)
     end
 

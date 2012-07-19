@@ -1,6 +1,6 @@
 --- 
 - Leaf::Platform: 
-    :zorder: 10
+    :zorder: 15
     :y: 350.0
     :alpha: 50
     :factor_x: 1.0
@@ -8,31 +8,31 @@
     :factor_y: 1.0
     :angle: 0
 - Leaf::Platform: 
-    :zorder: 10
-    :y: 700.0
+    :zorder: 15
+    :y: 150.0
     :alpha: 50
     :factor_x: 1.0
-    :x: 0.0
+    :x: 250.0
     :factor_y: 1.0
     :angle: 0
 - Leaf::Platform: 
-    :zorder: 10
-    :y: 700.0
+    :zorder: 15
+    :y: 250.0
     :alpha: 50
     :factor_x: 1.0
-    :x: 0.0
+    :x: 500.0
     :factor_y: 1.0
     :angle: 0
 - Leaf::Platform: 
-    :zorder: 10
-    :y: 700.0
-    :alpha: 50
+    :zorder: 15
+    :y: 150.0
+    :alpha: 255
     :factor_x: 1.0
-    :x: 50.0
+    :x: 350.0
     :factor_y: 1.0
     :angle: 0
 - Leaf::Platform: 
-    :zorder: 10
+    :zorder: 15
     :y: 350.0
     :alpha: 50
     :factor_x: 1.0
@@ -40,31 +40,31 @@
     :factor_y: 1.0
     :angle: 0
 - Leaf::Platform: 
-    :zorder: 10
+    :zorder: 15
     :y: 700.0
-    :alpha: 50
+    :alpha: 255
     :factor_x: 1.0
     :x: 100.0
     :factor_y: 1.0
     :angle: 0
 - Leaf::Platform: 
-    :zorder: 10
+    :zorder: 15
     :y: 700.0
-    :alpha: 50
+    :alpha: 255
     :factor_x: 1.0
     :x: 150.0
     :factor_y: 1.0
     :angle: 0
 - Leaf::Platform: 
-    :zorder: 10
+    :zorder: 15
     :y: 700.0
-    :alpha: 50
+    :alpha: 255
     :factor_x: 1.0
     :x: 200.0
     :factor_y: 1.0
     :angle: 0
 - Leaf::Platform: 
-    :zorder: 10
+    :zorder: 15
     :y: 350.0
     :alpha: 50
     :factor_x: 1.0
@@ -72,15 +72,15 @@
     :factor_y: 1.0
     :angle: 0
 - Leaf::Platform: 
-    :zorder: 10
+    :zorder: 15
     :y: 700.0
-    :alpha: 50
+    :alpha: 100
     :factor_x: 1.0
     :x: 250.0
     :factor_y: 1.0
     :angle: 0
 - Leaf::Platform: 
-    :zorder: 10
+    :zorder: 15
     :y: 350.0
     :alpha: 50
     :factor_x: 1.0
@@ -88,15 +88,15 @@
     :factor_y: 1.0
     :angle: 0
 - Leaf::Platform: 
-    :zorder: 10
+    :zorder: 15
     :y: 700.0
-    :alpha: 50
+    :alpha: 100
     :factor_x: 1.0
     :x: 300.0
     :factor_y: 1.0
     :angle: 0
 - Leaf::Platform: 
-    :zorder: 10
+    :zorder: 15
     :y: 350.0
     :alpha: 50
     :factor_x: 1.0
@@ -104,7 +104,7 @@
     :factor_y: 1.0
     :angle: 0
 - Leaf::Platform: 
-    :zorder: 10
+    :zorder: 15
     :y: 700.0
     :alpha: 50
     :factor_x: 1.0
@@ -112,7 +112,7 @@
     :factor_y: 1.0
     :angle: 0
 - Leaf::Platform: 
-    :zorder: 10
+    :zorder: 15
     :y: 700.0
     :alpha: 50
     :factor_x: 1.0
@@ -120,7 +120,7 @@
     :factor_y: 1.0
     :angle: 0
 - Leaf::Platform: 
-    :zorder: 10
+    :zorder: 15
     :y: 700.0
     :alpha: 50
     :factor_x: 1.0
@@ -128,7 +128,7 @@
     :factor_y: 1.0
     :angle: 0
 - Leaf::Platform: 
-    :zorder: 10
+    :zorder: 15
     :y: 250.0
     :alpha: 50
     :factor_x: 1.0
@@ -136,7 +136,7 @@
     :factor_y: 1.0
     :angle: 0
 - Leaf::Platform: 
-    :zorder: 10
+    :zorder: 15
     :y: 700.0
     :alpha: 50
     :factor_x: 1.0
@@ -144,7 +144,7 @@
     :factor_y: 1.0
     :angle: 0
 - Leaf::Platform: 
-    :zorder: 10
+    :zorder: 15
     :y: 250.0
     :alpha: 50
     :factor_x: 1.0
@@ -152,7 +152,7 @@
     :factor_y: 1.0
     :angle: 0
 - Leaf::Platform: 
-    :zorder: 10
+    :zorder: 15
     :y: 700.0
     :alpha: 50
     :factor_x: 1.0
@@ -160,7 +160,7 @@
     :factor_y: 1.0
     :angle: 0
 - Leaf::Platform: 
-    :zorder: 10
+    :zorder: 15
     :y: 700.0
     :alpha: 50
     :factor_x: 1.0
@@ -168,7 +168,7 @@
     :factor_y: 1.0
     :angle: 0
 - Leaf::Platform: 
-    :zorder: 10
+    :zorder: 15
     :y: 650.0
     :alpha: 50
     :factor_x: 1.0
@@ -176,7 +176,7 @@
     :factor_y: 1.0
     :angle: 0
 - Leaf::Platform: 
-    :zorder: 10
+    :zorder: 15
     :y: 650.0
     :alpha: 50
     :factor_x: 1.0
@@ -184,7 +184,7 @@
     :factor_y: 1.0
     :angle: 0
 - Leaf::Platform: 
-    :zorder: 10
+    :zorder: 15
     :y: 650.0
     :alpha: 50
     :factor_x: 1.0
@@ -192,39 +192,39 @@
     :factor_y: 1.0
     :angle: 0
 - Leaf::Platform: 
-    :zorder: 10
+    :zorder: 15
     :y: 550.0
-    :alpha: 50
+    :alpha: 100
     :factor_x: 1.0
     :x: 100.0
     :factor_y: 1.0
     :angle: 0
 - Leaf::Platform: 
-    :zorder: 10
-    :y: 450.0
-    :alpha: 50
-    :factor_x: 1.0
-    :x: 200.0
-    :factor_y: 1.0
-    :angle: 0
-- Leaf::Platform: 
-    :zorder: 10
-    :y: 550.0
-    :alpha: 50
-    :factor_x: 1.0
-    :x: 200.0
-    :factor_y: 1.0
-    :angle: 0
-- Leaf::Platform: 
-    :zorder: 10
-    :y: 450.0
+    :zorder: 15
+    :y: 250.0
     :alpha: 50
     :factor_x: 1.0
     :x: 250.0
     :factor_y: 1.0
     :angle: 0
 - Leaf::Platform: 
-    :zorder: 10
+    :zorder: 15
+    :y: 550.0
+    :alpha: 100
+    :factor_x: 1.0
+    :x: 200.0
+    :factor_y: 1.0
+    :angle: 0
+- Leaf::Platform: 
+    :zorder: 15
+    :y: 250.0
+    :alpha: 50
+    :factor_x: 1.0
+    :x: 300.0
+    :factor_y: 1.0
+    :angle: 0
+- Leaf::Platform: 
+    :zorder: 15
     :y: 550.0
     :alpha: 50
     :factor_x: 1.0
@@ -232,7 +232,7 @@
     :factor_y: 1.0
     :angle: 0
 - Leaf::Platform: 
-    :zorder: 10
+    :zorder: 15
     :y: 550.0
     :alpha: 50
     :factor_x: 1.0
@@ -240,7 +240,7 @@
     :factor_y: 1.0
     :angle: 0
 - Leaf::Platform: 
-    :zorder: 10
+    :zorder: 15
     :y: 550.0
     :alpha: 50
     :factor_x: 1.0
@@ -248,7 +248,7 @@
     :factor_y: 1.0
     :angle: 0
 - Leaf::Platform: 
-    :zorder: 10
+    :zorder: 15
     :y: 550.0
     :alpha: 50
     :factor_x: 1.0
@@ -256,7 +256,7 @@
     :factor_y: 1.0
     :angle: 0
 - Leaf::Platform: 
-    :zorder: 10
+    :zorder: 15
     :y: 550.0
     :alpha: 50
     :factor_x: 1.0
@@ -264,7 +264,7 @@
     :factor_y: 1.0
     :angle: 0
 - Leaf::Platform: 
-    :zorder: 10
+    :zorder: 15
     :y: 550.0
     :alpha: 50
     :factor_x: 1.0
@@ -272,7 +272,7 @@
     :factor_y: 1.0
     :angle: 0
 - Leaf::Platform: 
-    :zorder: 10
+    :zorder: 15
     :y: 350.0
     :alpha: 50
     :factor_x: 1.0
@@ -280,7 +280,7 @@
     :factor_y: 1.0
     :angle: 0
 - Leaf::Platform: 
-    :zorder: 10
+    :zorder: 15
     :y: 550.0
     :alpha: 50
     :factor_x: 1.0
@@ -288,7 +288,7 @@
     :factor_y: 1.0
     :angle: 0
 - Leaf::Platform: 
-    :zorder: 10
+    :zorder: 15
     :y: 550.0
     :alpha: 50
     :factor_x: 1.0
@@ -296,7 +296,7 @@
     :factor_y: 1.0
     :angle: 0
 - Leaf::Platform: 
-    :zorder: 10
+    :zorder: 15
     :y: 700.0
     :alpha: 50
     :factor_x: 1.0
@@ -304,7 +304,7 @@
     :factor_y: 1.0
     :angle: 0
 - Leaf::Platform: 
-    :zorder: 10
+    :zorder: 15
     :y: 550.0
     :alpha: 50
     :factor_x: 1.0
@@ -312,7 +312,7 @@
     :factor_y: 1.0
     :angle: 0
 - Leaf::Platform: 
-    :zorder: 10
+    :zorder: 15
     :y: 550.0
     :alpha: 50
     :factor_x: 1.0
@@ -320,7 +320,7 @@
     :factor_y: 1.0
     :angle: 0
 - Leaf::Platform: 
-    :zorder: 10
+    :zorder: 15
     :y: 550.0
     :alpha: 50
     :factor_x: 1.0
@@ -328,7 +328,7 @@
     :factor_y: 1.0
     :angle: 0
 - Leaf::Platform: 
-    :zorder: 10
+    :zorder: 15
     :y: 550.0
     :alpha: 50
     :factor_x: 1.0
@@ -336,7 +336,7 @@
     :factor_y: 1.0
     :angle: 0
 - Leaf::Platform: 
-    :zorder: 10
+    :zorder: 15
     :y: 550.0
     :alpha: 50
     :factor_x: 1.0
@@ -344,7 +344,7 @@
     :factor_y: 1.0
     :angle: 0
 - Leaf::Platform: 
-    :zorder: 10
+    :zorder: 15
     :y: 500.0
     :alpha: 50
     :factor_x: 2.0
@@ -352,7 +352,7 @@
     :factor_y: 2.0
     :angle: 0
 - Leaf::Platform: 
-    :zorder: 10
+    :zorder: 15
     :y: 500.0
     :alpha: 50
     :factor_x: 2.0
@@ -360,7 +360,7 @@
     :factor_y: 2.0
     :angle: 0
 - Leaf::Platform: 
-    :zorder: 10
+    :zorder: 15
     :y: 200.0
     :alpha: 50
     :factor_x: 2.0
@@ -368,7 +368,7 @@
     :factor_y: 2.0
     :angle: 0
 - Leaf::Platform: 
-    :zorder: 10
+    :zorder: 15
     :y: 500.0
     :alpha: 50
     :factor_x: 2.0
@@ -376,7 +376,7 @@
     :factor_y: 2.0
     :angle: 0
 - Leaf::Platform: 
-    :zorder: 10
+    :zorder: 15
     :y: 500.0
     :alpha: 50
     :factor_x: 2.0
@@ -384,7 +384,7 @@
     :factor_y: 2.0
     :angle: 0
 - Leaf::Platform: 
-    :zorder: 10
+    :zorder: 15
     :y: 400.0
     :alpha: 50
     :factor_x: 5.0
@@ -392,7 +392,7 @@
     :factor_y: 5.0
     :angle: 0
 - Leaf::Platform: 
-    :zorder: 10
+    :zorder: 15
     :y: 450.0
     :alpha: 50
     :factor_x: 5.0
@@ -400,7 +400,7 @@
     :factor_y: 5.0
     :angle: 0
 - Leaf::Platform: 
-    :zorder: 10
+    :zorder: 15
     :y: 300.0
     :alpha: 50
     :factor_x: 1.0
@@ -408,7 +408,7 @@
     :factor_y: 1.0
     :angle: 0
 - Leaf::Platform: 
-    :zorder: 10
+    :zorder: 15
     :y: 250.0
     :alpha: 50
     :factor_x: 1.0
@@ -416,7 +416,7 @@
     :factor_y: 1.0
     :angle: 0
 - Leaf::Platform: 
-    :zorder: 10
+    :zorder: 15
     :y: 250.0
     :alpha: 50
     :factor_x: 1.0
@@ -424,7 +424,7 @@
     :factor_y: 1.0
     :angle: 0
 - Leaf::Platform: 
-    :zorder: 10
+    :zorder: 15
     :y: 250.0
     :alpha: 50
     :factor_x: 1.0
@@ -432,7 +432,7 @@
     :factor_y: 1.0
     :angle: 0
 - Leaf::Platform: 
-    :zorder: 10
+    :zorder: 15
     :y: 200.0
     :alpha: 50
     :factor_x: 3.0
@@ -440,7 +440,7 @@
     :factor_y: 3.0
     :angle: 0
 - Leaf::Platform: 
-    :zorder: 10
+    :zorder: 15
     :y: 100.0
     :alpha: 50
     :factor_x: 1.0
@@ -448,7 +448,7 @@
     :factor_y: 1.0
     :angle: 0
 - Leaf::Platform: 
-    :zorder: 10
+    :zorder: 15
     :y: 100.0
     :alpha: 50
     :factor_x: 1.0
@@ -456,7 +456,7 @@
     :factor_y: 1.0
     :angle: 0
 - Leaf::Platform: 
-    :zorder: 10
+    :zorder: 15
     :y: 50.0
     :alpha: 50
     :factor_x: 1.0
@@ -464,7 +464,7 @@
     :factor_y: 1.0
     :angle: 0
 - Leaf::Platform: 
-    :zorder: 10
+    :zorder: 15
     :y: 50.0
     :alpha: 50
     :factor_x: 1.0
@@ -472,7 +472,7 @@
     :factor_y: 1.0
     :angle: 0
 - Leaf::Platform: 
-    :zorder: 10
+    :zorder: 15
     :y: 100.0
     :alpha: 50
     :factor_x: 1.0
@@ -480,7 +480,7 @@
     :factor_y: 1.0
     :angle: 0
 - Leaf::Platform: 
-    :zorder: 10
+    :zorder: 15
     :y: 0.0
     :alpha: 50
     :factor_x: 1.0
@@ -488,7 +488,7 @@
     :factor_y: 1.0
     :angle: 0
 - Leaf::Platform: 
-    :zorder: 10
+    :zorder: 15
     :y: -50.0
     :alpha: 50
     :factor_x: 1.0
@@ -498,17 +498,17 @@
 - Leaf::Guard: 
     :zorder: 100
     :y: 549.5
-    :alpha: 255
+    :alpha: 50
     :factor_x: 1.0
-    :x: 492.0
+    :x: 374.0
     :factor_y: 1.0
     :angle: 0
 - Leaf::Guard: 
     :zorder: 100
-    :y: 695.5
+    :y: 699.5
     :alpha: 255
     :factor_x: 1.0
-    :x: 587.0
+    :x: 558.0
     :factor_y: 1.0
     :angle: 0
 - Leaf::Guard: 
@@ -516,7 +516,7 @@
     :y: 549.5
     :alpha: 255
     :factor_x: 1.0
-    :x: 598.0
+    :x: 626.0
     :factor_y: 1.0
     :angle: 0
 - Leaf::Guard: 
@@ -529,9 +529,9 @@
     :angle: 0
 - Leaf::Walker: 
     :zorder: 100
-    :y: 545.5
-    :alpha: 255
+    :y: 500.0
+    :alpha: 100
     :factor_x: 1.0
-    :x: 437.0
+    :x: 450.0
     :factor_y: 1.0
     :angle: 0
