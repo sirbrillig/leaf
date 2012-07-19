@@ -6,11 +6,34 @@ module Leaf
 
     def setup
       @image = Gosu::Image["platform.png"]
-      self.zorder = 10
+      self.zorder = Leaf::Level::PLATFORM_LAYER
       self.rotation_center = :top_right 
     end
 
   end # Platform
+
+
+  class Enemy < Chingu::GameObject
+    trait :bounding_box, :scale => 1#, :debug => true
+    traits :collision_detection, :timer, :velocity
+
+    def setup
+      @animation = Animation.new(:file => "enemy.png", :size => 50)
+      @image = @animation.first
+
+      @speed = 2
+      @walking = false
+
+      self.zorder = Leaf::Level::SPRITES_LAYER
+      self.acceleration_y = 0.5
+      self.max_velocity = 20
+      self.rotation_center = :bottom_center
+    end
+
+    def move(x,y)
+      puts "moving"
+    end
+  end
 
 
   class Player < Chingu::GameObject
@@ -21,7 +44,6 @@ module Leaf
       @animation = Animation.new(:file => "player.png", :size => 50)
       @image = @animation.first
 
-
       on_input([:holding_left, :holding_a], :holding_left)
       on_input([:holding_right, :holding_d], :holding_right)
       on_input([:holding_up, :holding_w], :jump)
@@ -30,7 +52,7 @@ module Leaf
       @speed = 4
       @walking = false
 
-      self.zorder = 1000
+      self.zorder = Leaf::Level::SPRITES_LAYER
       self.acceleration_y = 0.5
       self.max_velocity = 20
       self.rotation_center = :bottom_center

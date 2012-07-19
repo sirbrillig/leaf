@@ -3,6 +3,9 @@ module Leaf
     traits :viewport, :timer
     attr_reader :player, :game_object_map
 
+    SPRITES_LAYER = 100
+    PLATFORM_LAYER = 10
+
     def initialize(options={})
       super
 
