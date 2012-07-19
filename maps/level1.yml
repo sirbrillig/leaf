@@ -497,17 +497,33 @@
     :angle: 0
 - Leaf::Enemy: 
     :zorder: 100
-    :y: 500.0
+    :y: 699.5
     :alpha: 255
     :factor_x: 1.0
-    :x: 450.0
+    :x: 220.0
     :factor_y: 1.0
     :angle: 0
 - Leaf::Enemy: 
     :zorder: 100
-    :y: 450.0
+    :y: 699.5
     :alpha: 255
     :factor_x: 1.0
-    :x: 650.0
+    :x: 470.0
     :factor_y: 1.0
+    :angle: 0
+- Leaf::Enemy: 
+    :zorder: 100
+    :y: 548.5
+    :alpha: 255
+    :factor_x: 1.0
+    :x: 764.0
+    :factor_y: 1.0
+    :angle: 0
+- Leaf::Enemy: 
+    :zorder: 100
+    :y: 350.0
+    :alpha: 255
+    :factor_x: 1
+    :x: 1850.0
+    :factor_y: 1
     :angle: 0

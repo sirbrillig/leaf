@@ -17,7 +17,7 @@ module Leaf
       self.viewport.game_area = [0, 0, 2048, 768]
 
       @file = File.join("maps/#{self.class.name.split('::').last.to_s.downcase}.yml")
-      load_game_objects(:file => @file, :debug => true)
+      load_game_objects(:file => @file, :debug => Leaf::DEBUG)
 
       @player = Leaf::Player.create(:x => 70, :y => 100)
 
@@ -43,9 +43,15 @@ module Leaf
       self.viewport.x_target = @player.x - $window.width/2
       $window.caption = "Leaf"
     end
+
+    def died
+      puts "you died"
+      push_game_state(Leaf::GameOver)
+    end
   end # Level
 
 class Level1 < Level; end
+class Level2 < Level; end
 
 end # Leaf
 

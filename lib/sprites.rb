@@ -13,59 +13,6 @@ module Leaf
   end # Platform
 
 
-  class Enemy < Creature
-    trait :bounding_box, :scale => 1#, :debug => true
-
-    def setup
-      super
-      @animation = Animation.new(:file => "media/enemy.png", :size => 50)
-      @image = @animation.first
-
-      @speed = 2
-      @stop = false
-      @headed_left = true
-      self.hide!
-      start_movement
-    end
-
-    def update
-      hide!
-      if game_state.viewport.inside?(self)
-        if stopped?
-          every(100, :name => 'waiting', :preserve => true) { @image = @animation.next }
-        else
-          stop_timer('waiting')
-          if @headed_left
-            move_left
-          else
-            move_right
-          end
-        end
-      end
-
-      self.each_collision(Player) do |enemy, player|
-        #stop
-      end
-    end
-
-    def start_movement
-      every(2500, :name => 'pacing') { turn_around }
-    end
-
-    def turn_around
-      @headed_left = !@headed_left
-    end
-
-    def stopped?
-      @stop
-    end
-
-    def stop
-      @stop = true
-    end
-  end # Enemy
-
-
   class Player < Creature
     def setup
       super
@@ -84,19 +31,19 @@ module Leaf
     end
   
     def fell_off_screen
-      exit
+      game_state.died
     end
   end # Player
 
 
   class VisibleArea < Chingu::GameObject
     trait :collision_detection
-    trait :bounding_circle, :scale => 1#, :debug => true
+    trait :bounding_circle, :scale => 1.5#, :debug => true
     def setup
       self.zorder = Leaf::Level::BACKGROUND_LAYER
       self.rotation_center = :center
       @image = Gosu::Image["media/visiblearea.png"]
-      self.alpha = 50
+      self.alpha = 40
     end
 
     def follow(sprite)

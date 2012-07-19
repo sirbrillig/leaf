@@ -1,6 +1,6 @@
 module Leaf
   class Creature < Chingu::GameObject
-    trait :bounding_box, :scale => 0.8#, :debug => true
+    trait :bounding_box, :scale => 0.7#, :debug => true
     traits :collision_detection, :timer, :velocity
 
     def setup
@@ -14,7 +14,7 @@ module Leaf
       self.zorder = Leaf::Level::SPRITES_LAYER
       self.acceleration_y = 0.5
       self.max_velocity = 20
-      #self.rotation_center = :bottom_center
+      self.rotation_center = :bottom_center
     end
 
     def jumping?
@@ -65,8 +65,25 @@ module Leaf
       block and block.y >= self.y
     end
 
+    def standing_on_platform
+      return nil if falling? or jumping?
+      self.y += 1
+      block = hit_something?
+      self.y -= 1
+      return block if block
+      nil
+    end
+
     def fallen_off_bottom?
       self.y > $window.height
+    end
+
+    def fallen_off_platform?(movement)
+      return false if jumping?
+      self.x += movement * 5
+      test = standing_on_platform
+      self.x -= movement * 5
+      not test
     end
 
     def hit_left_wall?
@@ -77,7 +94,12 @@ module Leaf
       self.x > (game_state.viewport.x + $window.width)
     end
 
+    # Called when we fall off screen.
     def fell_off_screen
+    end
+
+    # Called when we're about to fall off a platform.
+    def fell_off_platform
     end
 
     def move(x, y)
@@ -85,6 +107,10 @@ module Leaf
 
       self.x += x
       self.x = previous_x if hit_something?
+      if fallen_off_platform?(x) 
+        fell_off_platform
+        self.x = previous_x if @prevent_falling
+      end
       @walking = false
 
       self.y += y

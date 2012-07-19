@@ -1,4 +1,6 @@
 module Leaf
+  DEBUG = false
+
 	class Game < Chingu::Window
     def initialize
       super(1024, 768)
