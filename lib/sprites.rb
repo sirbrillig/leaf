@@ -38,7 +38,7 @@ module Leaf
 
   class VisibleArea < Chingu::GameObject
     trait :collision_detection
-    trait :bounding_circle, :scale => 1.5#, :debug => true
+    trait :bounding_circle, :scale => 1.1, :debug => Leaf::DEBUG
     def setup
       self.zorder = Leaf::Level::BACKGROUND_LAYER
       self.rotation_center = :center

@@ -1,6 +1,6 @@
 module Leaf
   class Creature < Chingu::GameObject
-    trait :bounding_box, :scale => 0.7#, :debug => true
+    trait :bounding_box, :scale => [0.3, 0.8], :debug => Leaf::DEBUG
     traits :collision_detection, :timer, :velocity
 
     def setup

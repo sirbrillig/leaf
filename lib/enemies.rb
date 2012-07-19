@@ -1,13 +1,11 @@
 module Leaf
   class Enemy < Creature
-    trait :bounding_box, :scale => 1#, :debug => true
-
     def setup
       super
       @animation = Animation.new(:file => "media/enemy.png", :size => 50)
       @image = @animation.first
 
-      @speed = 2
+      @speed = 1
       @stop = false
       @headed_left = true
       start_movement
