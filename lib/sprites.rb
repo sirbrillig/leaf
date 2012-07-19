@@ -116,6 +116,8 @@ module Leaf
           exit
         elsif hit_left_wall? or hit_right_wall?
           self.x = previous_x
+        else
+          self.y = previous_y
         end
       end
     end
