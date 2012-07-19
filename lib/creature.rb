@@ -14,7 +14,7 @@ module Leaf
       self.zorder = Leaf::Level::SPRITES_LAYER
       self.acceleration_y = 0.5
       self.max_velocity = 20
-      self.rotation_center = :bottom_center
+      #self.rotation_center = :bottom_center
     end
 
     def jumping?

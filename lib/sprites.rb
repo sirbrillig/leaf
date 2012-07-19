@@ -24,10 +24,12 @@ module Leaf
       @speed = 2
       @stop = false
       @headed_left = true
+      self.hide!
       start_movement
     end
 
     def update
+      hide!
       if game_state.viewport.inside?(self)
         if stopped?
           every(100, :name => 'waiting', :preserve => true) { @image = @animation.next }
@@ -61,8 +63,7 @@ module Leaf
     def stop
       @stop = true
     end
-
-  end
+  end # Enemy
 
 
   class Player < Creature
@@ -71,14 +72,44 @@ module Leaf
       @animation = Animation.new(:file => "media/player.png", :size => 50)
       @image = @animation.first
 
+      @visible_area = VisibleArea.create(:x => self.x, :y => self.y)
+
       on_input([:holding_left, :holding_a], :move_left)
       on_input([:holding_right, :holding_d], :move_right)
       on_input([:holding_up, :holding_w], :jump)
+    end
+
+    def update
+      @visible_area.follow(self) if @visible_area
     end
   
     def fell_off_screen
       exit
     end
-  end
+  end # Player
+
+
+  class VisibleArea < Chingu::GameObject
+    trait :collision_detection
+    trait :bounding_circle, :scale => 1#, :debug => true
+    def setup
+      self.zorder = Leaf::Level::BACKGROUND_LAYER
+      self.rotation_center = :center
+      @image = Gosu::Image["media/visiblearea.png"]
+      self.alpha = 50
+    end
+
+    def follow(sprite)
+      self.x = sprite.x
+      self.y = sprite.y
+    end
+
+    def update
+      self.each_collision(Enemy) do |area, enemy|
+        enemy.show!
+      end
+    end
+
+  end # VisibleArea
 
 end # Leaf

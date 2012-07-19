@@ -5,6 +5,7 @@ module Leaf
 
     SPRITES_LAYER = 100
     PLATFORM_LAYER = 10
+    BACKGROUND_LAYER = 5
 
     def initialize(options={})
       super
