@@ -64,19 +64,36 @@ module Leaf
 
     def jump
       return if @jumps == 1
+      # FIXME: add a jump timer so you can't jump more frequently than 0.2 sec.
       @image = @animation[1]
       @jumps += 1
       self.velocity_y = -11
     end
 
     def land
-      return unless falling?
       @image = @animation[0]
       @jumps = 0
     end
     
     def hit_something?
       game_state.game_object_map.from_game_object(self)
+    end
+
+    def hit_something_below?
+      block = hit_something?
+      block and block.y >= self.y
+    end
+
+    def fallen_off_bottom?
+      self.y > $window.height
+    end
+
+    def hit_left_wall?
+      self.x < 0
+    end
+
+    def hit_right_wall?
+      self.x > (game_state.viewport.x + $window.width)
     end
 
     def move(x, y)
@@ -88,16 +105,16 @@ module Leaf
 
       self.y += y
       if hit_something?
+        land if jumping? and hit_something_below?
         self.y = previous_y
-        land if falling?
         self.velocity_y = 0
       end
 
       if game_state.viewport.outside?(self)
-        if self.y > $window.height
+        if fallen_off_bottom?
           #$window.pop_game_state
           exit
-        elsif self.x < 0 or self.x > (game_state.viewport.x + $window.width)
+        elsif hit_left_wall? or hit_right_wall?
           self.x = previous_x
         end
       end
