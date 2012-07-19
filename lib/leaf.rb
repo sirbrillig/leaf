@@ -8,6 +8,7 @@ require 'game'
 require 'creature'
 require 'enemies'
 require 'sprites'
+require 'player'
 require 'level'
 require 'gameover'
 

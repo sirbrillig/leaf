@@ -7,6 +7,10 @@ module Leaf
     PLATFORM_LAYER = 10
     BACKGROUND_LAYER = 5
 
+    FAR_OBJECT_ALPHA = 50
+    MIDDLE_OBJECT_ALPHA = 100
+    CLOSE_OBJECT_ALPHA = 255
+
     def initialize(options={})
       super
 
@@ -47,6 +51,11 @@ module Leaf
     def died
       puts "you died"
       push_game_state(Leaf::GameOver)
+    end
+
+    # Return the distance between two points A and B on the x/y grid. 
+    def distance(a, b)
+      Math.sqrt(((a.x - b.x) ** 2) + ((a.y - b.y) ** 2).abs)
     end
   end # Level
 

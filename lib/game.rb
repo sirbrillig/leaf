@@ -11,3 +11,9 @@ module Leaf
     end
 	end # Game
 end # Leaf
+
+module Chingu::Traits::BoundingCircle
+  def radius=(rad)
+    @cached_radius = rad
+  end
+end
