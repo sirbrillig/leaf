@@ -15,7 +15,7 @@ module Leaf
 
       self.viewport.game_area = [0, 0, 2048, 768]
 
-      @file = File.join("#{self.class.name.split('::').last.to_s.downcase}.yml")
+      @file = File.join("maps/#{self.class.name.split('::').last.to_s.downcase}.yml")
       load_game_objects(:file => @file, :debug => true)
 
       @player = Leaf::Player.create(:x => 70, :y => 100)

@@ -5,6 +5,7 @@ include Chingu
 include Gosu
 
 require 'game'
+require 'creature'
 require 'sprites'
 require 'level'
 
