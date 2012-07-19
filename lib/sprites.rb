@@ -94,8 +94,12 @@ module Leaf
       end
 
       if game_state.viewport.outside?(self)
-        #$window.pop_game_state
-        exit
+        if self.y > $window.height
+          #$window.pop_game_state
+          exit
+        elsif self.x < 0 or self.x > (game_state.viewport.x + $window.width)
+          self.x = previous_x
+        end
       end
     end
 
