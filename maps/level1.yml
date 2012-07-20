@@ -202,7 +202,7 @@
 - Leaf::Platform: 
     :zorder: 15
     :y: 250.0
-    :alpha: 50
+    :alpha: 100
     :factor_x: 1.0
     :x: 250.0
     :factor_y: 1.0
@@ -500,7 +500,7 @@
     :y: 549.5
     :alpha: 50
     :factor_x: 1.0
-    :x: 350.0
+    :x: 353.0
     :factor_y: 1.0
     :angle: 0
 - Leaf::Guard: 
@@ -516,7 +516,7 @@
     :y: 549.5
     :alpha: 255
     :factor_x: 1.0
-    :x: 602.0
+    :x: 605.0
     :factor_y: 1.0
     :angle: 0
 - Leaf::Guard: 
@@ -532,7 +532,7 @@
     :y: 549.5
     :alpha: 100
     :factor_x: 1.0
-    :x: 396.0
+    :x: 357.0
     :factor_y: 1.0
     :angle: 0
 - Leaf::Watcher: 
@@ -545,9 +545,49 @@
     :angle: 0
 - Leaf::Watcher: 
     :zorder: 100
-    :y: 500.0
+    :y: 549.5
     :alpha: 255
-    :factor_x: 1
+    :factor_x: 1.0
     :x: 800.0
+    :factor_y: 1.0
+    :angle: 0
+- Leaf::Tree: 
+    :zorder: 8
+    :y: 650.0
+    :alpha: 50
+    :factor_x: 1.0
+    :x: 122.0
+    :factor_y: 1.0
+    :angle: 0
+- Leaf::Tree: 
+    :zorder: 8
+    :y: 500.0
+    :alpha: 50
+    :factor_x: 1
+    :x: 529.0
+    :factor_y: 1
+    :angle: 0
+- Leaf::Tree: 
+    :zorder: 8
+    :y: 650.0
+    :alpha: 50
+    :factor_x: 1
+    :x: 577.0
+    :factor_y: 1
+    :angle: 0
+- Leaf::Tree: 
+    :zorder: 8
+    :y: 500.0
+    :alpha: 50
+    :factor_x: 1
+    :x: 951.0
+    :factor_y: 1
+    :angle: 0
+- Leaf::Tree: 
+    :zorder: 8
+    :y: 450.0
+    :alpha: 50
+    :factor_x: 1
+    :x: 1450.0
     :factor_y: 1
     :angle: 0

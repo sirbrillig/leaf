@@ -1,6 +1,10 @@
 module Leaf
   DEBUG = false
 
+  module Climbable
+    attr_accessor :climb_height
+  end
+
 	class Game < Chingu::Window
     def initialize
       super(1024, 768)
@@ -10,6 +14,7 @@ module Leaf
       push_game_state(Level1)
     end
 	end # Game
+
 end # Leaf
 
 module Chingu::Traits::BoundingCircle

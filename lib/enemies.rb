@@ -92,28 +92,11 @@ module Leaf
     end
   end # Guard
 
-  class Walker < Enemy
-    def load_animation
-      @animation = Animation.new(:file => "media/walker.png", :size => 50)
-      @image = @animation.first
-    end
-
-    def start_movement
-      go
-    end
-
-    def each_movement
-      pace
-    end
-
-    def handle_fell_off_platform
-    end
-  end # Walker
-
   class Watcher < Enemy
     def start_movement
       @speed = 1.5
       @no_waiting = true
+      @noticed = false
     end
 
     def load_animation
@@ -123,6 +106,7 @@ module Leaf
 
     def noticed_player
       go
+      @noticed = true
     end
 
     def each_movement
@@ -151,4 +135,34 @@ module Leaf
       land if jumping?
     end
   end # Watcher
+
+  class Walker < Watcher
+    def load_animation
+      @animation = Animation.new(:file => "media/walker.png", :size => 50)
+      @image = @animation.first
+    end
+
+    def start_movement
+      go
+    end
+
+    def each_movement
+      if not stopped?
+        if not @noticed
+          move_left
+        else
+          @speed = 1.6
+          if game_state.player.x > self.x
+            move_right
+          else
+            move_left
+          end
+        end
+      end
+    end
+
+    def handle_fell_off_platform
+    end
+  end # Walker
+
 end # Leaf

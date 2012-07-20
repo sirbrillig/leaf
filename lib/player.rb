@@ -10,13 +10,34 @@ module Leaf
 
       on_input([:holding_left, :holding_a], :move_left)
       on_input([:holding_right, :holding_d], :move_right)
-      on_input([:holding_up, :holding_w], :jump)
+      on_input([:holding_up, :holding_w], :up_pressed)
+      on_input([:holding_down, :holding_s], :down_pressed)
 
       # FIXME: can movement be acceleration-based?
     end
 
+    def up_pressed
+      object = on_background_object?
+      if object and object.respond_to? :climb_height
+        climb_up(object)
+      else
+        jump
+      end
+    end
+
+    def down_pressed
+      object = on_background_object?
+      if object and climbing?
+        climb_down(object)
+      end
+    end
+
     def update
       @visible_area.follow(self) if @visible_area
+      @on_background_object = nil
+      self.each_collision(Tree) do |area, object|
+        @on_background_object = object if object.is_a? BackgroundObject
+      end
     end
   
     def handle_fell_off_screen
@@ -55,6 +76,8 @@ module Leaf
     end
 
     def update
+      # FIXME: it would be nice not to have to specify all classes here to be
+      # illuminated. Could they have a mixin or trait?
       self.each_collision(Guard, Walker, Watcher, Platform) do |area, object|
         range = self.range(object)
         case range
