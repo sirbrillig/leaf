@@ -11,6 +11,8 @@ module Leaf
       on_input([:holding_left, :holding_a], :move_left)
       on_input([:holding_right, :holding_d], :move_right)
       on_input([:holding_up, :holding_w], :jump)
+
+      # FIXME: can movement be acceleration-based?
     end
 
     def update
@@ -43,9 +45,9 @@ module Leaf
     def range(object)
       distance = game_state.distance(self, object)
       case distance
-      when 100..200
+      when 80..200
         return :middle
-      when 0..99
+      when 0..79
         return :close
       else
         return :far
@@ -53,15 +55,17 @@ module Leaf
     end
 
     def update
-      self.each_collision(Guard, Walker, Platform) do |area, object|
+      self.each_collision(Guard, Walker, Watcher, Platform) do |area, object|
         range = self.range(object)
         case range
         when :far
           object.alpha = Leaf::Level::FAR_OBJECT_ALPHA
         when :middle
           object.alpha = Leaf::Level::MIDDLE_OBJECT_ALPHA
+          object.noticed_player if object.respond_to? :noticed_player
         else
           object.alpha = Leaf::Level::CLOSE_OBJECT_ALPHA
+          object.noticed_player if object.respond_to? :noticed_player
         end
         object.show!
       end

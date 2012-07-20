@@ -10,7 +10,7 @@
 - Leaf::Platform: 
     :zorder: 15
     :y: 150.0
-    :alpha: 50
+    :alpha: 100
     :factor_x: 1.0
     :x: 250.0
     :factor_y: 1.0
@@ -26,7 +26,7 @@
 - Leaf::Platform: 
     :zorder: 15
     :y: 150.0
-    :alpha: 255
+    :alpha: 50
     :factor_x: 1.0
     :x: 350.0
     :factor_y: 1.0
@@ -42,7 +42,7 @@
 - Leaf::Platform: 
     :zorder: 15
     :y: 700.0
-    :alpha: 255
+    :alpha: 50
     :factor_x: 1.0
     :x: 100.0
     :factor_y: 1.0
@@ -50,7 +50,7 @@
 - Leaf::Platform: 
     :zorder: 15
     :y: 700.0
-    :alpha: 255
+    :alpha: 50
     :factor_x: 1.0
     :x: 150.0
     :factor_y: 1.0
@@ -58,7 +58,7 @@
 - Leaf::Platform: 
     :zorder: 15
     :y: 700.0
-    :alpha: 255
+    :alpha: 50
     :factor_x: 1.0
     :x: 200.0
     :factor_y: 1.0
@@ -74,7 +74,7 @@
 - Leaf::Platform: 
     :zorder: 15
     :y: 700.0
-    :alpha: 100
+    :alpha: 50
     :factor_x: 1.0
     :x: 250.0
     :factor_y: 1.0
@@ -90,7 +90,7 @@
 - Leaf::Platform: 
     :zorder: 15
     :y: 700.0
-    :alpha: 100
+    :alpha: 50
     :factor_x: 1.0
     :x: 300.0
     :factor_y: 1.0
@@ -194,7 +194,7 @@
 - Leaf::Platform: 
     :zorder: 15
     :y: 550.0
-    :alpha: 100
+    :alpha: 50
     :factor_x: 1.0
     :x: 100.0
     :factor_y: 1.0
@@ -210,7 +210,7 @@
 - Leaf::Platform: 
     :zorder: 15
     :y: 550.0
-    :alpha: 100
+    :alpha: 50
     :factor_x: 1.0
     :x: 200.0
     :factor_y: 1.0
@@ -500,7 +500,7 @@
     :y: 549.5
     :alpha: 50
     :factor_x: 1.0
-    :x: 374.0
+    :x: 350.0
     :factor_y: 1.0
     :angle: 0
 - Leaf::Guard: 
@@ -516,7 +516,7 @@
     :y: 549.5
     :alpha: 255
     :factor_x: 1.0
-    :x: 626.0
+    :x: 602.0
     :factor_y: 1.0
     :angle: 0
 - Leaf::Guard: 
@@ -529,9 +529,25 @@
     :angle: 0
 - Leaf::Walker: 
     :zorder: 100
-    :y: 500.0
+    :y: 549.5
     :alpha: 100
     :factor_x: 1.0
-    :x: 450.0
+    :x: 396.0
     :factor_y: 1.0
+    :angle: 0
+- Leaf::Watcher: 
+    :zorder: 100
+    :y: 499.745928338762
+    :alpha: 255
+    :factor_x: 1.0
+    :x: 1218.21978021978
+    :factor_y: 1.0
+    :angle: 0
+- Leaf::Watcher: 
+    :zorder: 100
+    :y: 500.0
+    :alpha: 255
+    :factor_x: 1
+    :x: 800.0
+    :factor_y: 1
     :angle: 0

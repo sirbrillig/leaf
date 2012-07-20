@@ -46,6 +46,7 @@ module Leaf
     def jump
       return if @jumps == 1
       return if @jump_delay
+      return if falling?
       @image = @animation[1]
       @jumps += 1
       self.velocity_y = -11
@@ -88,12 +89,29 @@ module Leaf
       not test
     end
 
+    # Return true if we walked off the left side of the screen.
     def hit_left_wall?
       self.x < 0
     end
 
+    # Return true if we walked off the right side of the screen.
     def hit_right_wall?
       self.x > (game_state.viewport.x + $window.width)
+    end
+
+    # Return true if we walked into a wall (Platform).
+    def hit_obstacle?(movement)
+      test = false
+      self.x += movement * 5
+      if block = hit_something?
+        test = true
+      end
+      self.x -= movement * 5
+      test
+    end
+
+    # Called when we run into a wall (Platform).
+    def hit_obstacle
     end
 
     # Called when we fall off screen.
@@ -111,7 +129,10 @@ module Leaf
       self.x = previous_x if hit_something?
       if fallen_off_platform?(x) 
         fell_off_platform
-        #self.x = previous_x if @prevent_falling
+        self.x = previous_x if @prevent_falling
+      end
+      if hit_obstacle?(x)
+        hit_obstacle
       end
       @walking = false
 

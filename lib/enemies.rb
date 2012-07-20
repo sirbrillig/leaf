@@ -7,6 +7,7 @@ module Leaf
       @speed = 1
       @stop = true
       @headed_left = true
+      @no_waiting = false
       start_movement
     end
 
@@ -18,13 +19,17 @@ module Leaf
       self.hide!
       if game_state.viewport.inside?(self)
         if stopped?
-          every(100, :name => 'waiting', :preserve => true) { @image = @animation.next }
+          every(100, :name => 'waiting', :preserve => true) { @image = @animation.next } unless @no_waiting
         else
           stop_timer('waiting')
           pace
         end
       end
 
+      kill_players
+    end
+
+    def kill_players
       self.each_collision(Player) do |enemy, player|
         game_state.died
       end
@@ -89,4 +94,49 @@ module Leaf
     def fell_off_platform
     end
   end # Walker
+
+  class Watcher < Enemy
+    def start_movement
+      @speed = 1.5
+      @no_waiting = true
+      #@prevent_falling = true
+    end
+
+    def load_animation
+      @animation = Animation.new(:file => "media/watcher.png", :size => 50)
+      @image = @animation.first
+    end
+
+    def noticed_player
+      go
+    end
+
+    def update
+      self.hide!
+      if not stopped?
+        if game_state.player.x > self.x
+          move_right
+        else
+          move_left
+        end
+        stop
+      end
+      kill_players
+    end
+
+    def hit_obstacle
+      jump
+      land
+    end
+
+    def jump
+      return if stopped?
+      super
+    end
+
+    def fell_off_platform
+      jump
+      land if jumping?
+    end
+  end # Watcher
 end # Leaf
