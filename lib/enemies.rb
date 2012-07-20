@@ -8,24 +8,16 @@ module Leaf
       @stop = true
       @headed_left = true
       @no_waiting = false
-      start_movement
-    end
-
-    def handle_fell_off_platform
-      turn_around
+      @started = false
     end
 
     def update
-      self.hide!
-      if game_state.viewport.inside?(self)
-        if stopped?
-          every(100, :name => 'waiting', :preserve => true) { @image = @animation.next } unless @no_waiting
-        else
-          stop_timer('waiting')
-          pace
-        end
+      if game_state.viewport.inside?(self) and not @started
+        start_movement 
+        @started = true
       end
-
+      self.hide!
+      each_movement if @started
       kill_players
     end
 
@@ -36,10 +28,17 @@ module Leaf
     end
 
     def pace
-      if @headed_left
-        move_left
-      else
-        move_right
+      if game_state.viewport.inside?(self)
+        if stopped?
+          every(100, :name => 'waiting', :preserve => true) { @image = @animation.next } unless @no_waiting
+        else
+          stop_timer('waiting')
+          if @headed_left
+            move_left
+          else
+            move_right
+          end
+        end
       end
     end
 
@@ -49,8 +48,12 @@ module Leaf
       @image = @animation.first
     end
 
-    # Override to provide custom walking code.
+    # Override to provide custom init code.
     def start_movement
+    end
+
+    # Override to provide custom movement code.
+    def each_movement
     end
 
     def turn_around
@@ -79,6 +82,14 @@ module Leaf
     def start_movement
       go
     end
+
+    def each_movement
+      pace
+    end
+
+    def handle_fell_off_platform
+      turn_around
+    end
   end # Guard
 
   class Walker < Enemy
@@ -91,6 +102,10 @@ module Leaf
       go
     end
 
+    def each_movement
+      pace
+    end
+
     def handle_fell_off_platform
     end
   end # Walker
@@ -99,7 +114,6 @@ module Leaf
     def start_movement
       @speed = 1.5
       @no_waiting = true
-      #@prevent_falling = true
     end
 
     def load_animation
@@ -111,8 +125,7 @@ module Leaf
       go
     end
 
-    def update
-      self.hide!
+    def each_movement
       if not stopped?
         if game_state.player.x > self.x
           move_right
@@ -121,7 +134,6 @@ module Leaf
         end
         stop
       end
-      kill_players
     end
 
     def handle_hit_obstacle
