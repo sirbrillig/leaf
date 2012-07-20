@@ -3,6 +3,7 @@ module Leaf
     def setup
       super
       load_animation
+      @image = @animation.first
 
       @speed = 1
       @stop = true
@@ -17,16 +18,19 @@ module Leaf
         @started = true
       end
       self.hide!
-      each_movement if @started
+      handle_each_update if @started
       kill_players
     end
 
+    # Check to see if we've killed any players.
     def kill_players
       self.each_collision(Player) do |enemy, player|
         game_state.died
       end
     end
 
+    # Walk back and forth or hang out if stopped. Actually, if you don't call
+    # turn_around, we will only walk in one direction.
     def pace
       if game_state.viewport.inside?(self)
         if stopped?
@@ -42,10 +46,9 @@ module Leaf
       end
     end
 
-    # Override to set @animation and @image.
+    # Override to set @animation.
     def load_animation
       @animation = Animation.new(:file => "media/blank.png", :size => 50)
-      @image = @animation.first
     end
 
     # Override to provide custom init code.
@@ -53,7 +56,7 @@ module Leaf
     end
 
     # Override to provide custom movement code.
-    def each_movement
+    def handle_each_update
     end
 
     def turn_around
@@ -83,7 +86,7 @@ module Leaf
       go
     end
 
-    def each_movement
+    def handle_each_update
       pace
     end
 
@@ -94,7 +97,7 @@ module Leaf
 
   class Watcher < Enemy
     def start_movement
-      @speed = 1.5
+      @speed = 1
       @no_waiting = true
       @noticed = false
     end
@@ -109,7 +112,7 @@ module Leaf
       @noticed = true
     end
 
-    def each_movement
+    def handle_each_update
       if not stopped?
         if game_state.player.x > self.x
           move_right
@@ -146,17 +149,18 @@ module Leaf
       go
     end
 
-    def each_movement
+    def handle_each_update
       if not stopped?
         if not @noticed
           move_left
         else
-          @speed = 1.6
+          @speed = 1.5
           if game_state.player.x > self.x
             move_right
           else
             move_left
           end
+          stop
         end
       end
     end
