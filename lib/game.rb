@@ -7,7 +7,7 @@ module Leaf
     end
 
     def setup
-      push_game_state(Level2)
+      push_game_state(Level1)
     end
 	end # Game
 end # Leaf

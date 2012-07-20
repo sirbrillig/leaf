@@ -11,7 +11,7 @@ module Leaf
       start_movement
     end
 
-    def fell_off_platform
+    def handle_fell_off_platform
       turn_around
     end
 
@@ -91,7 +91,7 @@ module Leaf
       go
     end
 
-    def fell_off_platform
+    def handle_fell_off_platform
     end
   end # Walker
 
@@ -124,7 +124,7 @@ module Leaf
       kill_players
     end
 
-    def hit_obstacle
+    def handle_hit_obstacle
       jump
       land
     end
@@ -134,7 +134,7 @@ module Leaf
       super
     end
 
-    def fell_off_platform
+    def handle_fell_off_platform
       jump
       land if jumping?
     end

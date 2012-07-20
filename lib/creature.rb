@@ -59,15 +59,21 @@ module Leaf
       @jumps = 0
     end
     
+    # Return the object we've hit if we collide with something.
+    #
+    # If you'd like to know about hitting floors or walls, see
+    # #hit_something_below? and #hit_obstacle?
     def hit_something?
       game_state.game_object_map.from_game_object(self)
     end
 
+    # Return the block we've hit if it's below us (see #hit_something?)
     def hit_something_below?
       block = hit_something?
       block and block.y >= self.y
     end
 
+    # Return the Platform we're standing on or nil.
     def standing_on_platform
       return nil if falling? or jumping?
       self.y += 1
@@ -77,10 +83,17 @@ module Leaf
       nil
     end
 
+    # Return true if we fell off the bottom of the screen. This will be
+    # automatically checked during normal movement and the method
+    # #handle_fell_off_screen will be called, so you can handle the event there.
     def fallen_off_bottom?
       self.y > $window.height
     end
 
+    # Return true if we are about to fall off a Platform. Despite the name this
+    # can be used to stop falling. This will be automatically checked during
+    # normal movement and the method #handle_fell_off_platform will be called,
+    # so you can handle the event there.
     def fallen_off_platform?(movement)
       return false if jumping?
       self.x += movement * 5
@@ -99,7 +112,9 @@ module Leaf
       self.x > (game_state.viewport.x + $window.width)
     end
 
-    # Return true if we walked into a wall (Platform).
+    # Return true if we walked into a wall (Platform). This will automatically
+    # be checked during normal movement and the method #handle_hit_obstacle will
+    # be called, so you can handle the event there.
     def hit_obstacle?(movement)
       test = false
       self.x += movement * 5
@@ -110,16 +125,16 @@ module Leaf
       test
     end
 
-    # Called when we run into a wall (Platform).
-    def hit_obstacle
+    # Called when we run into a wall (Platform). 
+    def handle_hit_obstacle
     end
 
     # Called when we fall off screen.
-    def fell_off_screen
+    def handle_fell_off_screen
     end
 
     # Called when we're about to fall off a platform.
-    def fell_off_platform
+    def handle_fell_off_platform
     end
 
     def move(x, y)
@@ -128,11 +143,11 @@ module Leaf
       self.x += x
       self.x = previous_x if hit_something?
       if fallen_off_platform?(x) 
-        fell_off_platform
+        handle_fell_off_platform
         self.x = previous_x if @prevent_falling
       end
       if hit_obstacle?(x)
-        hit_obstacle
+        handle_hit_obstacle
       end
       @walking = false
 
@@ -145,7 +160,7 @@ module Leaf
 
       if game_state.viewport.outside?(self)
         if fallen_off_bottom?
-          fell_off_screen
+          handle_fell_off_screen
         elsif hit_left_wall? or hit_right_wall?
           self.x = previous_x
         else

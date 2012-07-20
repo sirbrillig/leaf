@@ -19,7 +19,7 @@ module Leaf
       @visible_area.follow(self) if @visible_area
     end
   
-    def fell_off_screen
+    def handle_fell_off_screen
       game_state.died
     end
   end # Player
