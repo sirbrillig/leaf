@@ -22,3 +22,11 @@ module Chingu::Traits::BoundingCircle
     @cached_radius = rad
   end
 end
+
+class Chingu::GameStates::Edit
+  alias_method :old_setup, :setup
+  def setup
+    old_setup
+    editable_game_objects.each { |object| object.show! if object.respond_to? :show! }
+  end
+end

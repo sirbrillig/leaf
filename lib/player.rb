@@ -78,6 +78,8 @@ module Leaf
     def update
       # FIXME: it would be nice not to have to specify all classes here to be
       # illuminated. Could they have a mixin or trait?
+      #
+      # FIXME: line-of-sight should be blocked by solid objects (Platforms).
       self.each_collision(Guard, Walker, Watcher, Platform) do |area, object|
         range = self.range(object)
         case range

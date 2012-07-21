@@ -84,6 +84,8 @@ module Leaf
       @climbing = true
       suspend_gravity
       @distance_climbed += @speed
+      # FIXME: the distance_climbed calculuation will be wrong if we start at
+      # some other point of the tree.
       if @on_background_object.climb_height <= @distance_climbed
         @distance_climbed -= @speed
         #finish_climbing
