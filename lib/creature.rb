@@ -210,7 +210,7 @@ module Leaf
     def update
       @on_background_object = nil
       # FIXME: any way we can avoid listing all BackgroundObjects here?
-      self.each_collision(Tree, BackgroundWall) { |creature, object| @on_background_object = object if object.is_a? BackgroundObject }
+      self.each_collision(Tree, BackgroundWall, BackgroundPlatform) { |creature, object| @on_background_object = object if object.is_a? BackgroundObject }
     end
   
     def move(x, y)

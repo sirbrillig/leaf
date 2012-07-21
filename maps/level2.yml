@@ -66,7 +66,7 @@
 - Leaf::Platform: 
     :zorder: 15
     :y: 600.0
-    :alpha: 100
+    :alpha: 50
     :factor_x: 1.0
     :x: 650.0
     :factor_y: 1.0
@@ -74,7 +74,7 @@
 - Leaf::Platform: 
     :zorder: 15
     :y: 600.0
-    :alpha: 100
+    :alpha: 50
     :factor_x: 1.0
     :x: 700.0
     :factor_y: 1.0
@@ -82,7 +82,7 @@
 - Leaf::Platform: 
     :zorder: 15
     :y: 600.0
-    :alpha: 100
+    :alpha: 50
     :factor_x: 1.0
     :x: 750.0
     :factor_y: 1.0
@@ -90,7 +90,7 @@
 - Leaf::Platform: 
     :zorder: 15
     :y: 600.0
-    :alpha: 255
+    :alpha: 50
     :factor_x: 1.0
     :x: 850.0
     :factor_y: 1.0
@@ -98,7 +98,7 @@
 - Leaf::Platform: 
     :zorder: 15
     :y: 600.0
-    :alpha: 255
+    :alpha: 50
     :factor_x: 1.0
     :x: 800.0
     :factor_y: 1.0
@@ -106,7 +106,7 @@
 - Leaf::Platform: 
     :zorder: 15
     :y: 600.0
-    :alpha: 255
+    :alpha: 50
     :factor_x: 1.0
     :x: 900.0
     :factor_y: 1.0
@@ -114,7 +114,7 @@
 - Leaf::Platform: 
     :zorder: 15
     :y: 600.0
-    :alpha: 100
+    :alpha: 50
     :factor_x: 1.0
     :x: 950.0
     :factor_y: 1.0
@@ -122,7 +122,7 @@
 - Leaf::Platform: 
     :zorder: 15
     :y: 550.0
-    :alpha: 100
+    :alpha: 50
     :factor_x: 1.0
     :x: 1000.0
     :factor_y: 1.0
@@ -130,7 +130,7 @@
 - Leaf::Platform: 
     :zorder: 15
     :y: 600.0
-    :alpha: 100
+    :alpha: 50
     :factor_x: 1.0
     :x: 1000.0
     :factor_y: 1.0
@@ -164,7 +164,7 @@
     :y: 599.7125
     :alpha: 50
     :factor_x: 1.0
-    :x: 496.0125
+    :x: 479.0125
     :factor_y: 1.0
     :angle: 0
 - Leaf::Guard: 
@@ -172,7 +172,7 @@
     :y: 599.5375
     :alpha: 50
     :factor_x: 1.0
-    :x: 434.795833333333
+    :x: 417.795833333333
     :factor_y: 1.0
     :angle: 0
 - Leaf::Tree: 
@@ -218,7 +218,7 @@
 - Leaf::BackgroundWall: 
     :zorder: 8
     :y: 549.552117263844
-    :alpha: 100
+    :alpha: 50
     :factor_x: 1.0
     :x: 701.763125763126
     :factor_y: 1.0
@@ -226,56 +226,32 @@
 - Leaf::BackgroundWall: 
     :zorder: 8
     :y: 551.864820846905
-    :alpha: 255
+    :alpha: 50
     :factor_x: 1.0
     :x: 835.233211233211
     :factor_y: 1.0
     :angle: 0
-- Leaf::Platform: 
-    :zorder: 15
-    :y: 453.102605863192
+- Leaf::BackgroundPlatform: 
+    :zorder: 8
+    :y: 487.42345276873
     :alpha: 50
-    :factor_x: 1.0
-    :x: 600.019536019536
-    :factor_y: 1.0
+    :factor_x: 1
+    :x: 700.043956043956
+    :factor_y: 1
     :angle: 0
-- Leaf::Platform: 
-    :zorder: 15
-    :y: 453.205211726384
+- Leaf::BackgroundPlatform: 
+    :zorder: 8
+    :y: 487.5
     :alpha: 50
-    :factor_x: 1.0
-    :x: 649.074481074481
-    :factor_y: 1.0
+    :factor_x: 1
+    :x: 599.326007326007
+    :factor_y: 1
     :angle: 0
-- Leaf::Platform: 
-    :zorder: 15
-    :y: 453.415309446254
+- Leaf::BackgroundPlatform: 
+    :zorder: 8
+    :y: 487.172638436482
     :alpha: 50
-    :factor_x: 1.0
-    :x: 699.418803418803
-    :factor_y: 1.0
-    :angle: 0
-- Leaf::Platform: 
-    :zorder: 15
-    :y: 454.563517915309
-    :alpha: 100
-    :factor_x: 1.0
-    :x: 748.991452991453
-    :factor_y: 1.0
-    :angle: 0
-- Leaf::Platform: 
-    :zorder: 15
-    :y: 454.338762214984
-    :alpha: 100
-    :factor_x: 1.0
-    :x: 799.023199023199
-    :factor_y: 1.0
-    :angle: 0
-- Leaf::Platform: 
-    :zorder: 15
-    :y: 454.895765472313
-    :alpha: 100
-    :factor_x: 1.0
-    :x: 847.015277629808
-    :factor_y: 1.0
+    :factor_x: 1
+    :x: 800.807081807082
+    :factor_y: 1
     :angle: 0
