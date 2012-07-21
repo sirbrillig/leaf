@@ -51,6 +51,7 @@ module Leaf
       self.zorder = Leaf::Level::LIGHTED_LAYER
       self.rotation_center = :center
       @image = Gosu::Image["media/visiblearea.png"]
+      self.hide! # Not sure if it's better to be visible.
       self.alpha = 40
       self.radius = 250
     end
@@ -78,7 +79,7 @@ module Leaf
       # illuminated. Could they have a mixin or trait?
       #
       # FIXME: line-of-sight should be blocked by solid objects (Platforms).
-      self.each_collision(Guard, Walker, Watcher, Platform) do |area, object|
+      self.each_collision(Guard, Walker, Watcher, Platform, BackgroundWall) do |area, object|
         range = self.range(object)
         case range
         when :far
