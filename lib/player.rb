@@ -33,11 +33,8 @@ module Leaf
     end
 
     def update
+      super
       @visible_area.follow(self) if @visible_area
-      @on_background_object = nil
-      self.each_collision(Tree) do |area, object|
-        @on_background_object = object if object.is_a? BackgroundObject
-      end
     end
   
     def handle_fell_off_screen

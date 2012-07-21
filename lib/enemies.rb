@@ -13,12 +13,13 @@ module Leaf
     end
 
     def update
-      if game_state.viewport.inside?(self) and not @started
+      super
+      # We don't start moving until we're on-screen.
+      if (not @started) and game_state.viewport.inside?(self)
         start_movement 
         @started = true
       end
       self.hide!
-      handle_each_update if @started
       kill_players
     end
 
@@ -31,32 +32,14 @@ module Leaf
 
     # Walk back and forth or hang out if stopped. Actually, if you don't call
     # turn_around, we will only walk in one direction.
-    def pace
-      if game_state.viewport.inside?(self)
-        if stopped?
-          every(100, :name => 'waiting', :preserve => true) { @image = @animation.next } unless @no_waiting
-        else
-          stop_timer('waiting')
-          if @headed_left
-            move_left
-          else
-            move_right
-          end
-        end
+    def walk
+      return unless game_state.viewport.inside?(self)
+      return if stopped?
+      if @headed_left
+        move_left
+      else
+        move_right
       end
-    end
-
-    # Override to set @animation.
-    def load_animation
-      @animation = Animation.new(:file => "media/blank.png", :size => 50)
-    end
-
-    # Override to provide custom init code.
-    def start_movement
-    end
-
-    # Override to provide custom movement code.
-    def handle_each_update
     end
 
     def turn_around
@@ -74,7 +57,19 @@ module Leaf
     def go
       @stop = false
     end
+
+
+    # Override to set @animation.
+    def load_animation
+      @animation = Animation.new(:file => "media/blank.png", :size => 50)
+    end
+
+    # Override to provide custom init code.
+    def start_movement
+    end
+
   end # Enemy
+
 
   class Guard < Enemy
     def load_animation
@@ -86,14 +81,16 @@ module Leaf
       go
     end
 
-    def handle_each_update
-      pace
+    def update
+      super
+      walk
     end
 
     def handle_fell_off_platform
       turn_around
     end
   end # Guard
+
 
   class Watcher < Enemy
     def start_movement
@@ -112,8 +109,9 @@ module Leaf
       @noticed = true
     end
 
-    def handle_each_update
-      if not stopped?
+    def update
+      super
+      if not stopped? and not @noticed
         if game_state.player.x > self.x
           move_right
         else
@@ -139,6 +137,7 @@ module Leaf
     end
   end # Watcher
 
+
   class Walker < Watcher
     def load_animation
       @animation = Animation.new(:file => "media/walker.png", :size => 50)
@@ -149,7 +148,8 @@ module Leaf
       go
     end
 
-    def handle_each_update
+    def update
+      super
       if not stopped?
         if not @noticed
           move_left
