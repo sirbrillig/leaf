@@ -5,6 +5,7 @@ module Leaf
 
     def setup
       @animation = Animation.new(:file => "media/blank.png", :size => 50)
+      @animation.frame_names = {:face_right => 0, :face_left => 0, :climb => 0, :jump => 0}
       @image = @animation.first
 
       @jumps = 0
@@ -66,7 +67,6 @@ module Leaf
       return if @jumps == 1
       return if @jump_delay
       return if falling?
-      @image = @animation[1]
       @jumps += 1
       self.velocity_y = -(distance)
       @jump_delay = true
@@ -74,7 +74,6 @@ module Leaf
     end
 
     def land
-      @image = @animation[0]
       @jumps = 0
     end
 
@@ -91,7 +90,6 @@ module Leaf
     end
 
     def climb_up(object)
-      @image = @animation[1]
       @climbing = true
       suspend_gravity
       @distance_climbed += @speed
@@ -109,7 +107,6 @@ module Leaf
     end
     
     def climb_down(object)
-      @image = @animation[1]
       @climbing = true
       suspend_gravity
       @distance_climbed -= @speed
@@ -195,13 +192,19 @@ module Leaf
 
     def update_animation
       if walking?
-        if facing_right?
-          @image = @animation[:face_right].next
-        else
-          @image = @animation[:face_left].next
-        end
-        # FIXME: climbing
+        @image = next_animation_frame(:face, @facing)
+      elsif jumping?
+        @image = next_animation_frame(:face, @facing)
+      elsif climbing?
+        @image = next_animation_frame(:climb)
       end
+    end
+
+    def next_animation_frame(tag, facing=nil)
+      tag = "#{tag}_#{facing}".to_sym if facing
+      return @animation.next unless @animation[tag]
+      return @animation[tag] if @animation[tag].is_a? Gosu::Image
+      return @animation[tag].next
     end
 
     def update

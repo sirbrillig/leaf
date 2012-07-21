@@ -30,8 +30,7 @@ module Leaf
       end
     end
 
-    # Walk back and forth or hang out if stopped. Actually, if you don't call
-    # turn_around, we will only walk in one direction.
+    # Take a step.
     def walk
       return unless game_state.viewport.inside?(self)
       return if stopped?
@@ -74,7 +73,7 @@ module Leaf
   class Guard < Enemy
     def load_animation
       @animation = Animation.new(:file => "media/guard.png", :size => 50)
-      @image = @animation.first
+      @animation.frame_names = {:face_right => 0..1, :face_left => 2..3}
     end
 
     def start_movement
@@ -84,6 +83,10 @@ module Leaf
     def update
       super
       walk
+    end
+
+    def handle_hit_obstacle
+      turn_around
     end
 
     def handle_fell_off_platform
@@ -101,7 +104,6 @@ module Leaf
 
     def load_animation
       @animation = Animation.new(:file => "media/watcher.png", :size => 50)
-      @image = @animation.first
     end
 
     def noticed_player
@@ -141,7 +143,6 @@ module Leaf
   class Walker < Watcher
     def load_animation
       @animation = Animation.new(:file => "media/walker.png", :size => 50)
-      @image = @animation.first
     end
 
     def start_movement
