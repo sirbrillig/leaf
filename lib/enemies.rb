@@ -73,7 +73,7 @@ module Leaf
 
   class Guard < Enemy
     def load_animation
-      @animation = Animation.new(:file => "media/enemy.png", :size => 50)
+      @animation = Animation.new(:file => "media/guard.png", :size => 50)
       @image = @animation.first
     end
 

@@ -34,7 +34,7 @@ module Leaf
 
   class Tree < BackgroundObject
     include Climbable
-    trait :bounding_box, :scale => 1, :debug => Leaf::DEBUG
+    trait :bounding_box, :scale => [0.5, 1], :debug => Leaf::DEBUG
     def setup
       super
       @image = Gosu::Image["media/tree.png"]

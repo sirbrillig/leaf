@@ -13,6 +13,7 @@ module Leaf
       @climbing = false
       @distance_climbed = 0
       @on_background_object = false
+      @facing = :right
 
       self.zorder = Leaf::Level::SPRITES_LAYER
       self.acceleration_y = 0.5
@@ -20,6 +21,13 @@ module Leaf
       self.rotation_center = :bottom_center
     end
 
+    def facing_right?
+      @facing == :right
+    end
+
+    def facing_left?
+      @facing == :left
+    end
 
     def jumping?
       @jumps > 0
@@ -44,11 +52,13 @@ module Leaf
 
     def move_left
       @walking = true unless jumping?
+      @facing = :left
       move(-(@speed), 0)
     end
 
     def move_right
       @walking = true unless jumping?
+      @facing = :right
       move(@speed, 0)
     end
 
@@ -182,6 +192,18 @@ module Leaf
       test
     end
 
+
+    def update_animation
+      if walking?
+        if facing_right?
+          @image = @animation[:face_right].next
+        else
+          @image = @animation[:face_left].next
+        end
+        # FIXME: climbing
+      end
+    end
+
     def update
       @on_background_object = nil
       # FIXME: any way we can avoid listing all BackgroundObjects here?
@@ -189,7 +211,7 @@ module Leaf
     end
   
     def move(x, y)
-      @image = @animation.next if @animation and walking?
+      update_animation
 
       self.x += x
       self.x = previous_x if hit_something?
