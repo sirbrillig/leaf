@@ -18,6 +18,7 @@ module Leaf
     end
 
     def up_pressed
+      return jump #FIXME: disabled climbing for testing
       object = on_background_object?
       if object and object.respond_to? :climb_height
         climb_up(object)

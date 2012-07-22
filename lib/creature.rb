@@ -90,7 +90,6 @@ module Leaf
     end
 
     def climb_up(object)
-      return #FIXME: disabled climbing for testing.
       @climbing = true
       suspend_gravity
       @distance_climbed += @speed
@@ -136,7 +135,8 @@ module Leaf
     # Return the block we've hit if it's below us (see #hit_something?)
     def hit_something_below?
       block = hit_something?
-      block and block.y >= self.y
+      return block if block and block.y >= self.y
+      false
     end
 
     # Return an object if we're standing over BackgroundObject.
@@ -189,8 +189,11 @@ module Leaf
     def hit_obstacle?(movement)
       test = false
       self.x += movement * 5
-      test = hit_something?
-      test = (test.bb.collide?(self)) if test
+      if block = hit_something?
+        test = block
+        block2 = hit_something_below?
+        test = false if block == block2
+      end
       self.x -= movement * 5
       test
     end
@@ -234,8 +237,8 @@ module Leaf
       self.y += y
       if block = hit_something?
         land if jumping? and hit_something_below?
-        #self.y = previous_y
-        self.y = block.bb.top
+        self.y = previous_y
+        #self.y = block.bb.top #FIXME: this has the side effect of teleporting to top of block
         self.velocity_y = 0
       end
 
