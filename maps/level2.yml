@@ -2,7 +2,7 @@
 - Leaf::Platform: 
     :zorder: 15
     :y: 600.0
-    :alpha: 50
+    :alpha: 255
     :factor_x: 1.0
     :x: 100.0
     :factor_y: 1.0
@@ -10,7 +10,7 @@
 - Leaf::Platform: 
     :zorder: 15
     :y: 600.0
-    :alpha: 50
+    :alpha: 100
     :factor_x: 1.0
     :x: 150.0
     :factor_y: 1.0
@@ -18,7 +18,7 @@
 - Leaf::Platform: 
     :zorder: 15
     :y: 600.0
-    :alpha: 50
+    :alpha: 100
     :factor_x: 1.0
     :x: 200.0
     :factor_y: 1.0
@@ -26,7 +26,7 @@
 - Leaf::Platform: 
     :zorder: 15
     :y: 650.0
-    :alpha: 50
+    :alpha: 100
     :factor_x: 1.0
     :x: 250.0
     :factor_y: 1.0
@@ -161,18 +161,18 @@
     :angle: 0
 - Leaf::Guard: 
     :zorder: 100
-    :y: 599.7125
+    :y: 600.0
     :alpha: 50
     :factor_x: 1.0
-    :x: 479.0125
+    :x: 459.0125
     :factor_y: 1.0
     :angle: 0
 - Leaf::Guard: 
     :zorder: 100
-    :y: 599.5375
+    :y: 600.0
     :alpha: 50
     :factor_x: 1.0
-    :x: 417.795833333333
+    :x: 397.795833333333
     :factor_y: 1.0
     :angle: 0
 - Leaf::Tree: 
@@ -189,14 +189,6 @@
     :alpha: 50
     :factor_x: 1.0
     :x: 417.787545787546
-    :factor_y: 1.0
-    :angle: 0
-- Leaf::Tree: 
-    :zorder: 8
-    :y: 526.431596091205
-    :alpha: 50
-    :factor_x: 1.0
-    :x: 175.697191697192
     :factor_y: 1.0
     :angle: 0
 - Leaf::Platform: 
@@ -235,23 +227,31 @@
     :zorder: 8
     :y: 487.42345276873
     :alpha: 50
-    :factor_x: 1
+    :factor_x: 1.0
     :x: 700.043956043956
-    :factor_y: 1
+    :factor_y: 1.0
     :angle: 0
 - Leaf::BackgroundPlatform: 
     :zorder: 8
     :y: 487.5
     :alpha: 50
-    :factor_x: 1
+    :factor_x: 1.0
     :x: 599.326007326007
-    :factor_y: 1
+    :factor_y: 1.0
     :angle: 0
 - Leaf::BackgroundPlatform: 
     :zorder: 8
     :y: 487.172638436482
     :alpha: 50
-    :factor_x: 1
+    :factor_x: 1.0
     :x: 800.807081807082
-    :factor_y: 1
+    :factor_y: 1.0
+    :angle: 0
+- Leaf::BackgroundPlatform: 
+    :zorder: 8
+    :y: 533.208469055375
+    :alpha: 50
+    :factor_x: 1.0
+    :x: 280.131868131868
+    :factor_y: 1.0
     :angle: 0

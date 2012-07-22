@@ -1,6 +1,9 @@
 module Leaf
   DEBUG = false
 
+  module Standable
+  end
+
   module Climbable
     attr_accessor :climb_height
   end

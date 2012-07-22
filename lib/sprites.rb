@@ -50,14 +50,16 @@ module Leaf
       @image = Gosu::Image["media/backgroundwall.png"]
       @climb_height = self.height - 30
     end
-  end # Tree
+  end # BackgroundWall
 
   class BackgroundPlatform < BackgroundObject
     include Climbable
+    include Standable
     trait :bounding_box, :scale => 1, :debug => Leaf::DEBUG
     def setup
       super
       @image = Gosu::Image["media/backgroundplatform.png"]
+      @climb_height = self.height
     end
-  end # Tree
+  end # BackgroundPlatform
 end # Leaf

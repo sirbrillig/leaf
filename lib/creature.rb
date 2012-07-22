@@ -90,6 +90,7 @@ module Leaf
     end
 
     def climb_up(object)
+      return #FIXME: disabled climbing for testing.
       @climbing = true
       suspend_gravity
       @distance_climbed += @speed
@@ -125,7 +126,11 @@ module Leaf
     # If you'd like to know about hitting floors or walls, see
     # #hit_something_below? and #hit_obstacle?
     def hit_something?
-      game_state.game_object_map.from_game_object(self)
+      block = game_state.game_object_map.from_game_object(self)
+      return block if block
+      block = on_background_object?
+      return block if block and block.kind_of? Standable
+      false
     end
 
     # Return the block we've hit if it's below us (see #hit_something?)
@@ -185,6 +190,7 @@ module Leaf
       test = false
       self.x += movement * 5
       test = hit_something?
+      test = (test.bb.collide?(self)) if test
       self.x -= movement * 5
       test
     end
@@ -217,20 +223,19 @@ module Leaf
       update_animation
 
       self.x += x
-      self.x = previous_x if hit_something?
+      self.x = previous_x if hit_obstacle?(x)
       if fallen_off_platform?(x) 
         handle_fell_off_platform
         self.x = previous_x if @prevent_falling
       end
-      if hit_obstacle?(x)
-        handle_hit_obstacle
-      end
+      handle_hit_obstacle if hit_obstacle?(x)
       @walking = false
 
       self.y += y
-      if hit_something?
+      if block = hit_something?
         land if jumping? and hit_something_below?
-        self.y = previous_y
+        #self.y = previous_y
+        self.y = block.bb.top
         self.velocity_y = 0
       end
 
