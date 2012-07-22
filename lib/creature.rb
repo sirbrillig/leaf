@@ -237,7 +237,7 @@ module Leaf
       self.y += y
       if block = hit_something?
         land if jumping? and hit_something_below?
-        self.y = previous_y
+        self.y = previous_y # FIXME: we can get stuck inside objects while jumping
         #self.y = block.bb.top #FIXME: this has the side effect of teleporting to top of block
         self.velocity_y = 0
       end

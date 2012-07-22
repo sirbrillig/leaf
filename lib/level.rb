@@ -38,7 +38,7 @@ module Leaf
     end
 
     def edit
-      push_game_state(Chingu::GameStates::Edit.new(:grid => @grid, :file => @file, :snap_to_grid => false, :except => [Background, BackgroundObject, Player, Creature, Enemy, VisibleArea]))
+      push_game_state(Chingu::GameStates::Edit.new(:grid => @grid, :file => @file, :snap_to_grid => false, :except => [Background, BackgroundObject, Player, Creature, Enemy, DetectionArea, VisibleArea]))
     end
 
     def update

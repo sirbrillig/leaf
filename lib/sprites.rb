@@ -62,4 +62,7 @@ module Leaf
       @climb_height = self.height
     end
   end # BackgroundPlatform
+
+  class Lamp < VisibleArea
+  end
 end # Leaf

@@ -7,6 +7,7 @@ include Gosu
 require 'game'
 require 'creature'
 require 'enemies'
+require 'lights'
 require 'sprites'
 require 'player'
 require 'level'
