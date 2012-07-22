@@ -11,6 +11,8 @@ module Leaf
 
       on_input([:holding_left, :holding_a], :move_left)
       on_input([:holding_right, :holding_d], :move_right)
+      on_input([:released_right, :released_d], :stop_moving)
+      on_input([:released_left, :released_a], :stop_moving)
       on_input([:holding_up, :holding_w], :up_pressed)
       on_input([:holding_down, :holding_s], :down_pressed)
 

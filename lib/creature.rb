@@ -8,8 +8,8 @@ module Leaf
       @animation.frame_names = {:face_right => 0, :face_left => 0, :climb => 0, :jump => 0}
       @image = @animation.first
 
-      @jumps = 0
       @speed = 4
+      @jumping = false
       @walking = false
       @climbing = false
       @distance_climbed = 0
@@ -18,7 +18,8 @@ module Leaf
 
       self.zorder = Leaf::Level::SPRITES_LAYER
       self.acceleration_y = 0.5
-      self.max_velocity = 20
+      self.max_velocity_y = 20
+      self.max_velocity_x = 4
       self.rotation_center = :bottom_center
     end
 
@@ -31,7 +32,7 @@ module Leaf
     end
 
     def jumping?
-      @jumps > 0
+      @jumping
     end
 
     def falling?
@@ -54,27 +55,34 @@ module Leaf
     def move_left
       @walking = true unless jumping?
       @facing = :left
-      move(-(@speed), 0)
+      @acceleration_x = -0.3
     end
 
     def move_right
       @walking = true unless jumping?
       @facing = :right
-      move(@speed, 0)
+      @acceleration_x = 0.3
+    end
+
+    def stop_moving
+      @acceleration_x = -@acceleration_x
+      # Slow down a little slower.
+      @acceleration_x -= 0.1 if @acceleration_x > 0
+      @acceleration_x += 0.1 if @acceleration_x < 0
     end
 
     def jump(distance=11)
-      return if @jumps == 1
+      return if jumping?
       return if @jump_delay
       return if falling?
-      @jumps += 1
       self.velocity_y = -(distance)
+      @jumping = true
       @jump_delay = true
       after(700) { @jump_delay = false }
     end
 
     def land
-      @jumps = 0
+      @jumping = false
     end
 
     def suspend_gravity
@@ -216,30 +224,41 @@ module Leaf
       return @animation[tag].next
     end
 
-    def update
-      @on_background_object = nil
-      # FIXME: any way we can avoid listing all BackgroundObjects here?
-      self.each_collision(Tree, BackgroundWall, BackgroundPlatform) { |creature, object| @on_background_object = object if object.is_a? BackgroundObject }
-    end
-  
     def move(x, y)
-      update_animation
-
       self.x += x
-      self.x = previous_x if hit_obstacle?(x)
+      self.each_collision(Platform) do |me, object|
+        self.x = previous_x
+        break
+      end
+
       if fallen_off_platform?(x) 
         handle_fell_off_platform
         self.x = previous_x if @prevent_falling
       end
+
       handle_hit_obstacle if hit_obstacle?(x)
-      @walking = false
 
       self.y += y
-      if block = hit_something?
-        land if jumping? and hit_something_below?
-        self.y = previous_y # FIXME: we can get stuck inside objects while jumping
-        #self.y = block.bb.top #FIXME: this has the side effect of teleporting to top of block
-        self.velocity_y = 0
+    end
+
+    def update
+      # Make sure we stop.
+      if @velocity_x.between?(-0.1, 0.1)
+        @velocity_x = 0
+        @acceleration_x = 0
+        @walking = false
+      end
+
+      update_animation
+
+      self.each_collision(Platform) do |me, object|
+        if rising?
+          self.y = object.bb.bottom + self.image.height
+          self.velocity = 0
+        else
+          land
+          self.y = object.bb.top - 1
+        end
       end
 
       if climbing? 
@@ -259,6 +278,10 @@ module Leaf
           self.y = previous_y
         end
       end
+
+      @on_background_object = nil
+      # FIXME: any way we can avoid listing all BackgroundObjects here?
+      self.each_collision(Tree, BackgroundWall, BackgroundPlatform) { |creature, object| @on_background_object = object if object.is_a? BackgroundObject }
     end
 
 

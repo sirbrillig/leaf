@@ -6,9 +6,7 @@ module Leaf
       @image = @animation.first
 
       @speed = 1
-      @stop = true
       @headed_left = true
-      @no_waiting = false
       @started = false
     end
 
@@ -32,8 +30,6 @@ module Leaf
 
     # Take a step.
     def walk
-      return unless game_state.viewport.inside?(self)
-      return if stopped?
       if @headed_left
         move_left
       else
@@ -43,18 +39,6 @@ module Leaf
 
     def turn_around
       @headed_left = !@headed_left
-    end
-
-    def stopped?
-      @stop
-    end
-
-    def stop
-      @stop = true
-    end
-
-    def go
-      @stop = false
     end
 
 
@@ -77,11 +61,6 @@ module Leaf
     end
 
     def start_movement
-      go
-    end
-
-    def update
-      super
       walk
     end
 
@@ -98,7 +77,6 @@ module Leaf
   class Watcher < Enemy
     def start_movement
       @speed = 1
-      @no_waiting = true
       @noticed = false
     end
 
