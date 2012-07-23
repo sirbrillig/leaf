@@ -58,6 +58,14 @@ module Leaf
       @climbing
     end
 
+    # Return true if we're moving backwards or uncontrollably.
+    def sliding?
+      return true if @facing == :right and self.velocity_x < 0
+      return true if @facing == :left and self.velocity_x > 0
+      return true if @walking == false and @jumping == false and self.velocity_x != 0
+      false
+    end
+
 
     def move_left
       @walking = true unless jumping?
@@ -78,6 +86,7 @@ module Leaf
     end
 
     def stop_moving
+      return unless walking?
       @acceleration_x = -@acceleration_x
       # Slow down (a little slower than we accel).
       @acceleration_x -= 0.15 if @acceleration_x > 0
@@ -245,14 +254,14 @@ module Leaf
       return @animation[tag].next
     end
 
+
     def update
       # Make sure we stop after slowing down.
       stop_totally if @velocity_x != 0 and @velocity_x.between?(-0.2, 0.2)
+      stop_totally if sliding?
 
       update_animation
 
-      # FIXME: left-right-left quickly will cause uncontrolled backwards slide
-      
       if floor = hit_floor
         self.y = floor.bb.top - 1
         land
@@ -268,9 +277,6 @@ module Leaf
           if rising? and object.is_a? Unpassable
             self.y = object.bb.bottom + self.image.height
             self.velocity = 0
-          elsif object.is_a? Unpassable
-            self.x = previous_x
-            self.stop_totally
           end
         end
       end
@@ -281,6 +287,8 @@ module Leaf
       end
 
       if block = hit_obstacle?
+        self.x = previous_x
+        #self.stop_totally # Unnecessary?
         handle_hit_obstacle(block) 
       end
 
