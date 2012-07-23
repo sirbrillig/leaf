@@ -54,8 +54,7 @@ module Leaf
   end # BackgroundWall
 
   class BackgroundPlatform < BackgroundObject
-    include Climbable
-    include Standable
+    include Climbable, Standable
     trait :bounding_box, :scale => 1, :debug => Leaf::DEBUG
     def setup
       super

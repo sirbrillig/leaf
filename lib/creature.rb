@@ -43,7 +43,7 @@ module Leaf
     end
 
     def falling?
-      self.velocity_y > 0.5
+      self.velocity_y > 0.1
     end
 
     def rising?
@@ -145,6 +145,7 @@ module Leaf
     # Return an array of objects we have collided with.
     def hit_objects
       game_state.game_object_map.collisions_with(self)
+      #[game_state.game_object_map.from_game_object(self)]
     end
 
     # Return an object if we're standing over BackgroundObject.
@@ -158,6 +159,15 @@ module Leaf
       self.y += 1
       block = hit_objects.select {|o| o.is_a? Standable}.first
       self.y -= 1
+      block
+    end
+
+    # Like standing_on_platform but to be used when falling.
+    def hit_floor
+      look_ahead = 10
+      self.y += look_ahead
+      block = hit_objects.select {|o| o.is_a? Standable}.first
+      self.y -= look_ahead
       block
     end
 
@@ -215,7 +225,6 @@ module Leaf
       block_right = hit_objects.select {|o| o.is_a? Unpassable}.first
       self.x -= future_distance
       return block_right if block_right
-      
     end
 
 
@@ -239,22 +248,30 @@ module Leaf
     def update
       # Make sure we stop after slowing down.
       stop_totally if @velocity_x != 0 and @velocity_x.between?(-0.2, 0.2)
-      #puts "vel = #{@velocity_x}, accel = #{@acceleration_x}" if self.is_a? Player
 
       update_animation
 
-      #FIXME: again, listing is annoying
-      # FIXME: this loop is too slow! (and the one below)
-      self.each_collision(Platform, BackgroundWall, BackgroundPlatform) do |me, object|
-        if rising? and object.is_a? Unpassable
-          self.y = object.bb.bottom + self.image.height
-          self.velocity = 0
-        elsif falling? and object.is_a? Standable
-          land
-          self.y = object.bb.top - 1
-        elsif object.is_a? Unpassable
-          self.x = previous_x
-          self.stop_totally
+      # FIXME: left-right-left quickly will cause uncontrolled backwards slide
+      
+      if floor = hit_floor
+        self.y = floor.bb.top - 1
+        land
+      end
+
+      @on_background_object = nil
+      objects = self.hit_objects
+      unless objects.empty?
+        objects = [objects.first]
+        puts "hit #{objects.collect{|o|o.class}.inspect}" if self.is_a? Player
+        objects.each do |object|
+          @on_background_object = object if object.is_a? BackgroundObject
+          if rising? and object.is_a? Unpassable
+            self.y = object.bb.bottom + self.image.height
+            self.velocity = 0
+          elsif object.is_a? Unpassable
+            self.x = previous_x
+            self.stop_totally
+          end
         end
       end
 
@@ -285,9 +302,6 @@ module Leaf
         end
       end
 
-      @on_background_object = nil
-      # FIXME: any way we can avoid listing all BackgroundObjects here?
-      self.each_collision(Tree, BackgroundWall, BackgroundPlatform) { |creature, object| @on_background_object = object if object.is_a? BackgroundObject }
     end
 
 

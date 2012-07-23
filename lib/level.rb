@@ -27,14 +27,14 @@ module Leaf
 
       @background = Leaf::Background.create(:x => 900, :y => 200)
 
-      @player = Leaf::Player.create(:x => 70, :y => 100)
+      @player = Leaf::Player.create(:x => 95, :y => 50)
 
-      @grid = [20, 20]
+      @grid = [5, 5]
       self.viewport.lag = 0.95
     end
 
     def setup
-      @game_object_map = Chingu::GameObjectMap.new(:game_objects => Platform.all, :grid => @grid)
+      @game_object_map = Chingu::GameObjectMap.new(:game_objects => Platform.all + BackgroundPlatform.all, :grid => @grid) # FIXME: How can we track all relevant objects? use different maps, i guess.
     end
 
     def edit
