@@ -263,6 +263,7 @@ module Leaf
       update_animation
 
       if floor = hit_floor
+        # This will be called constantly while on the ground.
         self.y = floor.bb.top - 1
         land
       end
