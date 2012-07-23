@@ -239,12 +239,13 @@ module Leaf
 
     def update
       # Make sure we stop after slowing down.
-      stop_totally if @velocity_x.between?(-0.2, 0.2)
+      stop_totally if @velocity_x != 0 and @velocity_x.between?(-0.2, 0.2)
       #puts "vel = #{@velocity_x}, accel = #{@acceleration_x}" if self.is_a? Player
 
       update_animation
 
       #FIXME: again, listing is annoying
+      # FIXME: this loop is too slow! (and the one below)
       self.each_collision(Platform, BackgroundWall, BackgroundPlatform) do |me, object|
         if rising? and object.is_a? Unpassable
           self.y = object.bb.bottom + self.image.height

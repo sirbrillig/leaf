@@ -26,7 +26,7 @@ module Leaf
     end
 
     def setup
-      push_game_state(Level1)
+      push_game_state(Level2)
     end
 	end # Game
 

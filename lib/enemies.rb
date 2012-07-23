@@ -93,29 +93,29 @@ module Leaf
 
     def update
       super
-      if @noticed
+      if @noticed and @started
+        stop_moving
         if game_state.player.x > self.x
           move_right
         else
           move_left
         end
-        stop_moving
       end
     end
 
     def handle_hit_obstacle(object)
-      jump
-      land
+      #jump
+      #land
     end
 
     def jump
-      return if stopped?
-      super
+      #return if stopped?
+      #super
     end
 
     def handle_fell_off_platform
-      jump
-      land if jumping?
+      #jump
+      #land if jumping?
     end
   end # Watcher
 
