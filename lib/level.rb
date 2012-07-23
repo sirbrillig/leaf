@@ -29,7 +29,7 @@ module Leaf
 
       @player = Leaf::Player.create(:x => 70, :y => 100)
 
-      @grid = [50, 50]
+      @grid = [20, 20]
       self.viewport.lag = 0.95
     end
 

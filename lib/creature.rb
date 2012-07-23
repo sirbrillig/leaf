@@ -141,14 +141,10 @@ module Leaf
       @climbing = false
     end
 
-    
-    # Return the object we've hit if we collide with something.
-    def hit_something?
-      #block = game_state.game_object_map.from_game_object(self)
-      self.each_collision(Platform, BackgroundWall, BackgroundPlatform) do |me, object|
-        return object #FIXME: not the best
-      end
-      return nil
+
+    # Return an array of objects we have collided with.
+    def hit_objects
+      game_state.game_object_map.collisions_with(self)
     end
 
     # Return an object if we're standing over BackgroundObject.
@@ -160,7 +156,7 @@ module Leaf
     def standing_on_platform
       return nil if falling? or jumping?
       self.y += 1
-      block = hit_something?
+      block = hit_objects.select {|o| o.is_a? Standable}.first
       self.y -= 1
       block
     end
@@ -202,21 +198,24 @@ module Leaf
       self.x > (game_state.viewport.x + $window.width)
     end
 
-    # Return non-false if we walked into a wall (Platform); returns the object
-    # we hit. This will automatically be checked during normal movement and the
-    # method #handle_hit_obstacle will be called, so you can handle the event
-    # there.
+    # Return non-false if we walked into a wall (instance of Unpassable);
+    # returns the first object we hit. 
+    #
+    # This will automatically be checked during normal movement and the method
+    # #handle_hit_obstacle will be called, so you can handle the event there.
     def hit_obstacle?
       future_distance = 10
       # Check left
       self.x -= future_distance
-      block_left = hit_something?
+      block_left = hit_objects.select {|o| o.is_a? Unpassable}.first
       self.x += future_distance
+      return block_left if block_left
       # Check right
       self.x += future_distance
-      block_right = hit_something?
+      block_right = hit_objects.select {|o| o.is_a? Unpassable}.first
       self.x -= future_distance
-      block_left or block_right
+      return block_right if block_right
+      
     end
 
 
