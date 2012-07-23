@@ -9,8 +9,8 @@ module Leaf
     BACKGROUND_OBJECT_LAYER = 8
     BACKGROUND_LAYER = 5
 
-    FAR_OBJECT_ALPHA = 50
-    MIDDLE_OBJECT_ALPHA = 100
+    FAR_OBJECT_ALPHA = 40
+    MIDDLE_OBJECT_ALPHA = 70
     CLOSE_OBJECT_ALPHA = 255
 
     def initialize(options={})

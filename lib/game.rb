@@ -1,6 +1,15 @@
 module Leaf
   DEBUG = false
 
+  module Hidable
+    attr_accessor :hidden
+    def update
+      self.hide! if @hidden
+      self.show! if not @hidden
+      super
+    end
+  end
+
   module Standable
   end
 
@@ -17,7 +26,7 @@ module Leaf
     end
 
     def setup
-      push_game_state(Level2)
+      push_game_state(Level1)
     end
 	end # Game
 

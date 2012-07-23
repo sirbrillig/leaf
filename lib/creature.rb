@@ -22,6 +22,14 @@ module Leaf
       self.rotation_center = :bottom_center
     end
 
+    def speed=(spd)
+      self.max_velocity_x = (spd)
+    end
+
+    def speed
+      self.max_velocity_x
+    end
+
     def facing_right?
       @facing == :right
     end
@@ -71,9 +79,9 @@ module Leaf
 
     def stop_moving
       @acceleration_x = -@acceleration_x
-      # Slow down a little slower.
-      @acceleration_x -= 0.1 if @acceleration_x > 0
-      @acceleration_x += 0.1 if @acceleration_x < 0
+      # Slow down (a little slower than we accel).
+      @acceleration_x -= 0.15 if @acceleration_x > 0
+      @acceleration_x += 0.15 if @acceleration_x < 0
     end
 
     def jump(distance=11)
@@ -231,7 +239,8 @@ module Leaf
 
     def update
       # Make sure we stop after slowing down.
-      stop_totally if @velocity_x.between?(-0.1, 0.1)
+      stop_totally if @velocity_x.between?(-0.2, 0.2)
+      #puts "vel = #{@velocity_x}, accel = #{@acceleration_x}" if self.is_a? Player
 
       update_animation
 
@@ -245,6 +254,7 @@ module Leaf
           self.y = object.bb.top - 1
         elsif object.is_a? Unpassable
           self.x = previous_x
+          self.stop_totally
         end
       end
 

@@ -1,12 +1,16 @@
 module Leaf
   class Enemy < Creature
+    include Hidable
+
     def setup
       super
       load_animation
       @image = @animation.first
 
+      self.speed = 1
       @headed_left = true
       @started = false
+      @hidden = true
     end
 
     def update
@@ -16,7 +20,6 @@ module Leaf
         start_movement 
         @started = true
       end
-      self.hide!
       kill_players
     end
 
@@ -77,7 +80,6 @@ module Leaf
 
   class Watcher < Enemy
     def start_movement
-      @speed = 1
       @noticed = false
     end
 
@@ -101,7 +103,7 @@ module Leaf
       end
     end
 
-    def handle_hit_obstacle
+    def handle_hit_obstacle(object)
       jump
       land
     end
@@ -124,7 +126,7 @@ module Leaf
     end
 
     def start_movement
-      go
+      walk
     end
 
     def update
@@ -133,13 +135,13 @@ module Leaf
         if not @noticed
           move_left
         else
-          @speed = 1.5
+          self.speed = 1.5
           if game_state.player.x > self.x
             move_right
           else
             move_left
           end
-          stop
+          stop_moving
         end
       end
     end
