@@ -4,6 +4,9 @@ module Leaf
   module Standable
   end
 
+  module Unpassable
+  end
+
   module Climbable
     attr_accessor :climb_height
   end
@@ -31,5 +34,10 @@ class Chingu::GameStates::Edit
   def setup
     old_setup
     editable_game_objects.each { |object| object.show! if object.respond_to? :show! }
+    on_input(:s, :toggle_snap_to_grid)
+  end
+
+  def toggle_snap_to_grid
+    @snap_to_grid = !@snap_to_grid
   end
 end

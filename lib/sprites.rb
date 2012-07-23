@@ -3,6 +3,7 @@ module Leaf
   class Platform < Chingu::GameObject
     trait :collision_detection
     trait :bounding_box, :scale => 1#, :debug => true
+    include Standable, Unpassable
 
     def setup
       @image = Gosu::Image["media/platform.png"]

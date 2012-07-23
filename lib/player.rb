@@ -15,8 +15,6 @@ module Leaf
       on_input([:released_left, :released_a], :stop_moving)
       on_input([:holding_up, :holding_w], :up_pressed)
       on_input([:holding_down, :holding_s], :down_pressed)
-
-      # FIXME: can movement be acceleration-based?
     end
 
     def up_pressed

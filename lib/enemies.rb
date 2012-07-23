@@ -5,7 +5,6 @@ module Leaf
       load_animation
       @image = @animation.first
 
-      @speed = 1
       @headed_left = true
       @started = false
     end
@@ -38,7 +37,9 @@ module Leaf
     end
 
     def turn_around
+      stop_totally
       @headed_left = !@headed_left
+      walk
     end
 
 
@@ -64,8 +65,8 @@ module Leaf
       walk
     end
 
-    def handle_hit_obstacle
-      turn_around
+    def handle_hit_obstacle(object)
+      turn_around if object.is_a? Unpassable
     end
 
     def handle_fell_off_platform
@@ -85,19 +86,18 @@ module Leaf
     end
 
     def noticed_player
-      go
       @noticed = true
     end
 
     def update
       super
-      if not stopped? and not @noticed
+      if @noticed
         if game_state.player.x > self.x
           move_right
         else
           move_left
         end
-        stop
+        stop_moving
       end
     end
 

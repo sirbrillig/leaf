@@ -8,7 +8,6 @@ module Leaf
       @animation.frame_names = {:face_right => 0, :face_left => 0, :climb => 0, :jump => 0}
       @image = @animation.first
 
-      @speed = 4
       @jumping = false
       @walking = false
       @climbing = false
@@ -64,6 +63,12 @@ module Leaf
       @acceleration_x = 0.3
     end
 
+    def stop_totally
+      @velocity_x = 0
+      @acceleration_x = 0
+      @walking = false
+    end
+
     def stop_moving
       @acceleration_x = -@acceleration_x
       # Slow down a little slower.
@@ -83,6 +88,7 @@ module Leaf
 
     def land
       @jumping = false
+      @velocity_y = 0
     end
 
     def suspend_gravity
@@ -129,22 +135,12 @@ module Leaf
 
     
     # Return the object we've hit if we collide with something.
-    #
-    # If you'd like to know about hitting floors or walls, see
-    # #hit_something_below? and #hit_obstacle?
     def hit_something?
-      block = game_state.game_object_map.from_game_object(self)
-      return block if block
-      block = on_background_object?
-      return block if block and block.kind_of? Standable
-      false
-    end
-
-    # Return the block we've hit if it's below us (see #hit_something?)
-    def hit_something_below?
-      block = hit_something?
-      return block if block and block.y >= self.y
-      false
+      #block = game_state.game_object_map.from_game_object(self)
+      self.each_collision(Platform, BackgroundWall, BackgroundPlatform) do |me, object|
+        return object #FIXME: not the best
+      end
+      return nil
     end
 
     # Return an object if we're standing over BackgroundObject.
@@ -172,12 +168,20 @@ module Leaf
     # can be used to stop falling. This will be automatically checked during
     # normal movement and the method #handle_fell_off_platform will be called,
     # so you can handle the event there.
-    def fallen_off_platform?(movement)
+    def fallen_off_platform?
       return false if jumping?
-      self.x += movement * 5
-      test = standing_on_platform
-      self.x -= movement * 5
-      not test
+      under_foot = standing_on_platform
+      return true unless under_foot
+      future_distance = 10
+      # Check left
+      self.x -= future_distance
+      under_foot_left = standing_on_platform
+      self.x += future_distance
+      # Check right
+      self.x += future_distance
+      under_foot_right = standing_on_platform
+      self.x -= future_distance
+      not (under_foot_left and under_foot_right)
     end
 
     # Return true if we walked off the left side of the screen.
@@ -194,16 +198,17 @@ module Leaf
     # we hit. This will automatically be checked during normal movement and the
     # method #handle_hit_obstacle will be called, so you can handle the event
     # there.
-    def hit_obstacle?(movement)
-      test = false
-      self.x += movement * 5
-      if block = hit_something?
-        test = block
-        block2 = hit_something_below?
-        test = false if block == block2
-      end
-      self.x -= movement * 5
-      test
+    def hit_obstacle?
+      future_distance = 10
+      # Check left
+      self.x -= future_distance
+      block_left = hit_something?
+      self.x += future_distance
+      # Check right
+      self.x += future_distance
+      block_right = hit_something?
+      self.x -= future_distance
+      block_left or block_right
     end
 
 
@@ -224,41 +229,32 @@ module Leaf
       return @animation[tag].next
     end
 
-    def move(x, y)
-      self.x += x
-      self.each_collision(Platform) do |me, object|
-        self.x = previous_x
-        break
+    def update
+      # Make sure we stop after slowing down.
+      stop_totally if @velocity_x.between?(-0.1, 0.1)
+
+      update_animation
+
+      #FIXME: again, listing is annoying
+      self.each_collision(Platform, BackgroundWall, BackgroundPlatform) do |me, object|
+        if rising? and object.is_a? Unpassable
+          self.y = object.bb.bottom + self.image.height
+          self.velocity = 0
+        elsif falling? and object.is_a? Standable
+          land
+          self.y = object.bb.top - 1
+        elsif object.is_a? Unpassable
+          self.x = previous_x
+        end
       end
 
-      if fallen_off_platform?(x) 
+      if walking? and fallen_off_platform?
         handle_fell_off_platform
         self.x = previous_x if @prevent_falling
       end
 
-      handle_hit_obstacle if hit_obstacle?(x)
-
-      self.y += y
-    end
-
-    def update
-      # Make sure we stop.
-      if @velocity_x.between?(-0.1, 0.1)
-        @velocity_x = 0
-        @acceleration_x = 0
-        @walking = false
-      end
-
-      update_animation
-
-      self.each_collision(Platform) do |me, object|
-        if rising?
-          self.y = object.bb.bottom + self.image.height
-          self.velocity = 0
-        else
-          land
-          self.y = object.bb.top - 1
-        end
+      if block = hit_obstacle?
+        handle_hit_obstacle(block) 
       end
 
       if climbing? 
@@ -286,7 +282,7 @@ module Leaf
 
 
     # Called when we run into a wall (Platform). 
-    def handle_hit_obstacle
+    def handle_hit_obstacle(object)
     end
 
     # Called when we fall off screen.
