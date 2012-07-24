@@ -4,6 +4,7 @@ require 'chingu'
 include Chingu
 include Gosu
 
+require 'edit'
 require 'game'
 require 'creature'
 require 'enemies'
