@@ -3,6 +3,8 @@ module Leaf
   class VisibleArea < Chingu::GameObject
     trait :collision_detection
     trait :bounding_circle, :scale => 1.1, :debug => Leaf::DEBUG
+    attr_accessor :handle_collide_far, :handle_collide_middle, :handle_collide_close, :handle_collide_distant
+
     def setup
       self.zorder = Leaf::Level::LIGHTED_LAYER
       self.rotation_center = :center
@@ -32,9 +34,6 @@ module Leaf
     end
 
     def update
-      # FIXME: it would be nice not to have to specify all classes here to be
-      # illuminated. Could they have a mixin or trait?
-      #
       # FIXME: line-of-sight should be blocked by solid objects (Platforms).
       self.each_collision(Guard, Walker, Watcher) do |area, object|
         range = self.range(object)
@@ -42,33 +41,21 @@ module Leaf
         when :far
           object.alpha = Leaf::Level::FAR_OBJECT_ALPHA
           object.hidden = false if object.is_a? Hidable
-          handle_collide_far(object)
+          handle_collide_far.call(object) if handle_collide_far
         when :middle
           object.alpha = Leaf::Level::MIDDLE_OBJECT_ALPHA
           object.hidden = false if object.is_a? Hidable
-          handle_collide_middle(object)
+          handle_collide_middle.call(object) if handle_collide_middle
         when :close
           object.alpha = Leaf::Level::CLOSE_OBJECT_ALPHA
           object.hidden = false if object.is_a? Hidable
-          handle_collide_close(object)
+          handle_collide_close.call(object) if handle_collide_close
         else
           object.alpha = Leaf::Level::FAR_OBJECT_ALPHA
           object.hidden = true if object.is_a? Hidable
-          handle_collide_distant(object)
+          handle_collide_distant.call(object) if handle_collide_distant
         end
       end
-    end
-
-    def handle_collide_close(object)
-    end
-
-    def handle_collide_middle(object)
-    end
-
-    def handle_collide_far(object)
-    end
-
-    def handle_collide_distant(object)
     end
   end # VisibleArea
 
@@ -76,14 +63,6 @@ module Leaf
     def setup
       super
       self.hide! # Not sure if it's better to be visible.
-    end
-
-    def handle_collide_middle(object)
-      object.noticed_player if object.respond_to? :noticed_player
-    end
-
-    def handle_collide_close(object)
-      object.noticed_player if object.respond_to? :noticed_player
     end
   end # DetectionArea
 

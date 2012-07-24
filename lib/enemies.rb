@@ -94,12 +94,14 @@ module Leaf
     def update
       super
       if @noticed and @started
-        stop_moving
         if game_state.player.x > self.x
           move_right
         else
           move_left
         end
+        @noticed = false
+      else
+        stop_totally
       end
     end
 

@@ -6,8 +6,11 @@ module Leaf
       @animation = Animation.new(:file => "media/player2.png", :size => 50)
       @animation.frame_names = {:face_right => 0..1, :face_left => 2..3, :climb => 4..5, :jump => 5}
       @image = @animation.first
+      @partial_cover = false
 
       @visible_area = DetectionArea.create(:x => self.x, :y => self.y)
+      @visible_area.handle_collide_close = Proc.new { |object| object.noticed_player if object.respond_to? :noticed_player }
+      @visible_area.handle_collide_middle = Proc.new { |object| object.noticed_player if @partial_cover == false and object.respond_to? :noticed_player }
 
       on_input([:holding_left, :holding_a], :move_left)
       on_input([:holding_right, :holding_d], :move_right)
@@ -28,14 +31,15 @@ module Leaf
 
     def down_pressed
       object = background_object
-      if object and climbing?
-        climb_down(object)
-      end
+      climb_down(object) if object and climbing?
     end
 
     def update
       super
       @visible_area.follow(self) if @visible_area
+      object = background_object
+      @partial_cover = false
+      @partial_cover = true if object and climbing?
     end
   
     def handle_fell_off_screen
