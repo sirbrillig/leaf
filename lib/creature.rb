@@ -165,9 +165,10 @@ module Leaf
     # Return the Platform we're standing on or nil.
     def standing_on_platform
       return nil if falling? or jumping?
-      self.y += 1
+      look_ahead = 10
+      self.y += look_ahead
       block = hit_objects.select {|o| o.is_a? Standable}.first
-      self.y -= 1
+      self.y -= look_ahead
       block
     end
 
@@ -193,18 +194,20 @@ module Leaf
     # so you can handle the event there.
     def fallen_off_platform?
       return false if jumping?
-      under_foot = standing_on_platform
-      return true unless under_foot
       future_distance = 10
-      # Check left
-      self.x -= future_distance
-      under_foot_left = standing_on_platform
-      self.x += future_distance
-      # Check right
-      self.x += future_distance
-      under_foot_right = standing_on_platform
-      self.x -= future_distance
-      not (under_foot_left and under_foot_right)
+      block = nil
+      if @velocity_x < 0
+        # Check left
+        self.x -= future_distance
+        block = standing_on_platform
+        self.x += future_distance
+      elsif @velocity_x > 0
+        # Check right
+        self.x += future_distance
+        block = standing_on_platform
+        self.x -= future_distance
+      end
+      not block
     end
 
     # Return true if we walked off the left side of the screen.
@@ -224,15 +227,17 @@ module Leaf
     # #handle_hit_obstacle will be called, so you can handle the event there.
     def hit_obstacle?
       future_distance = 10
+      self.y -= 2 # Prevent hitting the floor.
       # Check left
       self.x -= future_distance
       block_left = hit_objects.select {|o| o.is_a? Unpassable}.first
       self.x += future_distance
-      return block_left if block_left
       # Check right
       self.x += future_distance
       block_right = hit_objects.select {|o| o.is_a? Unpassable}.first
       self.x -= future_distance
+      self.y += 2
+      return block_left if block_left
       return block_right if block_right
     end
 
