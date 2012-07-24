@@ -1,4 +1,5 @@
 require 'rubygems'
+# require '~/.gem/ruby/1.8/gems/chingu-0.9rc8/lib/chingu'
 require 'chingu'
 
 include Chingu

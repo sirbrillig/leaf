@@ -81,6 +81,7 @@ module Leaf
   class Watcher < Enemy
     def start_movement
       @noticed = false
+      self.speed = 3
     end
 
     def load_animation
@@ -101,7 +102,7 @@ module Leaf
         end
         @noticed = false
       else
-        stop_totally
+        stop_moving 
       end
     end
 

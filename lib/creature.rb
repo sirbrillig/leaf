@@ -67,12 +67,14 @@ module Leaf
 
     def move_left
       @walking = true unless jumping?
+      @stopping = false
       @facing = :left
       @acceleration_x = -0.3
     end
 
     def move_right
       @walking = true unless jumping?
+      @stopping = false
       @facing = :right
       @acceleration_x = 0.3
     end
@@ -85,6 +87,8 @@ module Leaf
 
     def stop_moving
       return unless walking?
+      return if @stopping
+      @stopping = true
       @acceleration_x = -@acceleration_x
       # Slow down (a little slower than we accel).
       @acceleration_x -= 0.15 if @acceleration_x > 0
