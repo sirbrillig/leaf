@@ -164,6 +164,7 @@ module Leaf
 
     # Like standing_on_platform but to be used when falling.
     def hit_floor
+      return nil if rising?
       look_ahead = 10
       self.y += look_ahead
       block = hit_objects.select {|o| o.is_a? Standable}.first
