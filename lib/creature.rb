@@ -119,14 +119,15 @@ module Leaf
     end
 
     def climb_up(object)
-      @jumping = false
+      self.y -= 10 unless @climbing
+      land if jumping?
       @climbing = true
       suspend_gravity
       self.y -= 2
     end
     
     def climb_down(object)
-      @jumping = false
+      land if jumping?
       @climbing = true
       suspend_gravity
       self.y += 2
@@ -153,6 +154,7 @@ module Leaf
     # Return the Platform we're standing on or nil.
     def standing_on_platform
       return nil if falling? or jumping?
+      # FIXME: use hit_floor?
       look_ahead = 10
       self.y += look_ahead
       block = hit_objects.select {|o| o.is_a? Standable}.first
@@ -263,7 +265,7 @@ module Leaf
 
       objects = self.hit_objects
       unless objects.empty?
-        objects = [objects.first]
+        #objects = [objects.first]
         #puts "hit #{objects.collect{|o|o.class}.inspect}" if self.is_a? Player
         objects.each do |object|
           if rising? and object.is_a? Unpassable
