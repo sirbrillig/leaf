@@ -36,7 +36,7 @@ module Leaf
       # illuminated. Could they have a mixin or trait?
       #
       # FIXME: line-of-sight should be blocked by solid objects (Platforms).
-      self.each_collision(Guard, Walker, Watcher, Platform, BackgroundWall, BackgroundPlatform) do |area, object|
+      self.each_collision(Guard, Walker, Watcher) do |area, object|
         range = self.range(object)
         case range
         when :far

@@ -1,7 +1,7 @@
 module Leaf
   class Level < Chingu::GameState
     traits :viewport, :timer
-    attr_reader :player, :game_object_map
+    attr_reader :player, :game_object_map, :background_object_map
 
     SPRITES_LAYER = 100
     PLATFORM_LAYER = 15
@@ -35,6 +35,7 @@ module Leaf
 
     def setup
       @game_object_map = Chingu::GameObjectMap.new(:game_objects => Platform.all + BackgroundPlatform.all, :grid => @grid) # FIXME: How can we track all relevant objects? use different maps, i guess.
+      @background_object_map = Chingu::GameObjectMap.new(:game_objects => Tree.all, :grid => @grid)
     end
 
     def edit

@@ -11,8 +11,6 @@ module Leaf
       @jumping = false
       @walking = false
       @climbing = false
-      @distance_climbed = 0
-      @on_background_object = false
       @facing = :right
 
       self.zorder = Leaf::Level::SPRITES_LAYER
@@ -109,7 +107,7 @@ module Leaf
     end
 
     def suspend_gravity
-      return unless @acceleration_y > 0
+      return if @acceleration_y == 0
       @previous_accel_y = @acceleration_y
       @acceleration_y = 0
       @velocity_y = 0
@@ -121,27 +119,17 @@ module Leaf
     end
 
     def climb_up(object)
+      @jumping = false
       @climbing = true
       suspend_gravity
-      @distance_climbed += @speed
-      # FIXME: the distance_climbed calculuation will be wrong if we start at
-      # some other point of the tree.
-      if @on_background_object.climb_height <= @distance_climbed
-        @distance_climbed -= @speed
-
-        # Jump off the top of the object. 
-        finish_climbing
-        jump(8)
-      else
-        move(0, -(@speed))
-      end
+      self.y -= 2
     end
     
     def climb_down(object)
+      @jumping = false
       @climbing = true
       suspend_gravity
-      @distance_climbed -= @speed
-      move(0, @speed)
+      self.y += 2
     end
 
     def finish_climbing
@@ -158,8 +146,8 @@ module Leaf
     end
 
     # Return an object if we're standing over BackgroundObject.
-    def on_background_object?
-      @on_background_object
+    def background_object
+      game_state.background_object_map.collisions_with(self).first
     end
 
     # Return the Platform we're standing on or nil.
@@ -273,13 +261,11 @@ module Leaf
         land
       end
 
-      @on_background_object = nil
       objects = self.hit_objects
       unless objects.empty?
         objects = [objects.first]
-        puts "hit #{objects.collect{|o|o.class}.inspect}" if self.is_a? Player
+        #puts "hit #{objects.collect{|o|o.class}.inspect}" if self.is_a? Player
         objects.each do |object|
-          @on_background_object = object if object.is_a? BackgroundObject
           if rising? and object.is_a? Unpassable
             self.y = object.bb.bottom + self.image.height
             self.velocity = 0
@@ -294,17 +280,10 @@ module Leaf
 
       if block = hit_obstacle?
         self.x = previous_x
-        #self.stop_totally # Unnecessary?
         handle_hit_obstacle(block) 
       end
 
-      if climbing? 
-        if @on_background_object
-          finish_climbing if @distance_climbed <= 0
-        else
-          finish_climbing
-        end
-      end
+      finish_climbing if climbing? and not background_object
 
       if game_state.viewport.outside?(self)
         if fallen_off_bottom?

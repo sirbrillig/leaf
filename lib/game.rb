@@ -17,7 +17,6 @@ module Leaf
   end
 
   module Climbable
-    attr_accessor :climb_height
   end
 
 	class Game < Chingu::Window
