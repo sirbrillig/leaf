@@ -34,8 +34,13 @@ module Leaf
     end
 
     def setup
-      @game_object_map = Chingu::GameObjectMap.new(:game_objects => Platform.all + BackgroundPlatform.all, :grid => @grid) # FIXME: How can we track all relevant objects? use different maps, i guess.
+      @game_object_map = Chingu::GameObjectMap.new(:game_objects => Platform.all + BackgroundPlatform.all, :grid => @grid)
       @background_object_map = Chingu::GameObjectMap.new(:game_objects => Tree.all, :grid => @grid)
+    end
+
+    def reset_level
+      clear_game_states
+      push_game_state(self.class)
     end
 
     def edit

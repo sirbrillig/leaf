@@ -5,10 +5,16 @@ module Leaf
       @white = Gosu::Color.new(255,255,255,255)
       @color = Gosu::Color.new(200,0,0,0)
       @font = Gosu::Font[64]
-      @text = "GAME OVER"
+      @text = "GAME OVER/nPlay Again (y/n)?"
 
       on_input(:escape, :exit)
-      on_input(:q, :exit)
+      on_input([:q, :n], :exit)
+      on_input(:y, :restart)
+    end
+
+    def restart
+      pop_game_state
+      previous_game_state.reset_level
     end
 
     def draw
