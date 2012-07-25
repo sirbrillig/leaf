@@ -3,6 +3,8 @@ module Leaf
     trait :bounding_box, :scale => [0.3, 0.8], :debug => Leaf::DEBUG
     traits :collision_detection, :timer, :velocity
 
+    question_accessor :stopping, :jumping, :walking, :climbing
+
     def setup
       @animation = Animation.new(:file => "media/blank.png", :size => 50)
       @animation.frame_names = {:face_right => 0, :face_left => 0, :climb => 0, :jump => 0}
@@ -12,6 +14,7 @@ module Leaf
       @walking = false
       @climbing = false
       @facing = :right
+      @stopping = false
 
       self.zorder = Leaf::Level::SPRITES_LAYER
       self.acceleration_y = 0.5
@@ -36,10 +39,6 @@ module Leaf
       @facing == :left
     end
 
-    def jumping?
-      @jumping
-    end
-
     def falling?
       self.velocity_y > 0.1
     end
@@ -48,19 +47,11 @@ module Leaf
       self.velocity_y < 0
     end
 
-    def walking?
-      @walking
-    end
-
-    def climbing?
-      @climbing
-    end
-
     # Return true if we're moving backwards or uncontrollably.
     def sliding?
-      return true if @facing == :right and self.velocity_x < 0
-      return true if @facing == :left and self.velocity_x > 0
-      return true if @walking == false and @jumping == false and self.velocity_x != 0
+      return true if facing_right? and self.velocity_x < 0
+      return true if facing_left? and self.velocity_x > 0
+      return true if not walking? and not jumping? and self.velocity_x != 0
       false
     end
 
@@ -83,11 +74,12 @@ module Leaf
       @velocity_x = 0
       @acceleration_x = 0
       @walking = false
+      @stopping = false
     end
 
     def stop_moving
       return unless walking?
-      return if @stopping
+      return if stopping?
       @stopping = true
       @acceleration_x = -@acceleration_x
       # Slow down (a little slower than we accel).
@@ -123,7 +115,7 @@ module Leaf
     end
 
     def climb_up(object)
-      self.y -= 10 unless @climbing
+      self.y -= 10 unless climbing?
       land if jumping?
       @climbing = true
       suspend_gravity
@@ -238,9 +230,11 @@ module Leaf
 
 
     def update_animation
-      if walking?
-        @image = next_animation_frame(:face, @facing)
+      if stopping?
+        @image = next_animation_frame(:stopping, @facing)
       elsif jumping?
+        @image = next_animation_frame(:jump, @facing)
+      elsif walking?
         @image = next_animation_frame(:face, @facing)
       elsif climbing?
         @image = next_animation_frame(:climb)

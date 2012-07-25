@@ -7,6 +7,7 @@ include Gosu
 
 require 'edit'
 require 'game'
+require 'editor'
 require 'creature'
 require 'enemies'
 require 'lights'

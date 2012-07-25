@@ -1,10 +1,12 @@
 module Leaf
 
   class Player < Creature
+    PARTIAL_COVER_ALPHA = 60
+
     def setup
       super
       @animation = Animation.new(:file => "media/player2.png", :size => 50)
-      @animation.frame_names = {:face_right => 0..1, :face_left => 2..3, :climb => 4..5, :jump => 5}
+      @animation.frame_names = {:face_right => 0..1, :face_left => 2..3, :climb => 4..5, :jump_left => 4..5, :jump_right => 4..5, :stopping_right => 0..1, :stopping_left => 2..3}
       @image = @animation.first
       @partial_cover = false
 
@@ -40,6 +42,17 @@ module Leaf
       object = background_object
       @partial_cover = false
       @partial_cover = true if object and climbing?
+      if @partial_cover
+        unless @old_alpha
+          @old_alpha = self.alpha
+          self.alpha = PARTIAL_COVER_ALPHA
+        end
+      else
+        if @old_alpha
+          self.alpha = @old_alpha
+          @old_alpha = nil
+        end
+      end
     end
   
     def handle_fell_off_screen
