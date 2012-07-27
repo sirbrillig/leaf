@@ -62,3 +62,15 @@ class Class
     end
   end
 end
+
+class Numeric
+  def seconds
+    self * 1000
+  end
+  alias_method :second, :seconds
+
+  def minutes
+    self * 1000 * 1000
+  end
+  alias_method :minute, :minutes
+end

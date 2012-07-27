@@ -14,47 +14,30 @@ module Leaf
       self.movement_behaviors.first.run unless self.movement_behaviors.first.executed?
     end
 
-    def walk_right_for(time_and_time_type)
-      time, time_type = time_and_time_type.split ' '
+    def walk_right_for(ms)
       behavior = MovementBehavior.create { move_right }
       behavior.at_end { stop_totally }
-      behavior.completed_after(parse_time_and_type(time, time_type))
+      behavior.completed_after(ms)
       @movement_behaviors << behavior
     end
 
-    def walk_left_for(time_and_time_type)
-      time, time_type = time_and_time_type.split ' '
+    def walk_left_for(ms)
       behavior = MovementBehavior.create { move_left }
       behavior.at_end { stop_totally }
-      behavior.completed_after(parse_time_and_type(time, time_type))
+      behavior.completed_after(ms)
       @movement_behaviors << behavior
     end
 
-    def look_right_for(time_and_time_type)
-      time, time_type = time_and_time_type.split ' '
+    def look_right_for(ms)
       behavior = MovementBehavior.create { @facing = :right }
-      behavior.completed_after(parse_time_and_type(time, time_type))
+      behavior.completed_after(ms)
       @movement_behaviors << behavior
     end
 
-    def look_left_for(time_and_time_type)
-      time, time_type = time_and_time_type.split ' '
+    def look_left_for(ms)
       behavior = MovementBehavior.create { @facing = :left }
-      behavior.completed_after(parse_time_and_type(time, time_type))
+      behavior.completed_after(ms)
       @movement_behaviors << behavior
-    end
-
-    private
-    def parse_time_and_type(time, time_type)
-      case time_type.to_s
-      when /^milliseconds?$/i
-        nil
-      when /^seconds?$/i
-        time = time.to_i * 1000
-      when /^minutes?$/i
-        time = time.to_i * 1000 * 1000
-      end
-      time
     end
   end
 

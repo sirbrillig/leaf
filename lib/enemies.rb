@@ -69,14 +69,14 @@ module Leaf
     def setup
       super
       define_movement do
-        walk_left_for '2 seconds'
-        look_left_for '2 seconds'
-        look_right_for '2 seconds'
-        look_left_for '1 second'
-        walk_right_for '2 seconds'
-        look_right_for '2 seconds'
-        look_left_for '2 seconds'
-        look_right_for '1 second'
+        walk_left_for 2.seconds
+        look_left_for 1.seconds
+        look_right_for 1.seconds
+        look_left_for 0.5.seconds
+        walk_right_for 2.seconds
+        look_right_for 1.seconds
+        look_left_for 1.seconds
+        look_right_for 0.5.seconds
       end
     end
 
