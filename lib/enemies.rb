@@ -36,7 +36,7 @@ module Leaf
       end
     end
 
-    # Take a step.
+    # Start walking in the direction we're facing (using headed_left).
     def walk
       if @headed_left
         move_left
@@ -45,6 +45,7 @@ module Leaf
       end
     end
 
+    # Stop, turn around, and start walking again.
     def turn_around
       stop_totally
       @headed_left = !@headed_left
@@ -69,7 +70,13 @@ module Leaf
       super
       define_movement do
         walk_left_for '2 seconds'
+        look_left_for '2 seconds'
+        look_right_for '2 seconds'
+        look_left_for '1 second'
         walk_right_for '2 seconds'
+        look_right_for '2 seconds'
+        look_left_for '2 seconds'
+        look_right_for '1 second'
       end
     end
 

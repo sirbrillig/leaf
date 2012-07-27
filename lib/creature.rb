@@ -238,7 +238,10 @@ module Leaf
         @image = next_animation_frame(:face, @facing)
       elsif climbing?
         @image = next_animation_frame(:climb)
+      elsif @facing != @previous_facing
+        @image = next_animation_frame(:face, @facing)
       end
+      @previous_facing = @facing
     end
 
     def next_animation_frame(tag, facing=nil)

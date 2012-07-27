@@ -1,12 +1,15 @@
 module Leaf
   class GameOver < Chingu::GameState
-    def initialize(options={})
-      super
+    def setup
       @white = Gosu::Color.new(255,255,255,255)
       @color = Gosu::Color.new(200,0,0,0)
       @font = Gosu::Font[64]
       @text = "GAME OVER"
       @text2 = "Play Again (y/n)?"
+
+      if defined?(previous_game_state.viewport)
+        @game_area_backup = previous_game_state.viewport.game_area.dup
+      end
 
       on_input(:escape, :exit)
       on_input([:q, :n], :exit)
@@ -15,9 +18,15 @@ module Leaf
 
     def restart
       pop_game_state
-      previous_game_state.reset_level
     end
 
+    def finalize
+      if defined?(previous_game_state.viewport)
+        previous_game_state.viewport.game_area = @game_area_backup
+      end
+      previous_game_state.reset_level
+    end
+            
     def draw
       previous_game_state.draw
       $window.draw_quad(0,0,@color, $window.width,0,@color, $window.width,$window.height,@color, 0,$window.height,@color, Chingu::DEBUG_ZORDER)

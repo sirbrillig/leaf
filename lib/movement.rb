@@ -30,6 +30,20 @@ module Leaf
       @movement_behaviors << behavior
     end
 
+    def look_right_for(time_and_time_type)
+      time, time_type = time_and_time_type.split ' '
+      behavior = MovementBehavior.create { @facing = :right }
+      behavior.completed_after(parse_time_and_type(time, time_type))
+      @movement_behaviors << behavior
+    end
+
+    def look_left_for(time_and_time_type)
+      time, time_type = time_and_time_type.split ' '
+      behavior = MovementBehavior.create { @facing = :left }
+      behavior.completed_after(parse_time_and_type(time, time_type))
+      @movement_behaviors << behavior
+    end
+
     private
     def parse_time_and_type(time, time_type)
       case time_type.to_s

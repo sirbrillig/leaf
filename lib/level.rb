@@ -21,7 +21,10 @@ module Leaf
       on_input(:q, :exit)
 
       self.viewport.game_area = [0, 0, 2048, 768]
+      load_map
+    end
 
+    def load_map
       @file = File.join("maps/#{self.class.name.split('::').last.to_s.downcase}.yml")
       load_game_objects(:file => @file, :debug => Leaf::DEBUG)
 
@@ -31,16 +34,12 @@ module Leaf
 
       @grid = [5, 5]
       self.viewport.lag = 0.95
+      puts "level created"
     end
 
     def setup
       @game_object_map = Chingu::GameObjectMap.new(:game_objects => Platform.all + BackgroundPlatform.all, :grid => @grid)
       @background_object_map = Chingu::GameObjectMap.new(:game_objects => Tree.all, :grid => @grid)
-    end
-
-    def reset_level
-      clear_game_states
-      push_game_state(self.class)
     end
 
     def edit
@@ -54,7 +53,7 @@ module Leaf
     end
 
     def died
-      push_game_state(Leaf::GameOver)
+      push_game_state(GameOver)
     end
 
     # Return the distance between two points A and B on the x/y grid. 
