@@ -1,6 +1,7 @@
 module Leaf
   class Enemy < Creature
     include Hidable
+    include MovementBehaviors
     # FIXME: add movement DSL with an array of MovementBehaviors.
     # FIXME: add noise_while_walking that lights you up when walking.
     # FIXME: add separate movement array for noticed_player.
@@ -24,6 +25,7 @@ module Leaf
         start_movement 
         @started = true
       end
+      play_next_movement if @started
       kill_players
     end
 
@@ -63,13 +65,20 @@ module Leaf
 
 
   class Guard < Enemy
+    def setup
+      super
+      define_movement do
+        walk_left_for '2 seconds'
+        walk_right_for '2 seconds'
+      end
+    end
+
     def load_animation
       @animation = Animation.new(:file => "media/guard.png", :size => 50)
       @animation.frame_names = {:face_right => 0..1, :face_left => 2..3}
     end
 
     def start_movement
-      walk
     end
 
     def handle_hit_obstacle(object)
