@@ -7,7 +7,7 @@ module Leaf
 
     def setup
       @animation = Animation.new(:file => "media/blank.png", :size => 50)
-      @animation.frame_names = {:face_right => 0, :face_left => 0, :climb => 0, :jump => 0}
+      @animation.frame_names = {:face_right => 0..1, :face_left => 2..3, :climb => 4..5, :jump_left => 4..5, :jump_right => 4..5, :stopping_right => 0..1, :stopping_left => 2..3}
       @image = @animation.first
 
       @jumping = false

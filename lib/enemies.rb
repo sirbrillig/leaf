@@ -62,6 +62,13 @@ module Leaf
     def start_movement
     end
 
+    def handle_hit_obstacle(object)
+      turn_around if object.is_a? Unpassable
+    end
+
+    def handle_fell_off_platform
+      turn_around
+    end
   end # Enemy
 
 
@@ -87,18 +94,21 @@ module Leaf
 
     def start_movement
     end
-
-    def handle_hit_obstacle(object)
-      turn_around if object.is_a? Unpassable
-    end
-
-    def handle_fell_off_platform
-      turn_around
-    end
   end # Guard
 
 
   class Watcher < Enemy
+    def setup
+      super
+      define_movement do
+        look_left_for :random_period
+        look_right_for :random_period
+        if_noticed do
+          walk_toward_player_for 0.2.seconds
+        end
+      end
+    end
+
     def start_movement
       @noticed = false
       self.speed = 3
@@ -106,6 +116,7 @@ module Leaf
 
     def load_animation
       @animation = Animation.new(:file => "media/watcher.png", :size => 50)
+      @animation.frame_names = {:face_right => 0..1, :face_left => 2..3, :jump_left => 2..3, :jump_right => 0..1, :stopping_right => 0..1, :stopping_left => 2..3}
     end
 
     def noticed_player
@@ -114,17 +125,22 @@ module Leaf
 
     def update
       super
-      if @noticed and @started
-        if game_state.player.x > self.x
-          move_right
-        else
-          move_left
-        end
-        @noticed = false
-      else
-        stop_moving 
-      end
+      @noticed = false
     end
+
+#     def update
+#       super
+#       if @noticed and @started
+#         if game_state.player.x > self.x
+#           move_right
+#         else
+#           move_left
+#         end
+#         @noticed = false
+#       else
+#         stop_moving 
+#       end
+#     end
 
     def handle_hit_obstacle(object)
       #jump
