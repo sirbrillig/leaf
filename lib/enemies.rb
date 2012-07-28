@@ -2,9 +2,7 @@ module Leaf
   class Enemy < Creature
     include Hidable
     include MovementBehaviors
-    # FIXME: add movement DSL with an array of MovementBehaviors.
     # FIXME: add noise_while_walking that lights you up when walking.
-    # FIXME: add separate movement array for noticed_player.
     # FIXME: add animation for noticed_player.
 
     def setup
@@ -55,12 +53,10 @@ module Leaf
 
 
     def noticed_player
-      puts "noticed"
       @noticed = true
     end
 
     def outside_notice
-      puts "not noticed"
       @noticed = false
     end
 

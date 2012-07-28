@@ -17,19 +17,17 @@ module Leaf
     def play_next_movement
       # Silently fail if no movements are defined.
       return if self.movement_behaviors.nil? or self.movement_behaviors.empty?
+      behavior_array = self.movement_behaviors
       if @noticed and not self.noticed_behaviors.nil?
-        puts "noticed behavior"
+#         puts "noticed behavior"
         self.movement_behaviors.first.cancel if not self.movement_behaviors.first.complete? and not self.movement_behaviors.first.executed?
         behavior_array = self.noticed_behaviors
-        rotate_behaviors if behavior_array.first.complete?
-        behavior_array.first.run unless behavior_array.first.executed?
       else
-        puts "regular behavior"
+#         puts "regular behavior"
         self.noticed_behaviors.first.cancel if not self.noticed_behaviors.nil? and not self.noticed_behaviors.first.complete? and self.noticed_behaviors.first.executed?
-        behavior_array = self.movement_behaviors
-        rotate_behaviors if behavior_array.first.complete?
-        behavior_array.first.run unless behavior_array.first.executed?
       end
+      rotate_behaviors if behavior_array.first.complete?
+      behavior_array.first.run unless behavior_array.first.executed?
     end
 
     # You can pass :random_period instead of an integer milliseconds and it will
@@ -76,7 +74,11 @@ module Leaf
           move_left
         end
       end
-      behavior.at_end { stop_moving }
+      if @recording_noticed_behavior
+        behavior.at_end { stop_moving if not @noticed }
+      else
+        behavior.at_end { stop_moving }
+      end
       behavior.completed_after(ms)
       record_behavior(behavior)
     end
@@ -142,10 +144,6 @@ module Leaf
     end
 
     def cancel
-      #FIXME: for unknown reasons this is not quite working to stop a prev
-      #behavior when a @noticed one begins. it appears to be called, though, so
-      #I don't know. The effect is a flicker when the two behaviors are
-      #co-existing.
       stop_timer(@timer_name) if @timer_name
       complete_run
     end
