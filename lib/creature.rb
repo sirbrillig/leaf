@@ -165,6 +165,11 @@ module Leaf
       self.y += look_ahead
       block = hit_objects.select {|o| o.is_a? Standable}.first
       self.y -= look_ahead
+      # Only return true if our *feet* are on the block.
+      margin_of_error = 10
+      # FIXME: because of this we now fall through stairs instead of climbing
+      # them. need to add special climbing?
+      block = nil if block and not block.bb.top.between?(self.bb.bottom - margin_of_error, self.bb.bottom + margin_of_error)
       block
     end
 
