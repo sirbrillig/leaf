@@ -19,13 +19,13 @@ module Leaf
       return if self.movement_behaviors.nil? or self.movement_behaviors.empty?
       if @noticed and not self.noticed_behaviors.nil?
         puts "noticed behavior"
-        self.movement_behaviors.first.cancel unless self.movement_behaviors.first.complete?
+        self.movement_behaviors.first.cancel if not self.movement_behaviors.first.complete? and not self.movement_behaviors.first.executed?
         behavior_array = self.noticed_behaviors
         rotate_behaviors if behavior_array.first.complete?
         behavior_array.first.run unless behavior_array.first.executed?
       else
         puts "regular behavior"
-        self.noticed_behaviors.first.cancel if not self.noticed_behaviors.nil? and not self.noticed_behaviors.first.complete?
+        self.noticed_behaviors.first.cancel if not self.noticed_behaviors.nil? and not self.noticed_behaviors.first.complete? and self.noticed_behaviors.first.executed?
         behavior_array = self.movement_behaviors
         rotate_behaviors if behavior_array.first.complete?
         behavior_array.first.run unless behavior_array.first.executed?
@@ -124,6 +124,7 @@ module Leaf
     # You can pass :random_period instead of an integer milliseconds and it will
     # choose a time between 0-3 seconds.
     def completed_after(ms)
+      raise "Cannot redefine completion block" if @complete_block
       @complete_block = Proc.new do
         time = ms
         time = rand(3.seconds) if ms == :random_period
@@ -133,6 +134,7 @@ module Leaf
     end
 
     def run
+      raise "Cannot call run block again: already running" if self.executed?
       @complete_block.call if @complete_block
       @action.call if @action
       self.executed = true
@@ -142,13 +144,16 @@ module Leaf
     def cancel
       #FIXME: for unknown reasons this is not quite working to stop a prev
       #behavior when a @noticed one begins. it appears to be called, though, so
-      #I don't know.
+      #I don't know. The effect is a flicker when the two behaviors are
+      #co-existing.
       stop_timer(@timer_name) if @timer_name
       complete_run
     end
 
     private
     def complete_run
+      raise "Cannot complete run block: already completed" if self.complete?
+      raise "Cannot complete run block: not yet started" unless self.executed?
       @at_end_block.call if @at_end_block
       self.complete = true
       self.executed = false

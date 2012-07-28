@@ -30,8 +30,11 @@ module Leaf
         return :middle
       when 0..79
         return :close
-      else
+      when 291..351
         return :distant
+      else
+        return nil
+#         raise "Distance (#{distance}) [and possibly Radius (#{self.radius})] is too large for my range (300) when checking distance between #{self.class} and #{object.class}."
       end
     end
 
@@ -64,7 +67,7 @@ module Leaf
             object.hidden = false if object.is_a? Hidable
             handle_collide_close.call(object) if handle_collide_close
           end
-        else
+        when :distant
           unless @tracked_objects[:distant].include? object
             @tracked_objects.each_key { |key| @tracked_objects[key].delete(object) }
             @tracked_objects[:distant] << object
@@ -72,6 +75,8 @@ module Leaf
             object.hidden = true if object.is_a? Hidable
             handle_collide_distant.call(object) if handle_collide_distant
           end
+#         else
+#           raise "Range was not what I expected between #{self.class} and #{object.class}. range=#{range}"
         end
       end
     end
