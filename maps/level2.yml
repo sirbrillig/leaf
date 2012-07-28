@@ -204,23 +204,7 @@
     :y: 639.0
     :alpha: 40
     :factor_x: 1.0
-    :x: 569.518925518933
-    :factor_y: 1.0
-    :angle: 0
-- Leaf::Guard: 
-    :zorder: 100
-    :y: 639.0
-    :alpha: 40
-    :factor_x: 1.0
-    :x: 518.342857142864
-    :factor_y: 1.0
-    :angle: 0
-- Leaf::Guard: 
-    :zorder: 100
-    :y: 639.0
-    :alpha: 40
-    :factor_x: 1.0
-    :x: 450.361660561675
+    :x: 412.561660561676
     :factor_y: 1.0
     :angle: 0
 - Leaf::BackgroundPlatform: 

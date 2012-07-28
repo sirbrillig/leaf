@@ -16,6 +16,7 @@ module Leaf
       @headed_left = true
       @started = false
       @hidden = true
+      @noticed = false
     end
 
     def update
@@ -53,6 +54,16 @@ module Leaf
     end
 
 
+    def noticed_player
+      puts "noticed"
+      @noticed = true
+    end
+
+    def outside_notice
+      puts "not noticed"
+      @noticed = false
+    end
+
     # Override to set @animation.
     def load_animation
       @animation = Animation.new(:file => "media/blank.png", :size => 50)
@@ -77,13 +88,16 @@ module Leaf
       super
       define_movement do
         walk_left_for 2.seconds
-        look_left_for 1.seconds
-        look_right_for 1.seconds
+        look_left_for :random_period
+        look_right_for :random_period
         look_left_for 0.5.seconds
         walk_right_for 2.seconds
-        look_right_for 1.seconds
-        look_left_for 1.seconds
+        look_left_for :random_period
+        look_right_for :random_period
         look_right_for 0.5.seconds
+        if_noticed do
+          walk_toward_player_for 0.2.seconds
+        end
       end
     end
 
@@ -110,37 +124,13 @@ module Leaf
     end
 
     def start_movement
-      @noticed = false
-      self.speed = 3
+      self.speed = 4
     end
 
     def load_animation
       @animation = Animation.new(:file => "media/watcher.png", :size => 50)
       @animation.frame_names = {:face_right => 0..1, :face_left => 2..3, :jump_left => 2..3, :jump_right => 0..1, :stopping_right => 0..1, :stopping_left => 2..3}
     end
-
-    def noticed_player
-      @noticed = true
-    end
-
-    def update
-      super
-      @noticed = false
-    end
-
-#     def update
-#       super
-#       if @noticed and @started
-#         if game_state.player.x > self.x
-#           move_right
-#         else
-#           move_left
-#         end
-#         @noticed = false
-#       else
-#         stop_moving 
-#       end
-#     end
 
     def handle_hit_obstacle(object)
       #jump

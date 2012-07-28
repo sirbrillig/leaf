@@ -24,7 +24,7 @@ module Leaf
       if defined?(previous_game_state.viewport)
         previous_game_state.viewport.game_area = @game_area_backup
       end
-      previous_game_state.reset_level
+#       previous_game_state.reset_level
     end
             
     def draw

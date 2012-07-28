@@ -17,10 +17,19 @@ module Leaf
     def play_next_movement
       # Silently fail if no movements are defined.
       return if self.movement_behaviors.nil? or self.movement_behaviors.empty?
-      behavior_array = self.movement_behaviors
-      behavior_array = self.noticed_behaviors if @noticed and not self.noticed_behaviors.nil?
-      rotate_behaviors if behavior_array.first.complete?
-      behavior_array.first.run unless behavior_array.first.executed?
+      if @noticed and not self.noticed_behaviors.nil?
+        puts "noticed behavior"
+        self.movement_behaviors.first.cancel unless self.movement_behaviors.first.complete?
+        behavior_array = self.noticed_behaviors
+        rotate_behaviors if behavior_array.first.complete?
+        behavior_array.first.run unless behavior_array.first.executed?
+      else
+        puts "regular behavior"
+        self.noticed_behaviors.first.cancel if not self.noticed_behaviors.nil? and not self.noticed_behaviors.first.complete?
+        behavior_array = self.movement_behaviors
+        rotate_behaviors if behavior_array.first.complete?
+        behavior_array.first.run unless behavior_array.first.executed?
+      end
     end
 
     # You can pass :random_period instead of an integer milliseconds and it will
@@ -96,12 +105,15 @@ module Leaf
 
   class MovementBehavior < Chingu::BasicGameObject
     trait :timer
-    attr_accessor :action
+    attr_accessor :action, :image
     question_accessor :complete
     question_accessor :executed
 
     def initialize(&block)
       super
+      # Note: we have an image accessor to keep things running smoothly with the
+      # GameObject stuff, although there is clearly no image. We need to be a
+      # BasicGameObject so we can use the Timer trait.
       @action = block
     end
 
@@ -115,19 +127,32 @@ module Leaf
       @complete_block = Proc.new do
         time = ms
         time = rand(3.seconds) if ms == :random_period
-        after(time) do 
-          @at_end_block.call if @at_end_block
-          self.complete = true
-          self.executed = false
-        end
+        @timer_name = "completed_after_#{Time.now.to_i}"
+        after(time, :name => @timer_name, :persistent => true) { complete_run }
       end
     end
-    
+
     def run
       @complete_block.call if @complete_block
       @action.call if @action
       self.executed = true
       self.complete = false
     end
+
+    def cancel
+      #FIXME: for unknown reasons this is not quite working to stop a prev
+      #behavior when a @noticed one begins. it appears to be called, though, so
+      #I don't know.
+      stop_timer(@timer_name) if @timer_name
+      complete_run
+    end
+
+    private
+    def complete_run
+      @at_end_block.call if @at_end_block
+      self.complete = true
+      self.executed = false
+    end
+    
   end # MovementBehavior
 end # Leaf
