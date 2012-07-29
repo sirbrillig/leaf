@@ -150,7 +150,6 @@ module Leaf
     # Return the Platform we're standing on or nil.
     def standing_on_platform
       return nil if falling? or jumping?
-      # FIXME: use hit_floor?
       look_ahead = 10
       self.y += look_ahead
       block = hit_objects.select {|o| o.is_a? Standable}.first
@@ -163,13 +162,11 @@ module Leaf
       return nil if rising?
       look_ahead = 10
       self.y += look_ahead
-      block = hit_objects.select {|o| o.is_a? Standable}.first
+      margin_of_error = 20
+      block = hit_objects.select do |o| 
+        o.is_a? Standable and o.bb.top.between?(self.bb.bottom - margin_of_error, self.bb.bottom + margin_of_error)
+      end.last
       self.y -= look_ahead
-      # Only return true if our *feet* are on the block.
-      margin_of_error = 10
-      # FIXME: because of this we now fall through stairs instead of climbing
-      # them. need to add special climbing?
-      block = nil if block and not block.bb.top.between?(self.bb.bottom - margin_of_error, self.bb.bottom + margin_of_error)
       block
     end
 
@@ -265,7 +262,7 @@ module Leaf
       update_animation
 
       if floor = hit_floor
-        # This will be called constantly while on the ground.
+        # This will be called constantly while on the ground, which is fine.
         self.y = floor.bb.top - 1
         land
       end
