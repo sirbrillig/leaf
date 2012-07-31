@@ -1,6 +1,6 @@
 module Leaf
   module MovementBehaviors
-    attr_accessor :movement_behaviors, :noticed_behaviors
+    attr_accessor :movement_behaviors, :noticed_behaviors, :alert_behaviors
 
     def define_movement(&block)
       self.movement_behaviors = []
@@ -14,6 +14,13 @@ module Leaf
       @recording_noticed_behavior = false
     end
 
+    def if_alert(&block)
+      self.alert_behaviors = []
+      @recording_alert_behavior = true
+      block.call
+      @recording_alert_behavior = false
+    end
+
     def play_next_movement
       # Silently fail if no movements are defined.
       return if self.movement_behaviors.nil? or self.movement_behaviors.empty?
@@ -22,6 +29,12 @@ module Leaf
 #         puts "noticed behavior"
         self.movement_behaviors.first.cancel if not self.movement_behaviors.first.complete? and not self.movement_behaviors.first.executed?
         behavior_array = self.noticed_behaviors
+      elsif @alert and not self.alert_behaviors.nil?
+#         puts "alert behavior"
+        self.movement_behaviors.first.cancel if not self.movement_behaviors.first.complete? and not self.movement_behaviors.first.executed?
+        behavior_array = self.alert_behaviors
+        #FIXME: now we have all these behaviors to deal with.
+        raise "fixme"
       else
 #         puts "regular behavior"
         self.noticed_behaviors.first.cancel if not self.noticed_behaviors.nil? and not self.noticed_behaviors.first.complete? and self.noticed_behaviors.first.executed?

@@ -15,6 +15,7 @@ module Leaf
       @started = false
       @hidden = true
       @noticed = false
+      @alert = false
     end
 
     def update
@@ -57,7 +58,14 @@ module Leaf
     end
 
     def outside_notice
+      start_alert if @noticed
       @noticed = false
+    end
+
+    # Sets us to @alert status and starts a timer to turn it off.
+    def start_alert
+      @alert = true
+      after(5000) { @alert = false }
     end
 
     # Override to set @animation.
