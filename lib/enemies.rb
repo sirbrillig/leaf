@@ -2,6 +2,9 @@ module Leaf
   class Enemy < Creature
     include Hidable
     include MovementBehaviors
+
+    attr_accessor :movement_states
+
     # FIXME: add noise_while_walking that lights you up when walking.
     # FIXME: add animation for noticed_player.
 
@@ -14,8 +17,8 @@ module Leaf
       @headed_left = true
       @started = false
       @hidden = true
-      @noticed = false
       @alert = false
+      self.movement_states = []
     end
 
     def update
@@ -54,18 +57,20 @@ module Leaf
 
 
     def noticed_player
-      @noticed = true
+      puts "noticed!"
+      self.movement_states << :noticed unless self.movement_states.include? :noticed
     end
 
     def outside_notice
-      start_alert if @noticed
-      @noticed = false
+      puts "un - noticed!"
+      start_alert if self.movement_states.include? :noticed
+      self.movement_states.delete :noticed
     end
 
-    # Sets us to @alert status and starts a timer to turn it off.
+    # Sets us to alert status and starts a timer to turn it off.
     def start_alert
-      @alert = true
-      after(5000) { @alert = false }
+      self.movement_states << :alert unless self.movement_states.include? :alert
+      after(5000) { self.movement_states.delete :alert }
     end
 
     # Override to set @animation.
@@ -151,36 +156,5 @@ module Leaf
       #land if jumping?
     end
   end # Watcher
-
-
-  class Walker < Watcher
-    def load_animation
-      @animation = Animation.new(:file => "media/walker.png", :size => 50)
-    end
-
-    def start_movement
-      walk
-    end
-
-    def update
-      super
-      if not stopped?
-        if not @noticed
-          move_left
-        else
-          self.speed = 1.5
-          if game_state.player.x > self.x
-            move_right
-          else
-            move_left
-          end
-          stop_moving
-        end
-      end
-    end
-
-    def handle_fell_off_platform
-    end
-  end # Walker
 
 end # Leaf

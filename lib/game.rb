@@ -74,19 +74,3 @@ class Numeric
   end
   alias_method :minute, :minutes
 end
-
-# Borrowed from:
-# http://www.hans-eric.com/code-samples/ruby-floating-point-round-off/
-class Float
-  def round_to(x)
-    (self * 10**x).round.to_f / 10**x
-  end
-
-  def ceil_to(x)
-    (self * 10**x).ceil.to_f / 10**x
-  end
-
-  def floor_to(x)
-    (self * 10**x).floor.to_f / 10**x
-  end
-end 

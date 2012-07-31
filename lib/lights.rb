@@ -39,8 +39,9 @@ module Leaf
     end
 
     def update
+      # FIXME: add a debug mode where we can see all the detection areas.
       # FIXME: line-of-sight should be blocked by solid objects (Platforms).
-      self.each_collision(Guard, Walker, Watcher) do |area, object|
+      self.each_collision(Guard, Watcher) do |area, object|
         range = self.range(object)
         case range
         when :far
