@@ -147,6 +147,10 @@ module Leaf
       game_state.background_object_map.collisions_with(self).first
     end
 
+    def hit_enemy
+      game_state.enemy_map.collisions_with(self).first
+    end
+
     # Return the Platform we're standing on or nil.
     def standing_on_platform
       return nil if falling? or jumping?
@@ -269,14 +273,20 @@ module Leaf
 
       objects = self.hit_objects
       unless objects.empty?
-        #objects = [objects.first]
-        #puts "hit #{objects.collect{|o|o.class}.inspect}" if self.is_a? Player
+#         objects = [objects.first]
+#         puts "hit #{objects.collect{|o|o.class}.inspect}" if self.is_a? Player
         objects.each do |object|
           if rising? and object.is_a? Unpassable
             self.y = object.bb.bottom + self.image.height
             self.velocity = 0
           end
         end
+      end
+
+      if self.is_a? Player and hit_enemy
+        # FIXME: this... seems to take a while to get called
+        puts "hit enemy"
+        game_state.died
       end
 
       if walking? and fallen_off_platform?

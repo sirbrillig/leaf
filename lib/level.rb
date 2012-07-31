@@ -1,7 +1,7 @@
 module Leaf
   class Level < Chingu::GameState
     traits :viewport, :timer
-    attr_reader :player, :game_object_map, :background_object_map
+    attr_reader :player, :game_object_map, :background_object_map, :enemy_map
 
     SPRITES_LAYER = 100
     PLATFORM_LAYER = 15
@@ -12,17 +12,6 @@ module Leaf
     FAR_OBJECT_ALPHA = 40
     MIDDLE_OBJECT_ALPHA = 70
     CLOSE_OBJECT_ALPHA = 255
-
-    def initialize(options={})
-      super
-
-      on_input(:e, :edit)
-      on_input(:escape, :exit)
-      on_input(:q, :exit)
-
-      self.viewport.game_area = [0, 0, 2048, 768]
-      load_map
-    end
 
     def load_map
       @file = File.join("maps/#{self.class.name.split('::').last.to_s.downcase}.yml")
@@ -38,8 +27,16 @@ module Leaf
     end
 
     def setup
+      on_input(:e, :edit)
+      on_input(:escape, :exit)
+      on_input(:q, :exit)
+
+      self.viewport.game_area = [0, 0, 2048, 768]
+      load_map
+
       @game_object_map = Chingu::GameObjectMap.new(:game_objects => Platform.all + BackgroundPlatform.all, :grid => @grid)
       @background_object_map = Chingu::GameObjectMap.new(:game_objects => Tree.all, :grid => @grid)
+      @enemy_map = Chingu::GameObjectMap.new(:game_objects => Guard.all + Watcher.all, :grid => @grid) #FIXME: is this a good idea?
     end
 
     def edit
@@ -53,7 +50,7 @@ module Leaf
     end
 
     def died
-      push_game_state(GameOver)
+      switch_game_state(GameOver)
     end
 
     # Return the distance between two points A and B on the x/y grid. 

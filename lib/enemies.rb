@@ -29,14 +29,6 @@ module Leaf
         @started = true
       end
       play_next_movement if @started
-      kill_players
-    end
-
-    # Check to see if we've killed any players.
-    def kill_players
-      self.each_collision(Player) do |enemy, player|
-        game_state.died
-      end
     end
 
     # Start walking in the direction we're facing (using headed_left).

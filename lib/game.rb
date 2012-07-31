@@ -1,5 +1,5 @@
 module Leaf
-  DEBUG = false
+  DEBUG = true
 
   module Hidable
     attr_accessor :hidden
