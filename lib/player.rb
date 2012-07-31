@@ -37,8 +37,15 @@ module Leaf
       climb_down(object) if object and climbing?
     end
 
+    def delete_other_players
+      Player.all.each do |player|
+        player.destroy! unless player == self
+      end
+    end
+
     def update
       super
+      delete_other_players
       @visible_area.follow(self) if @visible_area
       object = background_object
       @partial_cover = false

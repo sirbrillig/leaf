@@ -1,7 +1,7 @@
 module Leaf
   class Level < Chingu::GameState
     traits :viewport, :timer
-    attr_reader :player, :game_object_map, :background_object_map, :enemy_map
+    attr_reader :player, :game_object_map, :background_object_map
 
     SPRITES_LAYER = 100
     PLATFORM_LAYER = 15
@@ -36,7 +36,15 @@ module Leaf
 
       @game_object_map = Chingu::GameObjectMap.new(:game_objects => Platform.all + BackgroundPlatform.all, :grid => @grid)
       @background_object_map = Chingu::GameObjectMap.new(:game_objects => Tree.all, :grid => @grid)
-      @enemy_map = Chingu::GameObjectMap.new(:game_objects => Guard.all + Watcher.all, :grid => @grid) #FIXME: is this a good idea?
+    end
+
+    def finalize
+      #FIXME: remember to list all objects here.
+      #FIXME: do we need to list Platforms, etc, too?
+      objects = [Player, Guard, Watcher]
+      objects.each do |obj|
+        obj.destroy_all
+      end
     end
 
     def edit

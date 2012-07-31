@@ -148,7 +148,13 @@ module Leaf
     end
 
     def hit_enemy
-      game_state.enemy_map.collisions_with(self).first
+      # FIXME: is this better than in the Enemy class? Is it worth it?
+      each_collision(Guard, Watcher) do |a, object|
+#         puts "collision! #{a} with #{object}"
+#         Player.all.each { |pl| puts pl }
+        return true
+      end
+      false
     end
 
     # Return the Platform we're standing on or nil.
@@ -284,8 +290,7 @@ module Leaf
       end
 
       if self.is_a? Player and hit_enemy
-        # FIXME: this... seems to take a while to get called
-        puts "hit enemy"
+#         puts "hit enemy"
         game_state.died
       end
 
