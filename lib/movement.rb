@@ -43,7 +43,7 @@ module Leaf
     def play_next_movement
       return if self.movement_behaviors.nil?
       state = current_behavior_state
-      puts "current state: #{state}"
+#       puts "current state: #{state}"
       behavior_array = self.movement_behaviors[state]
       cancel_running_behaviors_except_for(state)
       rotate_behaviors(state) if behavior_array.first.complete?

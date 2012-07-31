@@ -5,14 +5,20 @@ module Leaf
     trait :bounding_circle, :scale => 1.1, :debug => Leaf::DEBUG
     attr_accessor :handle_collide_far, :handle_collide_middle, :handle_collide_close, :handle_collide_distant
 
+    CLOSE_RADIUS = 80
+    MIDDLE_RADIUS = 200
+    FAR_RADIUS = 290
+    DISTANT_RADIUS = 351
+
     def setup
       self.zorder = Leaf::Level::LIGHTED_LAYER
       self.rotation_center = :center
-      @image = Gosu::Image["media/visiblearea.png"]
+      @image = nil#Gosu::Image["media/visiblearea.png"]
       self.alpha = 40
       self.radius = 300
 
       @tracked_objects = {:close => [], :middle => [], :far => [], :distant => []}
+      @show_detection_area = true # For debugging
     end
 
     def follow(sprite)
@@ -24,13 +30,13 @@ module Leaf
     def range(object)
       distance = game_state.distance(self, object)
       case distance
-      when 200..290
+      when (MIDDLE_RADIUS + 1)..FAR_RADIUS
         return :far
-      when 80..199
+      when (CLOSE_RADIUS + 1)..MIDDLE_RADIUS
         return :middle
-      when 0..79
+      when 0..CLOSE_RADIUS
         return :close
-      when 291..351
+      when (FAR_RADIUS + 1)..DISTANT_RADIUS
         return :distant
       else
         return nil
@@ -38,8 +44,17 @@ module Leaf
       end
     end
 
+    def draw
+      super
+      if @show_detection_area
+        game_state.draw_circle(self.x, self.y, CLOSE_RADIUS, Gosu::Color.new(0xff00ff00))
+        game_state.draw_circle(self.x, self.y, MIDDLE_RADIUS, Gosu::Color.new(0xff00ff00))
+        game_state.draw_circle(self.x, self.y, FAR_RADIUS, Gosu::Color.new(0xff00ff00))
+        game_state.draw_circle(self.x, self.y, DISTANT_RADIUS, Gosu::Color.new(0xff00ff00))
+      end
+    end
+
     def update
-      # FIXME: add a debug mode where we can see all the detection areas.
       # FIXME: line-of-sight should be blocked by solid objects (Platforms).
       self.each_collision(Guard, Watcher) do |area, object|
         range = self.range(object)
@@ -47,7 +62,7 @@ module Leaf
         when :far
           unless @tracked_objects[:far].include? object
             @tracked_objects.each_key { |key| @tracked_objects[key].delete(object) }
-            @tracked_objects[:far] << object
+#             @tracked_objects[:far] << object
             object.alpha = Leaf::Level::FAR_OBJECT_ALPHA
             object.hidden = false if object.is_a? Hidable
             handle_collide_far.call(object) if handle_collide_far
@@ -55,7 +70,8 @@ module Leaf
         when :middle
           unless @tracked_objects[:middle].include? object
             @tracked_objects.each_key { |key| @tracked_objects[key].delete(object) }
-            @tracked_objects[:middle] << object
+            # FIXME: this caching mechanism keeps hiding from working
+#             @tracked_objects[:middle] << object
             object.alpha = Leaf::Level::MIDDLE_OBJECT_ALPHA
             object.hidden = false if object.is_a? Hidable
             handle_collide_middle.call(object) if handle_collide_middle
@@ -63,7 +79,7 @@ module Leaf
         when :close
           unless @tracked_objects[:close].include? object
             @tracked_objects.each_key { |key| @tracked_objects[key].delete(object) }
-            @tracked_objects[:close] << object
+#             @tracked_objects[:close] << object
             object.alpha = Leaf::Level::CLOSE_OBJECT_ALPHA
             object.hidden = false if object.is_a? Hidable
             handle_collide_close.call(object) if handle_collide_close
@@ -86,7 +102,7 @@ module Leaf
   class DetectionArea < VisibleArea
     def setup
       super
-      self.hide! # Not sure if it's better to be visible.
+#       self.hide! # Not sure if it's better to be visible.
     end
   end # DetectionArea
 

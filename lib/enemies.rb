@@ -49,12 +49,12 @@ module Leaf
 
 
     def noticed_player
-      puts "noticed!"
+#       puts "noticed!"
       self.movement_states << :noticed unless self.movement_states.include? :noticed
     end
 
     def outside_notice
-      puts "un - noticed!"
+#       puts "un - noticed!"
       start_alert if self.movement_states.include? :noticed
       self.movement_states.delete :noticed
     end
