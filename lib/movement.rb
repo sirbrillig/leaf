@@ -1,4 +1,29 @@
 module Leaf
+  module MovementStates
+    attr_accessor :movement_states
+
+    def initialize_movement_states
+      return unless self.movement_states.nil?
+      self.movement_states = []
+    end
+
+    def add_movement_state(state)
+      initialize_movement_states
+      self.movement_states << state unless has_movement_state?(state)
+    end
+
+    def remove_movement_state(state)
+      initialize_movement_states
+      self.movement_states.delete(state)
+    end
+
+    def has_movement_state?(state)
+      initialize_movement_states
+      self.movement_states.include? state
+    end
+  end # MovementStates
+
+
   module MovementBehaviors
     attr_accessor :movement_behaviors
 
@@ -107,7 +132,7 @@ module Leaf
     def current_behavior_state
       states = [:noticed, :alert, :default]
       states.each do |state|
-       return state if self.movement_states.include? state and self.movement_behaviors.has_key? state and not self.movement_behaviors[state].empty?
+       return state if has_movement_state?(state) and self.movement_behaviors.has_key? state and not self.movement_behaviors[state].empty?
       end
       :default
     end

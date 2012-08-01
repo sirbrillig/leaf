@@ -2,8 +2,7 @@ module Leaf
   class Enemy < Creature
     include Hidable
     include MovementBehaviors
-
-    attr_accessor :movement_states
+    include MovementStates
 
     # FIXME: add noise_while_walking that lights you up when walking.
     # FIXME: add animation for noticed_player.
@@ -17,8 +16,6 @@ module Leaf
       @headed_left = true
       @started = false
       @hidden = true
-      @alert = false
-      self.movement_states = []
     end
 
     def update
@@ -29,6 +26,12 @@ module Leaf
         @started = true
       end
       play_next_movement if @started
+      kill_players
+    end
+
+    def kill_players
+      raise "More than one Player found." if Player.size > 1
+      each_collision(Player) { game_state.died }
     end
 
     # Start walking in the direction we're facing (using headed_left).
@@ -50,19 +53,19 @@ module Leaf
 
     def noticed_player
 #       puts "noticed!"
-      self.movement_states << :noticed unless self.movement_states.include? :noticed
+      add_movement_state(:noticed)
     end
 
     def outside_notice
 #       puts "un - noticed!"
-      start_alert if self.movement_states.include? :noticed
-      self.movement_states.delete :noticed
+      start_alert if has_movement_state? :noticed
+      remove_movement_state(:noticed)
     end
 
     # Sets us to alert status and starts a timer to turn it off.
     def start_alert
-      self.movement_states << :alert unless self.movement_states.include? :alert
-      after(5000) { self.movement_states.delete :alert }
+      add_movement_state(:alert)
+      after(5000) { remove_movement_state :alert }
     end
 
     # Override to set @animation.
@@ -104,7 +107,7 @@ module Leaf
 
     def load_animation
       @animation = Animation.new(:file => "media/guard.png", :size => 50)
-      @animation.frame_names = {:face_right => 0..1, :face_left => 2..3}
+      @animation.frame_names = {:face_right => 0..1, :face_left => 2..3, :face_alert_right => 4..5, :face_alert_left => 6..7}
     end
 
     def start_movement
