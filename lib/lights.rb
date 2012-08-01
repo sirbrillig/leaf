@@ -68,8 +68,7 @@ module Leaf
       end
     end
 
-    def delegate_collision_with(object)
-      range = self.range_to(object)
+    def delegate_collision_with(object, range)
       case range
       when :far
         unless @tracked_objects[:far].include? object
@@ -99,7 +98,7 @@ module Leaf
       when :distant
         unless @tracked_objects[:distant].include? object
           @tracked_objects.each_key { |key| @tracked_objects[key].delete(object) }
-          @tracked_objects[:distant] << object
+#           @tracked_objects[:distant] << object
           object.alpha = Leaf::Level::FAR_OBJECT_ALPHA
           object.hidden = true if object.is_a? Hidable
           handle_collide_distant.call(object) if handle_collide_distant
@@ -111,9 +110,9 @@ module Leaf
 
     def update
       self.each_collision(Guard, Watcher) do |area, object|
-        #FIXME: now we need to call this as though we were far away or hidden or
-        #something. 
-        delegate_collision_with(object) if line_of_sight_to(object)
+        range = :distant
+        range = self.range_to(object) if line_of_sight_to(object)
+        delegate_collision_with(object, range)
       end
     end
   end # VisibleArea

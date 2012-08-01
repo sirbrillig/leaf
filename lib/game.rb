@@ -54,6 +54,7 @@ class Chingu::GameObjectMap
   end
 
   def each_object_between(origin, destination)
+    # FIXME: this is not a good line-of-sight calculation. do better!
     start_x = (origin.bb.centerx / @grid[0]).to_i
     stop_x =  (destination.bb.centerx / @grid[0]).to_i
 
@@ -62,7 +63,6 @@ class Chingu::GameObjectMap
       stop_y =  (destination.bb.centery / @grid[1]).to_i
 
       (start_y ... stop_y).each do |y|
-        puts "object between"
         yield @map[x][y] if @map[x] && @map[x][y]
       end
     end
