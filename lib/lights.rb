@@ -18,7 +18,7 @@ module Leaf
       self.radius = 300
 
       @tracked_objects = {:close => [], :middle => [], :far => [], :distant => []}
-      @show_detection_area = true # For debugging
+      @show_detection_area = false # For debugging
     end
 
     def follow(sprite)
