@@ -230,20 +230,33 @@ module Leaf
       return block_right if block_right
     end
 
+    # Return true if we support movement states and we're aware of something
+    # amiss.
+    def alert?
+      return true if self.respond_to? :has_movement_state? and (has_movement_state?(:alert) or has_movement_state?(:noticed))
+      false
+    end
+
 
     def update_animation
-      if self.respond_to? :has_movement_state? and (has_movement_state?(:alert) or has_movement_state?(:noticed))
-        @image = next_animation_frame(:face_alert, @facing)
-      elsif stopping?
+      if stopping?
         @image = next_animation_frame(:stopping, @facing)
       elsif jumping?
         @image = next_animation_frame(:jump, @facing)
       elsif walking?
-        @image = next_animation_frame(:face, @facing)
+        if alert?
+          @image = next_animation_frame(:face_alert, @facing)
+        else
+          @image = next_animation_frame(:face, @facing)
+        end
       elsif climbing?
         @image = next_animation_frame(:climb)
       elsif @facing != @previous_facing
-        @image = next_animation_frame(:face, @facing)
+        if alert?
+          @image = next_animation_frame(:face_alert, @facing)
+        else
+          @image = next_animation_frame(:face, @facing)
+        end
       end
       @previous_facing = @facing
     end

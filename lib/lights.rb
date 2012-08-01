@@ -27,7 +27,7 @@ module Leaf
     end
 
     # Return the range area (:close, :middle, :far) of the object.
-    def range(object)
+    def range_to(object)
       distance = game_state.distance(self, object)
       case distance
       when (MIDDLE_RADIUS + 1)..FAR_RADIUS
@@ -57,7 +57,7 @@ module Leaf
     def update
       # FIXME: line-of-sight should be blocked by solid objects (Platforms).
       self.each_collision(Guard, Watcher) do |area, object|
-        range = self.range(object)
+        range = self.range_to(object)
         case range
         when :far
           unless @tracked_objects[:far].include? object
