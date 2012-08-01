@@ -40,5 +40,10 @@ module Leaf
         end
       end        
     end
+
+    def quit
+      exit
+    end
+
   end # LevelEditor
 end # Leaf

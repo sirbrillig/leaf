@@ -38,7 +38,7 @@ module Leaf
       @background_object_map = Chingu::GameObjectMap.new(:game_objects => Tree.all, :grid => @grid)
     end
 
-    def finalize
+    def destroy_all_objects
       #FIXME: remember to list all objects here.
       #FIXME: do we need to list Platforms, etc, too?
       objects = [Player, Guard, Watcher]
@@ -58,6 +58,7 @@ module Leaf
     end
 
     def died
+      destroy_all_objects 
       switch_game_state(GameOver)
     end
 
