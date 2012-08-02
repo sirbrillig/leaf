@@ -16,6 +16,9 @@ module Leaf
   module Unpassable
   end
 
+  module BlocksVision
+  end
+
   module Climbable
   end
 
@@ -63,6 +66,7 @@ class Chingu::GameObjectMap
         end
       end
     end
+    # Obviously this doesn't get called if the yield breaks the loop.
     origin.x = previous_x
   end
 
@@ -86,7 +90,15 @@ class Chingu::GameObjectMap
     diff_y *= 2
 
     n.times do
-      yield @map[x][y] if @map[x] and @map[x][y]
+
+      @map[x][y].highlight(0xffff0000) if @map[x] and @map[x][y] and @map[x][y].respond_to? :highlight
+      #FIXME: this is showing negative coordinates. something isn't right.
+      if @map[x] and @map[x][y] and @map[x][y] != origin and @map[x][y] != dest and @map[x][y].is_a? Leaf::BlocksVision
+        puts "hit something at #{x},#{y}"
+        @map[x][y].highlight(0xff0000ff)
+        yield @map[x][y] 
+      end
+
       if error > 0
         x += x_inc
         error -= diff_y

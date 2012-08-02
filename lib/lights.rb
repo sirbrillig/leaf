@@ -53,8 +53,8 @@ module Leaf
     # Return true if we have line-of-sight to object.
     def line_of_sight_to(object)
       # FIXME: line-of-sight should be blocked by solid objects (Platforms).
-#       game_state.game_object_map.each_object_between(self, object) { return false }
-      game_state.game_object_map.each_collision_between(self, object) { return false }
+      game_state.game_object_map.each_object_between(self, object) { return false }
+#       game_state.game_object_map.each_collision_between(self, object) { return false }
       true
     end
 
@@ -114,6 +114,7 @@ module Leaf
         range = :distant
         # FIXME: separately call #hidden and #handle_collide_distant so we can
         # have invisible enemies that know you are there.
+        game_state.player.enemy = object
         range = self.range_to(object) if line_of_sight_to(object)
         delegate_collision_with(object, range)
       end

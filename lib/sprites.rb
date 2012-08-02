@@ -31,6 +31,17 @@ module Leaf
       self.rotation_center = :center
       self.alpha = Leaf::Level::FAR_OBJECT_ALPHA
     end
+
+    def highlight(color)
+      @highlighted = color
+    end
+
+    def draw
+      super
+      if @highlighted
+        game_state.draw_rect(bb, Gosu::Color.new(@highlighted), Leaf::Level::LIGHTED_LAYER)
+      end
+    end
   end # BackgroundObject
 
   class Tree < BackgroundObject
@@ -43,7 +54,7 @@ module Leaf
   end # Tree
 
   class BackgroundWall < BackgroundObject
-    include Climbable
+    include Climbable, BlocksVision
     trait :bounding_box, :scale => 1, :debug => Leaf::DEBUG
     def setup
       super
@@ -53,7 +64,7 @@ module Leaf
   end # BackgroundWall
 
   class BackgroundPlatform < BackgroundObject
-    include Standable
+    include Standable, BlocksVision
     trait :bounding_box, :scale => 1, :debug => Leaf::DEBUG
     def setup
       super
