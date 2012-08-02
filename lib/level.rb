@@ -3,12 +3,14 @@ module Leaf
     traits :viewport, :timer
     attr_reader :player, :game_object_map, :background_object_map
 
+    OVERLAY_LAYER = 200
     SPRITES_LAYER = 100
     PLATFORM_LAYER = 15
     LIGHTED_LAYER = 10
     BACKGROUND_OBJECT_LAYER = 8
     BACKGROUND_LAYER = 5
 
+    DARKNESS_ALPHA = 180
     FAR_OBJECT_ALPHA = 255
     MIDDLE_OBJECT_ALPHA = 255
     CLOSE_OBJECT_ALPHA = 255
@@ -21,6 +23,7 @@ module Leaf
       load_game_objects(:file => @file, :debug => Leaf::DEBUG)
 
       @background = Leaf::Background.create(:x => 900, :y => 200)
+      @overlay = Leaf::Darkness.create(:x => 0, :y => 0)
 
       @player = Leaf::Player.create(:x => 95, :y => 50)
 
@@ -57,6 +60,7 @@ module Leaf
     def update
       super
       self.viewport.x_target = @player.x - $window.width/2
+      @overlay.x = self.viewport.x
       $window.caption = "Leaf"
     end
 

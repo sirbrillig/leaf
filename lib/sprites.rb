@@ -1,5 +1,19 @@
 module Leaf
 
+  class Darkness < Chingu::GameObject
+    def setup
+      @image = nil
+      self.zorder = Leaf::Level::OVERLAY_LAYER
+      self.alpha = Leaf::Level::DARKNESS_ALPHA
+    end
+
+    def draw
+      color = Gosu::Color::BLACK
+      color.alpha = Leaf::Level::DARKNESS_ALPHA
+      game_state.fill_rect(Chingu::Rect.new(x - 100, y - 100, 1224, 868), color, Leaf::Level::OVERLAY_LAYER)
+    end
+  end
+
   class Platform < Chingu::GameObject
     trait :collision_detection
     trait :bounding_box, :scale => 1#, :debug => true
