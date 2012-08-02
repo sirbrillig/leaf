@@ -53,50 +53,50 @@ class Chingu::GameObjectMap
     objects
   end
 
-  def each_object_between(origin, destination)
-    # FIXME: this is not a good line-of-sight calculation. do better!
-    start_x = (origin.bb.centerx / @grid[0]).to_i
-    stop_x =  (destination.bb.centerx / @grid[0]).to_i
-    start_y = (origin.bb.centery / @grid[1]).to_i
-    stop_y =  (destination.bb.centery / @grid[1]).to_i
+  def each_collision_between(origin, dest)
+    previous_x = origin.x
+    if origin.x < dest.x
+      while origin.x <= dest.x
+        origin.x += @grid[0]
+        if object_in_path = from_game_object(origin)
+          yield object_in_path
+        end
+      end
+    end
+    origin.x = previous_x
+  end
 
-    distance_x = (start_x - stop_x).abs
-    distance_y = (start_y - stop_y).abs
+  def each_object_between(origin, dest)
+    start_x = (origin.bb.x / @grid[0]).to_i
+    stop_x =  (dest.bb.x / @grid[0]).to_i
+    start_y = (origin.bb.y / @grid[1]).to_i
+    stop_y =  (dest.bb.y / @grid[1]).to_i
+    diff_x = (start_x - stop_x).abs
+    diff_y = (start_y - stop_y).abs
 
-    if distance_y == 0
-      puts "y = 0"
-      (start_x .. stop_x).each do |x|
-        yield @map[x][start_y] if @map[x] and @map[x][start_y]
-      end
-    elsif distance_x == 0
-      puts "x = 0"
-      (start_y .. stop_y).each do |y|
-        yield @map[start_x][y] if @map[start_x] and @map[start_x][y]
-      end
-    elsif distance_y == distance_x
-      puts "x == y"
-      (start_x .. stop_x).each do |x|
-        yield @map[x][start_y + x] if @map[x] and @map[x][start_y + x]
-      end
-    elsif distance_y > distance_x
-      puts "y (#{distance_y}) > x (#{distance_x})"
-      next_line = (distance_y / distance_x).round
-      y = start_y
-      (start_x .. stop_x).each do |x|
-        y += 1 if (x % next_line) == 0
-        yield @map[x][y] if @map[x] and @map[x][y]
-      end
-    elsif distance_x > distance_y
-      puts "x (#{distance_x}) > y (#{distance_y})"
-      next_line = (distance_x / distance_y).round
-      y = start_y
-      (start_x .. stop_x).each do |x|
-        y += 1 if (x % next_line) == 0
-        yield @map[x][y] if @map[x] and @map[x][y]
+    x = start_x
+    y = start_y
+    n = 1 + diff_x + diff_y
+    x_inc = -1
+    x_inc = 1 if start_x > stop_x
+    y_inc = -1
+    y_inc = 1 if start_y > stop_y
+    error = diff_x - diff_y
+    diff_x *= 2
+    diff_y *= 2
+
+    n.times do
+      yield @map[x][y] if @map[x] and @map[x][y]
+      if error > 0
+        x += x_inc
+        error -= diff_y
+      else
+        y += y_inc
+        error += diff_x
       end
     end
   end
-end
+end # GameObjectMap
 
 class Class
   def question_accessor(*args)
