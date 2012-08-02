@@ -9,9 +9,12 @@ module Leaf
     BACKGROUND_OBJECT_LAYER = 8
     BACKGROUND_LAYER = 5
 
-    FAR_OBJECT_ALPHA = 40
-    MIDDLE_OBJECT_ALPHA = 70
+    FAR_OBJECT_ALPHA = 255
+    MIDDLE_OBJECT_ALPHA = 255
     CLOSE_OBJECT_ALPHA = 255
+
+    # FIXME: draw darkness over everything 
+    # FIXME: darkness is removed only by light sources
 
     def load_map
       @file = File.join("maps/#{self.class.name.split('::').last.to_s.downcase}.yml")
@@ -34,7 +37,7 @@ module Leaf
       self.viewport.game_area = [0, 0, 2048, 768]
       load_map
 
-      @game_object_map = Chingu::GameObjectMap.new(:game_objects => Platform.all + BackgroundPlatform.all + BackgroundWall.all, :grid => @grid)
+      @game_object_map = Chingu::GameObjectMap.new(:game_objects => Platform.all + BackgroundPlatform.all, :grid => @grid)
       @background_object_map = Chingu::GameObjectMap.new(:game_objects => Tree.all, :grid => @grid)
     end
 
@@ -62,7 +65,7 @@ module Leaf
       switch_game_state(GameOver)
     end
 
-    # Return the distance between two points A and B on the x/y grid. 
+    # Return the distance in pixels between two points A and B on the x/y grid. 
     def distance(a, b)
       Math.sqrt(((a.x - b.x) ** 2) + ((a.y - b.y) ** 2).abs)
     end

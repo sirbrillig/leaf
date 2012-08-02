@@ -4,9 +4,6 @@ module Leaf
     include MovementBehaviors
     include MovementStates
 
-    # FIXME: add noise_while_walking that lights you up when walking.
-    # FIXME: add animation for noticed_player.
-
     def setup
       super
       load_animation
@@ -15,7 +12,8 @@ module Leaf
       self.speed = 1
       @headed_left = true
       @started = false
-      @hidden = true
+      @hidden = false
+      self.alpha = 255
     end
 
     def update
