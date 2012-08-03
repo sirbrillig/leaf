@@ -3,7 +3,7 @@ module Leaf
   class VisibleArea < Chingu::GameObject
     trait :collision_detection
     trait :bounding_circle, :scale => 1.1, :debug => Leaf::DEBUG
-    attr_accessor :handle_collide_far, :handle_collide_middle, :handle_collide_close, :handle_collide_distant
+    attr_accessor :handle_collide_far, :handle_collide_middle, :handle_collide_close, :handle_collide_distant, :holder
 
     CLOSE_RADIUS = 80
     MIDDLE_RADIUS = 200
@@ -58,7 +58,8 @@ module Leaf
     # Return true if we have line-of-sight to object.
     def line_of_sight_to(object)
       # FIXME: line-of-sight should be blocked by solid objects.
-#       game_state.game_object_map.each_object_between(self, object) { return false }
+      @holder ||= self
+      game_state.game_object_map.each_object_between(@holder, object) { return false } 
 #       game_state.game_object_map.each_collision_between(self, object) { return false }
       true
     end
