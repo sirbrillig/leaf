@@ -15,7 +15,6 @@ module Leaf
     MIDDLE_OBJECT_ALPHA = 255
     CLOSE_OBJECT_ALPHA = 255
 
-    # FIXME: draw darkness over everything 
     # FIXME: darkness is removed only by light sources
 
     def load_map
@@ -23,7 +22,6 @@ module Leaf
       load_game_objects(:file => @file, :debug => Leaf::DEBUG)
 
       @background = Leaf::Background.create(:x => 900, :y => 200)
-      @overlay = Leaf::Darkness.create(:x => 0, :y => 0)
 
       @player = Leaf::Player.create(:x => 95, :y => 50)
 
@@ -60,7 +58,6 @@ module Leaf
     def update
       super
       self.viewport.x_target = @player.x - $window.width/2
-      @overlay.x = self.viewport.x
       $window.caption = "Leaf"
     end
 

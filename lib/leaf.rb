@@ -6,6 +6,8 @@ include Chingu
 include Gosu
 
 require 'edit'
+require 'helpers'
+require 'monkeypatch'
 require 'game'
 require 'movement'
 require 'editor'

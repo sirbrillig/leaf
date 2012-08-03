@@ -10,6 +10,8 @@ module Leaf
     def draw
       color = Gosu::Color::BLACK
       color.alpha = Leaf::Level::DARKNESS_ALPHA
+      # Make this a little larger than the screen so when it moves there is no
+      # flicker as the viewport lags.
       game_state.fill_rect(Chingu::Rect.new(x - 100, y - 100, 1224, 868), color, Leaf::Level::OVERLAY_LAYER)
     end
   end
