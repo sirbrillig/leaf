@@ -10,12 +10,17 @@ module Leaf
     FAR_RADIUS = 290
     DISTANT_RADIUS = 351
 
+    #FIXME: make light of different shapes, ie: a cone for the guards.
+    #FIXME: make different shaped-light use appropriate collision to determine
+    #what happens.
+
     def setup
       self.zorder = Leaf::Level::LIGHTED_LAYER
       self.rotation_center = :center
-      @image = nil#Gosu::Image["media/visiblearea.png"]
-      self.alpha = 40
-      self.radius = 300
+      @image = Gosu::Image["media/visiblearea.png"]
+      self.mode = :add
+      self.alpha = 200
+      self.radius = DISTANT_RADIUS + 1
 
       @tracked_objects = {:close => [], :middle => [], :far => [], :distant => []}
       @show_detection_area = false # For debugging
@@ -52,8 +57,8 @@ module Leaf
 
     # Return true if we have line-of-sight to object.
     def line_of_sight_to(object)
-      # FIXME: line-of-sight should be blocked by solid objects (Platforms).
-      game_state.game_object_map.each_object_between(self, object) { return false }
+      # FIXME: line-of-sight should be blocked by solid objects.
+#       game_state.game_object_map.each_object_between(self, object) { return false }
 #       game_state.game_object_map.each_collision_between(self, object) { return false }
       true
     end

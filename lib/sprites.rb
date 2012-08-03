@@ -14,6 +14,10 @@ module Leaf
       # flicker as the viewport lags.
       game_state.fill_rect(Chingu::Rect.new(x - 100, y - 100, 1224, 868), color, Leaf::Level::OVERLAY_LAYER)
     end
+
+    def follow(object)
+      self.x = object.x
+    end
   end
 
   class Platform < Chingu::GameObject
