@@ -21,8 +21,7 @@ module Leaf
       @file = File.join("maps/#{self.class.name.split('::').last.to_s.downcase}.yml")
       load_game_objects(:file => @file, :debug => Leaf::DEBUG)
 
-      @background = Leaf::Background.create(:x => 900, :y => 200)
-      @shadow = Leaf::Darkness.create(:x => 0, :y => 0)
+      @background = Leaf::Background.create(:x => 600, :y => 400)
 
       @player = Leaf::Player.create(:x => 95, :y => 50)
 
@@ -59,7 +58,6 @@ module Leaf
     def update
       super
       self.viewport.x_target = @player.x - $window.width/2
-      @shadow.follow(viewport) if @shadow
       $window.caption = "Leaf"
     end
 

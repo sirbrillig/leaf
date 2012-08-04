@@ -130,7 +130,7 @@ module Leaf
   class DetectionArea < VisibleArea
     def setup
       super
-#       self.hide! # Not sure if it's better to be visible.
+      self.hide! # Not sure if it's better to be visible.
     end
   end # DetectionArea
 

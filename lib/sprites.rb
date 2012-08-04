@@ -36,7 +36,7 @@ module Leaf
 
   class Background < Chingu::GameObject
     def setup
-      @image = Gosu::Image["media/darkclouds.jpg"]
+      @image = Gosu::Image["media/background.jpg"]
       self.zorder = Leaf::Level::BACKGROUND_LAYER
     end
   end # Background
