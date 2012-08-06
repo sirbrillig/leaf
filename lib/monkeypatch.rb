@@ -5,6 +5,7 @@ module Chingu::Traits::BoundingCircle
 end
 
 class Chingu::GameObjectMap
+  attr_accessor :checked_squares
   def collisions_with(game_object)
     start_x = (game_object.bb.left / @grid[0]).to_i
     stop_x =  (game_object.bb.right / @grid[0]).to_i
@@ -21,20 +22,6 @@ class Chingu::GameObjectMap
     objects
   end
 
-  def each_collision_between(origin, dest)
-    previous_x = origin.x
-    if origin.x < dest.x
-      while origin.x <= dest.x
-        origin.x += @grid[0]
-        if object_in_path = from_game_object(origin)
-          yield object_in_path
-        end
-      end
-    end
-    # Obviously this doesn't get called if the yield breaks the loop.
-    origin.x = previous_x
-  end
-
   def each_object_between(origin, dest)
     start_x = (origin.bb.x/ @grid[0]).to_i
     stop_x =  (dest.bb.x/ @grid[0]).to_i
@@ -42,11 +29,11 @@ class Chingu::GameObjectMap
     stop_y =  (dest.bb.y/ @grid[1]).to_i
     diff_x = (start_x - stop_x).abs
     diff_y = (start_y - stop_y).abs
-    puts "origin.bb.x (#{origin.bb.centerx}) / @grid[0](#{@grid[0]})"
-    puts "start_x = #{start_x}"
-    puts "start_y = #{start_y}"
-    puts "stop_x = #{stop_x}"
-    puts "stop_y = #{stop_y}"
+#     puts "origin.bb.x (#{origin.bb.centerx}) / @grid[0](#{@grid[0]})"
+#     puts "start_x = #{start_x}"
+#     puts "start_y = #{start_y}"
+#     puts "stop_x = #{stop_x}"
+#     puts "stop_y = #{stop_y}"
 
     x = start_x
     y = start_y
@@ -59,10 +46,13 @@ class Chingu::GameObjectMap
     diff_x *= 2
     diff_y *= 2
 
+
+    @checked_squares = []
     n.times do
 
+      @checked_squares << [x,y]
       if @map[x] and @map[x][y] and @map[x][y] != origin and @map[x][y] != dest and @map[x][y].is_a? Leaf::BlocksVision
-        puts "hit something at #{x},#{y}"
+#         puts "hit something at #{x},#{y}"
         # FIXME: this is still not quite hitting the grid squares I would
         # expect.
         @map[x][y].highlight(0xff0000ff)

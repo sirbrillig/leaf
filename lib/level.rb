@@ -22,7 +22,7 @@ module Leaf
       @parallax = Chingu::Parallax.new(:x => 900, :y => 200, :rotation_center => :top_left)
       @parallax << {:image => 'media/background.jpg', :damping => 5, :repeat_x => true, :repeat_y => true, :zorder => BACKGROUND_LAYER}
 
-      @player = Leaf::Player.create(:x => 95, :y => 50)
+      @player = Leaf::Player.create(:x => 95, :y => 590)
 
       @grid = [5, 5]
       self.viewport.lag = 0.95
@@ -65,6 +65,9 @@ module Leaf
     def draw
       @parallax.draw
       super
+      if @game_object_map.checked_squares
+        @game_object_map.checked_squares.each { |sq| self.draw_rect(Rect.new(sq[0] * @grid[0], sq[1] * @grid[1], 10, 10), Gosu::Color::GREEN, Leaf::Level::LIGHTED_LAYER) }
+      end
     end
 
     def died
