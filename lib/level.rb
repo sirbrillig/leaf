@@ -65,8 +65,10 @@ module Leaf
     def draw
       @parallax.draw
       super
-      if @game_object_map.checked_squares
-        @game_object_map.checked_squares.each { |sq| self.draw_rect(Rect.new(sq[0] * @grid[0], sq[1] * @grid[1], 10, 10), Gosu::Color::GREEN, Leaf::Level::LIGHTED_LAYER) }
+      if Leaf::DEBUG and @game_object_map.checked_squares
+        # Draw line-of-sight
+        @game_object_map.checked_squares.each { |sq| self.draw_rect(Rect.new((sq[0] * @grid[0] - self.viewport.x), sq[1] * @grid[1], 10, 10), Gosu::Color::GREEN, Leaf::Level::LIGHTED_LAYER) }
+        @game_object_map.checked_squares.clear
       end
     end
 

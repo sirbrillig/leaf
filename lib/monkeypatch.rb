@@ -29,33 +29,26 @@ class Chingu::GameObjectMap
     stop_y =  (dest.bb.y/ @grid[1]).to_i
     diff_x = (start_x - stop_x).abs
     diff_y = (start_y - stop_y).abs
-#     puts "origin.bb.x (#{origin.bb.centerx}) / @grid[0](#{@grid[0]})"
-#     puts "start_x = #{start_x}"
-#     puts "start_y = #{start_y}"
-#     puts "stop_x = #{stop_x}"
-#     puts "stop_y = #{stop_y}"
 
     x = start_x
     y = start_y
     n = 1 + diff_x + diff_y
-    x_inc = -1
-    x_inc = 1 if start_x > stop_x
-    y_inc = -1
-    y_inc = 1 if start_y > stop_y
+    x_inc = 1
+    x_inc = -1 if start_x > stop_x
+    y_inc = 1
+    y_inc = -1 if start_y > stop_y
     error = diff_x - diff_y
     diff_x *= 2
     diff_y *= 2
 
 
     @checked_squares = []
+    @checked_squares << [start_x,start_y]
+    @checked_squares << [stop_x,stop_y]
     n.times do
 
       @checked_squares << [x,y]
       if @map[x] and @map[x][y] and @map[x][y] != origin and @map[x][y] != dest and @map[x][y].is_a? Leaf::BlocksVision
-#         puts "hit something at #{x},#{y}"
-        # FIXME: this is still not quite hitting the grid squares I would
-        # expect.
-        @map[x][y].highlight(0xff0000ff)
         yield @map[x][y] 
       end
 

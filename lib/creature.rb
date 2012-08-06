@@ -318,21 +318,6 @@ module Leaf
 
     end
 
-    attr_accessor :enemy
-    def draw
-      super
-      @show_enemy_los = true # For debugging
-      if @show_enemy_los
-        origin_rect = Rect.new(bb.x, bb.y, 10, 10)
-        game_state.draw_rect(origin_rect, Gosu::Color.new(0xff00ff00), Leaf::Level::LIGHTED_LAYER)
-        if self.is_a? Player and @enemy
-          $window.draw_line(origin_rect.x, origin_rect.y, Gosu::Color.new(0xff00ff00), @enemy.bb.x, @enemy.bb.y, Gosu::Color.new(0xff00ff00), Leaf::Level::LIGHTED_LAYER)
-          puts "drawing line between #{origin_rect.x}, #{origin_rect.y} and #{@enemy.bb.x},#{@enemy.bb.y}"
-          puts "    --- which is a line between grid #{origin_rect.x / 5}, #{origin_rect.y / 5} and #{@enemy.bb.x / 5},#{@enemy.bb.y / 5}"
-        end
-      end
-    end
-
 
     # Called when we run into a wall (Platform). 
     def handle_hit_obstacle(object)
