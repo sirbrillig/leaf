@@ -98,6 +98,7 @@ module Leaf
         look_right_for :random_period
         look_right_for 0.5.seconds
         if_noticed do
+          set_speed_to 2
           walk_toward_player_for 0.2.seconds
         end
       end

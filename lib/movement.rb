@@ -71,8 +71,15 @@ module Leaf
 #       puts "current state: #{state}"
       behavior_array = self.movement_behaviors[state]
       cancel_running_behaviors_except_for(state)
-      rotate_behaviors(state) if behavior_array.first.complete?
+      rotate_behaviors(state) if behavior_array.first.complete? or behavior_array.first.does_not_block
       behavior_array.first.run unless behavior_array.first.executed?
+    end
+
+    def set_speed_to(speed)
+      behavior = MovementBehavior.create { return if @save_old_speed; @save_old_speed = self.speed; self.speed = speed }
+      behavior.at_end { self.speed = @save_old_speed if @save_old_speed; @save_old_speed = nil }
+      behavior.does_not_block = true
+      record_behavior(behavior)
     end
 
     # You can pass :random_period instead of an integer milliseconds and it will
@@ -142,8 +149,9 @@ module Leaf
       self.movement_behaviors.each_key do |state|
         next if state == current_state
         next if self.movement_behaviors[state].empty?
-        behavior = self.movement_behaviors[state].first
-        behavior.cancel if behavior.executed? and not behavior.complete?
+        self.movement_behaviors[state].each do |behavior|
+          behavior.cancel if behavior.executed? and not behavior.complete?
+        end
       end
     end
 
@@ -164,7 +172,7 @@ module Leaf
 
   class MovementBehavior < Chingu::BasicGameObject
     trait :timer
-    attr_accessor :action, :image
+    attr_accessor :action, :image, :does_not_block
     question_accessor :complete
     question_accessor :executed
 
