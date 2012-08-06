@@ -114,7 +114,7 @@ module Leaf
     def update_object_visibility(object, range)
       return unless object.is_a? Hidable
       case range
-      when :distant
+      when :distant, nil
         object.hidden = true
       else 
         object.hidden = ! line_of_sight_to(object)

@@ -172,6 +172,27 @@ module Leaf
       block
     end
 
+    def hit_step
+      return nil unless walking?
+      return nil if jumping?
+      look_ahead = 10
+      if @facing == :right
+        self.x += look_ahead
+      else
+        self.x -= look_ahead
+      end
+      margin_of_error = 25
+      block = hit_objects.select do |o| 
+        o.is_a? Standable and o.bb.top.between?(self.bb.bottom - margin_of_error, self.bb.bottom + margin_of_error)
+      end.last
+      if @facing == :right
+        self.x -= look_ahead
+      else
+        self.x += look_ahead
+      end
+      block
+    end
+
     # Return true if we fell off the bottom of the screen. This will be
     # automatically checked during normal movement and the method
     # #handle_fell_off_screen will be called, so you can handle the event there.
@@ -277,6 +298,11 @@ module Leaf
       stop_totally if sliding?
 
       update_animation
+
+      if floor = hit_step
+        self.y = floor.bb.top - 1
+        land
+      end
 
       if floor = hit_floor
         # This will be called constantly while on the ground, which is fine.

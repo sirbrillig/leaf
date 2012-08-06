@@ -12,7 +12,7 @@ module Leaf
       self.speed = 1
       @headed_left = true
       @started = false
-      @hidden = false
+      @hidden = true
       self.alpha = 255
     end
 
