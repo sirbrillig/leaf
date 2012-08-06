@@ -1,7 +1,6 @@
 module Leaf
   class Level < Chingu::GameState
-    trait :timer
-#     trait :viewport
+    traits :timer, :viewport
     attr_reader :player, :game_object_map, :background_object_map
 
     OVERLAY_LAYER = 200
@@ -20,15 +19,13 @@ module Leaf
       @file = File.join("maps/#{self.class.name.split('::').last.to_s.downcase}.yml")
       load_game_objects(:file => @file, :debug => Leaf::DEBUG)
 
-      @parallax = Chingu::Parallax.create(:x => 150, :y => 150, :rotation_center => :top_left)
-      @parallax << Chingu::ParallaxLayer.new(:image => )
-
-#       @background = Leaf::Background.create(:x => 900, :y => 200)
+      @parallax = Chingu::Parallax.new(:x => 900, :y => 200, :rotation_center => :top_left)
+      @parallax << {:image => 'media/background.jpg', :damping => 5, :repeat_x => true, :repeat_y => true, :zorder => BACKGROUND_LAYER}
 
       @player = Leaf::Player.create(:x => 95, :y => 50)
 
       @grid = [5, 5]
-#       self.viewport.lag = 0.95
+      self.viewport.lag = 0.95
       puts "level created"
     end
 
@@ -37,7 +34,7 @@ module Leaf
       on_input(:escape, :exit)
       on_input(:q, :exit)
 
-#       self.viewport.game_area = [0, 0, 2048, 768]
+      self.viewport.game_area = [0, 0, 2048, 768]
       load_map
 
       @game_object_map = Chingu::GameObjectMap.new(:game_objects => Platform.all + BackgroundPlatform.all, :grid => @grid)
@@ -59,8 +56,15 @@ module Leaf
 
     def update
       super
-#       self.viewport.x_target = @player.x - $window.width/2
+      self.viewport.x_target = @player.x - $window.width/2
+      @parallax.camera_x, @parallax.camera_y = self.viewport.x.to_i, self.viewport.y.to_i
+      @parallax.update
       $window.caption = "Leaf"
+    end
+
+    def draw
+      @parallax.draw
+      super
     end
 
     def died
