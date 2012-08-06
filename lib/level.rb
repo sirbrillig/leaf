@@ -1,6 +1,7 @@
 module Leaf
   class Level < Chingu::GameState
-    traits :viewport, :timer
+    trait :timer
+#     trait :viewport
     attr_reader :player, :game_object_map, :background_object_map
 
     OVERLAY_LAYER = 200
@@ -15,19 +16,19 @@ module Leaf
     MIDDLE_OBJECT_ALPHA = 255
     CLOSE_OBJECT_ALPHA = 255
 
-    # FIXME: darkness is removed only by light sources
-
     def load_map
       @file = File.join("maps/#{self.class.name.split('::').last.to_s.downcase}.yml")
       load_game_objects(:file => @file, :debug => Leaf::DEBUG)
 
-      @background = Leaf::Background.create(:x => 900, :y => 200)
-      @shadow = Leaf::Darkness.create(:x => 0, :y => 0)
+      @parallax = Chingu::Parallax.create(:x => 150, :y => 150, :rotation_center => :top_left)
+      @parallax << Chingu::ParallaxLayer.new(:image => )
+
+#       @background = Leaf::Background.create(:x => 900, :y => 200)
 
       @player = Leaf::Player.create(:x => 95, :y => 50)
 
       @grid = [5, 5]
-      self.viewport.lag = 0.95
+#       self.viewport.lag = 0.95
       puts "level created"
     end
 
@@ -36,7 +37,7 @@ module Leaf
       on_input(:escape, :exit)
       on_input(:q, :exit)
 
-      self.viewport.game_area = [0, 0, 2048, 768]
+#       self.viewport.game_area = [0, 0, 2048, 768]
       load_map
 
       @game_object_map = Chingu::GameObjectMap.new(:game_objects => Platform.all + BackgroundPlatform.all, :grid => @grid)
@@ -58,8 +59,7 @@ module Leaf
 
     def update
       super
-      self.viewport.x_target = @player.x - $window.width/2
-      @shadow.follow(viewport) if @shadow
+#       self.viewport.x_target = @player.x - $window.width/2
       $window.caption = "Leaf"
     end
 
