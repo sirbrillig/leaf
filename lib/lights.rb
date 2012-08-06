@@ -57,7 +57,6 @@ module Leaf
 
     # Return true if we have line-of-sight to object.
     def line_of_sight_to(object)
-      # FIXME: line-of-sight should be blocked by solid objects.
       @holder ||= self
       game_state.game_object_map.each_object_between(@holder, object) { return false } 
       true
@@ -79,48 +78,46 @@ module Leaf
       when :far
         unless @tracked_objects[:far].include? object
           @tracked_objects.each_key { |key| @tracked_objects[key].delete(object) }
-          #             @tracked_objects[:far] << object
-          object.alpha = Leaf::Level::FAR_OBJECT_ALPHA
-          object.hidden = false if object.is_a? Hidable
+          @tracked_objects[:far] << object
           handle_collide_far.call(object) if handle_collide_far
         end
       when :middle
         unless @tracked_objects[:middle].include? object
           @tracked_objects.each_key { |key| @tracked_objects[key].delete(object) }
-          # FIXME: this caching mechanism keeps hiding from working
-          #             @tracked_objects[:middle] << object
-          object.alpha = Leaf::Level::MIDDLE_OBJECT_ALPHA
-          object.hidden = false if object.is_a? Hidable
+          @tracked_objects[:middle] << object
           handle_collide_middle.call(object) if handle_collide_middle
         end
       when :close
         unless @tracked_objects[:close].include? object
           @tracked_objects.each_key { |key| @tracked_objects[key].delete(object) }
-          #             @tracked_objects[:close] << object
-          object.alpha = Leaf::Level::CLOSE_OBJECT_ALPHA
-          object.hidden = false if object.is_a? Hidable
+          @tracked_objects[:close] << object
           handle_collide_close.call(object) if handle_collide_close
         end
       when :distant
         unless @tracked_objects[:distant].include? object
           @tracked_objects.each_key { |key| @tracked_objects[key].delete(object) }
-#           @tracked_objects[:distant] << object
-          object.alpha = Leaf::Level::FAR_OBJECT_ALPHA
-          object.hidden = true if object.is_a? Hidable
+          @tracked_objects[:distant] << object
           handle_collide_distant.call(object) if handle_collide_distant
         end
-        #         else
-        #           raise "Range was not what I expected between #{self.class} and #{object.class}. range=#{range}"
       end
     end
 
     def update
       self.each_collision(Guard, Watcher) do |area, object|
-        range = :distant
-        # FIXME: separately call #hidden and #handle_collide_distant so we can
-        # have invisible enemies that know you are there.
-        range = self.range_to(object) if line_of_sight_to(object)
+        range = self.range_to(object)
+        update_object_visibility(object, range)
         delegate_collision_with(object, range)
+      end
+    end
+
+    private
+    def update_object_visibility(object, range)
+      return unless object.is_a? Hidable
+      case range
+      when :distant
+        object.hidden = true
+      else 
+        object.hidden = ! line_of_sight_to(object)
       end
     end
   end # VisibleArea
