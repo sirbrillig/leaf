@@ -1,25 +1,5 @@
 module Leaf
 
-  class Darkness < Chingu::GameObject
-    def setup
-      @image = nil
-      self.zorder = Leaf::Level::OVERLAY_LAYER
-      self.alpha = Leaf::Level::DARKNESS_ALPHA
-    end
-
-    def draw
-      color = Gosu::Color::BLACK
-      color.alpha = Leaf::Level::DARKNESS_ALPHA
-      # Make this a little larger than the screen so when it moves there is no
-      # flicker as the viewport lags.
-      game_state.fill_rect(Chingu::Rect.new(x - 100, y - 100, 1224, 868), color, Leaf::Level::OVERLAY_LAYER)
-    end
-
-    def follow(object)
-      self.x = object.x
-    end
-  end
-
   class Platform < Chingu::GameObject
     trait :collision_detection
     trait :bounding_box, :scale => 1#, :debug => true
@@ -50,17 +30,6 @@ module Leaf
       self.zorder = Leaf::Level::BACKGROUND_OBJECT_LAYER
       self.rotation_center = :center
       self.alpha = Leaf::Level::FAR_OBJECT_ALPHA
-    end
-
-    def highlight(color)
-      @highlighted = color
-    end
-
-    def draw
-      super
-      if @highlighted
-        game_state.draw_rect(bb, Gosu::Color.new(@highlighted), Leaf::Level::LIGHTED_LAYER)
-      end
     end
   end # BackgroundObject
 

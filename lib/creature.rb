@@ -147,6 +147,8 @@ module Leaf
       game_state.background_object_map.collisions_with(self).first
     end
 
+    #FIXME: deal with platforms that are at an angle, if possible.
+
     # Return the Platform we're standing on or nil.
     def standing_on_platform
       return nil if falling? or jumping?
