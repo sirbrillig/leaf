@@ -62,5 +62,9 @@ module Leaf
   end # BackgroundPlatform
 
   class Lamp < VisibleArea
+    def setup
+      super
+      @image = Gosu::Image["media/lamp.png"]
+    end
   end
 end # Leaf

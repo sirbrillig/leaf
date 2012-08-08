@@ -22,7 +22,7 @@ module Leaf
       @parallax = Chingu::Parallax.new(:x => 900, :y => 200, :rotation_center => :top_left)
       @parallax << {:image => 'media/background.jpg', :damping => 5, :repeat_x => true, :repeat_y => true, :zorder => BACKGROUND_LAYER}
 
-      @player = Leaf::Player.create(:x => 95, :y => 590)
+      @player = Leaf::Player.create(:x => 95, :y => 250)
 
       @grid = [5, 5]
       self.viewport.lag = 0.95

@@ -1,5 +1,5 @@
 module Leaf
-  DEBUG = false
+  DEBUG = true
 
 	class Game < Chingu::Window
     def initialize

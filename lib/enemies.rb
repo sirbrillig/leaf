@@ -25,6 +25,7 @@ module Leaf
       end
       play_next_movement if @started
       kill_players
+      @hidden = true
     end
 
     def kill_players

@@ -73,6 +73,35 @@ module Leaf
       end
     end
 
+    def update
+      self.each_collision(Guard, Watcher) do |area, object|
+        range = self.range_to(object)
+        update_object_visibility(object, range)
+      end
+    end
+
+    private
+    def update_object_visibility(object, range)
+      return unless object.is_a? Hidable
+      return unless object.hidden?
+      object.hidden = false
+    end
+  end # VisibleArea
+
+  class DetectionArea < VisibleArea
+    def setup
+      super
+      self.hide! # Not sure if it's better to be visible.
+    end
+
+    def update
+      self.each_collision(Guard, Watcher) do |area, object|
+        range = self.range_to(object)
+        update_object_visibility(object, range) if line_of_sight_to(object)
+        delegate_collision_with(object, range)
+      end
+    end
+
     def delegate_collision_with(object, range)
       case range
       when :far
@@ -102,31 +131,6 @@ module Leaf
       end
     end
 
-    def update
-      self.each_collision(Guard, Watcher) do |area, object|
-        range = self.range_to(object)
-        update_object_visibility(object, range)
-        delegate_collision_with(object, range)
-      end
-    end
-
-    private
-    def update_object_visibility(object, range)
-      return unless object.is_a? Hidable
-      case range
-      when :distant, nil
-        object.hidden = true
-      else 
-        object.hidden = ! line_of_sight_to(object)
-      end
-    end
-  end # VisibleArea
-
-  class DetectionArea < VisibleArea
-    def setup
-      super
-      self.hide! # Not sure if it's better to be visible.
-    end
   end # DetectionArea
 
 end # Leaf

@@ -6,6 +6,10 @@ module Leaf
       self.show! if not @hidden
       super
     end
+
+    def hidden?
+      @hidden
+    end
   end
 
   module Standable
