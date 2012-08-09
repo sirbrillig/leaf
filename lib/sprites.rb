@@ -1,19 +1,5 @@
 module Leaf
 
-  class Platform < Chingu::GameObject
-    trait :collision_detection
-    trait :bounding_box, :scale => 1#, :debug => true
-    include Standable, Unpassable
-
-    def setup
-      @image = Gosu::Image["media/platform.png"]
-      self.zorder = Leaf::Level::PLATFORM_LAYER
-      self.rotation_center = :top_right 
-      self.alpha = Leaf::Level::FAR_OBJECT_ALPHA
-    end
-
-  end # Platform
-
   class Background < Chingu::GameObject
     def setup
       @image = Gosu::Image["media/background.jpg"]
@@ -43,7 +29,6 @@ module Leaf
   end # Tree
 
   class BackgroundWall < BackgroundObject
-    include Climbable
     trait :bounding_box, :scale => 1, :debug => Leaf::DEBUG
     def setup
       super
@@ -53,7 +38,7 @@ module Leaf
   end # BackgroundWall
 
   class BackgroundPlatform < BackgroundObject
-    include Standable, BlocksVision
+    include Standable, BlocksVision, Unpassable, Hangable
     trait :bounding_box, :scale => 1, :debug => Leaf::DEBUG
     def setup
       super

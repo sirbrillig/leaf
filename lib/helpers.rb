@@ -24,4 +24,7 @@ module Leaf
   module Climbable
   end
 
+  module Hangable
+  end
+
 end # Leaf

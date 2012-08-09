@@ -204,7 +204,7 @@ module Leaf
 
     # Return true if we are about to fall off a Platform. Despite the name this
     # can be used to stop falling. This will be automatically checked during
-    # normal movement and the method #handle_fell_off_platform will be called,
+    # normal movement and the method in @prevent_falling will be called,
     # so you can handle the event there.
     def fallen_off_platform?
       return false if jumping?
@@ -328,8 +328,8 @@ module Leaf
       end
 
       if walking? and fallen_off_platform?
-        handle_fell_off_platform
-        self.x = previous_x if @prevent_falling
+#         self.x = previous_x if @prevent_falling
+        @prevent_falling.call if @prevent_falling
       end
 
       if block = hit_obstacle?
@@ -358,10 +358,6 @@ module Leaf
 
     # Called when we fall off screen.
     def handle_fell_off_screen
-    end
-
-    # Called when we're about to fall off a platform.
-    def handle_fell_off_platform
     end
 
   end # Creature

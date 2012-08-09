@@ -37,7 +37,7 @@ module Leaf
       self.viewport.game_area = [0, 0, 2048, 768]
       load_map
 
-      @game_object_map = Chingu::GameObjectMap.new(:game_objects => Platform.all + BackgroundPlatform.all, :grid => @grid)
+      @game_object_map = Chingu::GameObjectMap.new(:game_objects => BackgroundPlatform.all, :grid => @grid)
       @background_object_map = Chingu::GameObjectMap.new(:game_objects => Tree.all, :grid => @grid)
     end
 

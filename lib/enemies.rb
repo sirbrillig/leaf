@@ -14,6 +14,8 @@ module Leaf
       @started = false
       @hidden = true
       self.alpha = 255
+
+      @prevent_falling = Proc.new { turn_around }
     end
 
     def update
@@ -74,13 +76,9 @@ module Leaf
     def start_movement
     end
 
-    def handle_hit_obstacle(object)
-      turn_around if object.is_a? Unpassable
-    end
-
-    def handle_fell_off_platform
-      turn_around
-    end
+#     def handle_hit_obstacle(object)
+#       turn_around if object.is_a? Unpassable and not alert?
+#     end
   end # Enemy
 
 
@@ -89,15 +87,16 @@ module Leaf
       super
       define_movement do
         walk_left_for 2.seconds
-        look_left_for :random_period
-        look_right_for :random_period
+        look_left_for random_period
+        look_right_for random_period
         look_left_for 0.5.seconds
         walk_right_for 2.seconds
-        look_left_for :random_period
-        look_right_for :random_period
+        look_left_for random_period
+        look_right_for random_period
         look_right_for 0.5.seconds
         if_noticed do
           set_speed_to 2
+          ignore_falling
           walk_toward_player_for 0.2.seconds
         end
       end
@@ -117,9 +116,10 @@ module Leaf
     def setup
       super
       define_movement do
-        look_left_for :random_period
-        look_right_for :random_period
+        look_left_for random_period
+        look_right_for random_period
         if_noticed do
+          ignore_falling
           walk_toward_player_for 0.2.seconds
         end
       end
@@ -132,21 +132,6 @@ module Leaf
     def load_animation
       @animation = Animation.new(:file => "media/watcher.png", :size => 50)
       @animation.frame_names = {:face_right => 0..1, :face_left => 2..3, :face_alert_right => 0..1, :face_alert_left => 2..3, :jump_left => 2..3, :jump_right => 0..1, :stopping_right => 0..1, :stopping_left => 2..3}
-    end
-
-    def handle_hit_obstacle(object)
-      #jump
-      #land
-    end
-
-    def jump
-      #return if stopped?
-      #super
-    end
-
-    def handle_fell_off_platform
-      #jump
-      #land if jumping?
     end
   end # Watcher
 

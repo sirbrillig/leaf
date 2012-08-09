@@ -75,6 +75,13 @@ module Leaf
       behavior_array.first.run unless behavior_array.first.executed?
     end
 
+    def ignore_falling
+      behavior = MovementBehavior.create { return if @save_old_falling; @save_old_falling = @prevent_falling; @prevent_falling = false }
+      behavior.at_end { @prevent_falling = @save_old_falling if @save_old_falling; @save_old_falling = nil }
+      behavior.does_not_block = true
+      record_behavior(behavior)
+    end
+
     def set_speed_to(speed)
       behavior = MovementBehavior.create { return if @save_old_speed; @save_old_speed = self.speed; self.speed = speed }
       behavior.at_end { self.speed = @save_old_speed if @save_old_speed; @save_old_speed = nil }
@@ -133,6 +140,10 @@ module Leaf
       end
       behavior.completed_after(ms)
       record_behavior(behavior)
+    end
+
+    def random_period
+      :random_period
     end
 
     private
