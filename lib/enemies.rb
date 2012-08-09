@@ -51,12 +51,10 @@ module Leaf
 
 
     def noticed_player
-#       puts "noticed!"
       add_movement_state(:noticed)
     end
 
     def outside_notice
-#       puts "un - noticed!"
       start_alert if has_movement_state? :noticed
       remove_movement_state(:noticed)
     end
@@ -133,7 +131,7 @@ module Leaf
 
     def load_animation
       @animation = Animation.new(:file => "media/watcher.png", :size => 50)
-      @animation.frame_names = {:face_right => 0..1, :face_left => 2..3, :jump_left => 2..3, :jump_right => 0..1, :stopping_right => 0..1, :stopping_left => 2..3}
+      @animation.frame_names = {:face_right => 0..1, :face_left => 2..3, :face_alert_right => 0..1, :face_alert_left => 2..3, :jump_left => 2..3, :jump_right => 0..1, :stopping_right => 0..1, :stopping_left => 2..3}
     end
 
     def handle_hit_obstacle(object)

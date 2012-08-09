@@ -1,12 +1,12 @@
 module Leaf
 
   class Player < Creature
-    PARTIAL_COVER_ALPHA = 60
+    PARTIAL_COVER_ALPHA = 160
 
     def setup
       super
       @animation = Animation.new(:file => "media/player2.png", :size => 50)
-      @animation.frame_names = {:face_right => 0..1, :face_left => 2..3, :climb => 4..5, :jump_left => 4..5, :jump_right => 4..5, :stopping_right => 0..1, :stopping_left => 2..3}
+      @animation.frame_names = {:face_right => 0..1, :face_left => 2..3, :climb => 4..5, :jump_left => 2..3, :jump_right => 0..1, :stopping_right => 0..1, :stopping_left => 2..3}
       @image = @animation.first
       @partial_cover = false
 

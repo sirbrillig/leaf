@@ -57,6 +57,7 @@ module Leaf
 
 
     def move_left
+      return @velocity_x = -1 if climbing?
       @walking = true unless jumping?
       @stopping = false
       @facing = :left
@@ -64,6 +65,7 @@ module Leaf
     end
 
     def move_right
+      return @velocity_x = 1 if climbing?
       @walking = true unless jumping?
       @stopping = false
       @facing = :right
@@ -115,7 +117,7 @@ module Leaf
     end
 
     def climb_up(object)
-      self.y -= 10 unless climbing?
+      self.y -= 10 unless climbing? # We've got to get off the ground
       land if jumping?
       @climbing = true
       suspend_gravity
@@ -266,14 +268,16 @@ module Leaf
         @image = next_animation_frame(:stopping, @facing)
       elsif jumping?
         @image = next_animation_frame(:jump, @facing)
-      elsif walking?
+      elsif walking? and not climbing?
         if alert?
           @image = next_animation_frame(:face_alert, @facing)
         else
           @image = next_animation_frame(:face, @facing)
         end
       elsif climbing?
-        @image = next_animation_frame(:climb)
+        if [self.x, self.y] != @previous_position
+          @image = next_animation_frame(:climb)
+        end
       elsif @facing != @previous_facing
         if alert?
           @image = next_animation_frame(:face_alert, @facing)
@@ -282,6 +286,7 @@ module Leaf
         end
       end
       @previous_facing = @facing
+      @previous_position = [self.x, self.y]
     end
 
     def next_animation_frame(tag, facing=nil)
