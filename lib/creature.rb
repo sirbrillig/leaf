@@ -3,24 +3,22 @@ module Leaf
     trait :bounding_box, :scale => [0.3, 0.8], :debug => Leaf::DEBUG
     traits :collision_detection, :timer, :velocity
 
-    question_accessor :stopping, :jumping, :walking, :climbing
+    question_accessor :stopping, :jumping, :walking, :climbing, :hanging
+    attr_accessor :climb_speed
 
     def setup
       @animation = Animation.new(:file => "media/blank.png", :size => 50)
       @animation.frame_names = {:face_right => 0..1, :face_left => 2..3, :climb => 4..5, :jump_left => 4..5, :jump_right => 4..5, :stopping_right => 0..1, :stopping_left => 2..3}
       @image = @animation.first
 
-      @jumping = false
-      @walking = false
-      @climbing = false
       @facing = :right
-      @stopping = false
 
       self.zorder = Leaf::Level::SPRITES_LAYER
       self.acceleration_y = 0.5
       self.max_velocity_y = 20
       self.max_velocity_x = 4
       self.rotation_center = :bottom_center
+      self.climb_speed = 1
     end
 
     def speed=(spd)
@@ -51,24 +49,24 @@ module Leaf
     def sliding?
       return true if facing_right? and self.velocity_x < 0
       return true if facing_left? and self.velocity_x > 0
-      return true if not walking? and not jumping? and self.velocity_x != 0
+      return true if not walking? and not jumping? and not climbing? and self.velocity_x != 0
       false
     end
 
 
     def move_left
-      return @velocity_x = -1 if climbing?
+      @facing = :left
+      return self.x -= self.climb_speed if climbing?
       @walking = true unless jumping?
       @stopping = false
-      @facing = :left
       @acceleration_x = -0.3
     end
 
     def move_right
-      return @velocity_x = 1 if climbing?
+      @facing = :right
+      return self.x += self.climb_speed if climbing?
       @walking = true unless jumping?
       @stopping = false
-      @facing = :right
       @acceleration_x = 0.3
     end
 
@@ -116,6 +114,13 @@ module Leaf
       @acceleration_y = @previous_accel_y
     end
 
+    def hang(object)
+      land if jumping?
+      @climbing = true
+      @hanging = true
+      suspend_gravity
+    end
+
     def climb_up(object)
       self.y -= 10 unless climbing? # We've got to get off the ground
       land if jumping?
@@ -135,6 +140,7 @@ module Leaf
       restore_gravity
       @distance_climbed = 0
       @climbing = false
+      @hanging = false
     end
 
 
@@ -193,6 +199,26 @@ module Leaf
         self.x += look_ahead
       end
       block
+    end
+
+    def hit_hangable
+      return nil unless self.is_a? Player
+      return nil unless jumping?
+      look_ahead = 10
+      self.y -= look_ahead
+      margin_of_error = 20
+      block = hit_objects.select do |o| 
+        o.is_a? Hangable and o.bb.top.between?(self.bb.top - margin_of_error, self.bb.top + margin_of_error)
+      end.last
+      self.y += look_ahead
+      block
+    end
+
+    def hit_ceiling
+      return nil unless rising?
+      block = hit_objects.select do |o|
+        o.is_a? Unpassable
+      end.last
     end
 
     # Return true if we fell off the bottom of the screen. This will be
@@ -315,20 +341,16 @@ module Leaf
         land
       end
 
-      objects = self.hit_objects
-      unless objects.empty?
-#         objects = [objects.first]
-#         puts "hit #{objects.collect{|o|o.class}.inspect}" if self.is_a? Player
-        objects.each do |object|
-          if rising? and object.is_a? Unpassable
-            self.y = object.bb.bottom + self.image.height
-            self.velocity = 0
-          end
-        end
+      if ceil = hit_hangable
+        hang(ceil)
+      end
+
+      if ceil = hit_ceiling
+        self.y = ceil.bb.bottom + self.image.height
+        self.velocity = 0
       end
 
       if walking? and fallen_off_platform?
-#         self.x = previous_x if @prevent_falling
         @prevent_falling.call if @prevent_falling
       end
 
@@ -337,7 +359,7 @@ module Leaf
         handle_hit_obstacle(block) 
       end
 
-      finish_climbing if climbing? and not background_object
+      finish_climbing if not hanging? and (climbing? and not background_object)
 
       if game_state.viewport.outside?(self)
         if fallen_off_bottom?

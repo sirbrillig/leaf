@@ -26,6 +26,7 @@ module Leaf
     end
 
     def up_pressed
+      return if hanging?
       object = background_object
       if object and object.is_a? Climbable
         climb_up(object)
@@ -37,6 +38,7 @@ module Leaf
     def down_pressed
       object = background_object
       climb_down(object) if object and climbing?
+      finish_climbing if hanging?
     end
 
     def delete_other_players
