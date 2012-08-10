@@ -8,7 +8,19 @@ module Leaf
 
     def setup
       @animation = Animation.new(:file => "media/blank.png", :size => 50)
-      @animation.frame_names = {:face_right => 0..1, :face_left => 2..3, :climb => 4..5, :jump_left => 4..5, :jump_right => 4..5, :stopping_right => 0..1, :stopping_left => 2..3}
+      @animation.frame_names = {
+        :face_right => 0..1, 
+        :face_left => 2..3, 
+        :face_alert_right => 0..1, 
+        :face_alert_left => 2..3, 
+        :climb => 4..5, 
+        :jump_left => 4..5, 
+        :jump_right => 4..5, 
+        :stopping_right => 0..1, 
+        :stopping_left => 2..3,
+        :hang_left => 4..5, 
+        :hang_right => 4..5
+      }
       @image = @animation.first
 
       @facing = :right
@@ -83,8 +95,8 @@ module Leaf
       @stopping = true
       @acceleration_x = -@acceleration_x
       # Slow down (a little slower than we accel).
-      @acceleration_x -= 0.15 if @acceleration_x > 0
-      @acceleration_x += 0.15 if @acceleration_x < 0
+      @acceleration_x -= 0.12 if @acceleration_x > 0
+      @acceleration_x += 0.12 if @acceleration_x < 0
     end
 
     def jump(distance=11)
@@ -300,6 +312,10 @@ module Leaf
         else
           @image = next_animation_frame(:face, @facing)
         end
+      elsif hanging?
+        if [self.x, self.y] != @previous_position
+          @image = next_animation_frame(:hang, @facing)
+        end
       elsif climbing?
         if [self.x, self.y] != @previous_position
           @image = next_animation_frame(:climb)
@@ -327,8 +343,6 @@ module Leaf
       # Make sure we stop after slowing down.
       stop_totally if @velocity_x != 0 and @velocity_x.between?(-0.2, 0.2)
       stop_totally if sliding?
-
-      update_animation
 
       if floor = hit_step
         self.y = floor.bb.top - 1
@@ -360,6 +374,8 @@ module Leaf
       end
 
       finish_climbing if not hanging? and (climbing? and not background_object)
+
+      update_animation
 
       if game_state.viewport.outside?(self)
         if fallen_off_bottom?
