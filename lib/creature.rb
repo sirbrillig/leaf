@@ -113,6 +113,7 @@ module Leaf
     def land
       @jumping = false
       @velocity_y = 0
+      finish_climbing
     end
 
     def suspend_gravity
@@ -132,6 +133,7 @@ module Leaf
       @climbing = true
       @hanging = true
       suspend_gravity
+      stop_totally
     end
 
     def climb_up(object)
@@ -140,6 +142,7 @@ module Leaf
       @climbing = true
       suspend_gravity
       self.y -= 2
+      stop_totally
     end
     
     def climb_down(object)
@@ -147,6 +150,7 @@ module Leaf
       @climbing = true
       suspend_gravity
       self.y += 2
+      stop_totally
     end
 
     def finish_climbing
@@ -356,6 +360,7 @@ module Leaf
         land
       end
 
+      # FIXME: add a way to hang on to the edge of a platform as well as beneath
       if ceil = hit_hangable
         hang(ceil)
       elsif ceil = hit_ceiling

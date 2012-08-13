@@ -14,7 +14,7 @@ module Leaf
       self.rotation_center = :center
       @image = Gosu::Image["media/visiblearea.png"]
       self.mode = :add
-      self.alpha = 200
+      self.alpha = 250
       self.radius = 352
 
       @tracked_objects = {:close => [], :middle => [], :far => [], :distant => []}
