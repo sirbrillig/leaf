@@ -5,11 +5,6 @@ module Leaf
     trait :bounding_circle, :scale => 1.1, :debug => Leaf::DEBUG
     attr_accessor :handle_collide_far, :handle_collide_middle, :handle_collide_close, :handle_collide_distant, :holder
 
-    CLOSE_RADIUS = 80
-    MIDDLE_RADIUS = 200
-    FAR_RADIUS = 290
-    DISTANT_RADIUS = 351
-
     #FIXME: make light of different shapes, ie: a cone for the guards.
     #FIXME: make different shaped-light use appropriate collision to determine
     #what happens.
@@ -20,10 +15,26 @@ module Leaf
       @image = Gosu::Image["media/visiblearea.png"]
       self.mode = :add
       self.alpha = 200
-      self.radius = DISTANT_RADIUS + 1
+      self.radius = 352
 
       @tracked_objects = {:close => [], :middle => [], :far => [], :distant => []}
       @show_detection_area = false # For debugging
+    end
+
+    def distant_radius
+      self.radius
+    end
+
+    def far_radius
+      self.radius - (self.radius / 4)
+    end
+
+    def middle_radius
+      self.radius - (self.radius / 2)
+    end
+
+    def close_radius
+      self.radius - ((self.radius / 4) * 3)
     end
 
     def follow(sprite)
@@ -41,13 +52,13 @@ module Leaf
     def range_to(object)
       distance = game_state.distance(self, object)
       case distance
-      when (MIDDLE_RADIUS + 1)..FAR_RADIUS
+      when (middle_radius + 1)..far_radius
         return :far
-      when (CLOSE_RADIUS + 1)..MIDDLE_RADIUS
+      when (close_radius + 1)..middle_radius
         return :middle
-      when 0..CLOSE_RADIUS
+      when 0..close_radius
         return :close
-      when (FAR_RADIUS + 1)..DISTANT_RADIUS
+      when (far_radius + 1)..distant_radius
         return :distant
       else
         return nil
@@ -65,10 +76,10 @@ module Leaf
     def draw
       super
       if @show_detection_area
-        game_state.draw_circle(self.x, self.y, CLOSE_RADIUS, Gosu::Color.new(0xff00ff00))
-        game_state.draw_circle(self.x, self.y, MIDDLE_RADIUS, Gosu::Color.new(0xff00ff00))
-        game_state.draw_circle(self.x, self.y, FAR_RADIUS, Gosu::Color.new(0xff00ff00))
-        game_state.draw_circle(self.x, self.y, DISTANT_RADIUS, Gosu::Color.new(0xff00ff00))
+        game_state.draw_circle(self.x, self.y, close_radius, Gosu::Color.new(0xff00ff00))
+        game_state.draw_circle(self.x, self.y, middle_radius, Gosu::Color.new(0xff00ff00))
+        game_state.draw_circle(self.x, self.y, far_radius, Gosu::Color.new(0xff00ff00))
+        game_state.draw_circle(self.x, self.y, distant_radius, Gosu::Color.new(0xff00ff00))
         game_state.draw_rect(bb, Gosu::Color.new(0xff00ff00), Leaf::Level::LIGHTED_LAYER)
       end
     end
@@ -91,7 +102,9 @@ module Leaf
   class DetectionArea < VisibleArea
     def setup
       super
-      self.hide! # Not sure if it's better to be visible.
+      @image = nil
+#       self.hide! # Not sure if it's better to be visible.
+      @show_detection_area = true # For debugging
     end
 
     def update

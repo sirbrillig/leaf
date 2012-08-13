@@ -19,8 +19,8 @@ module Leaf
       # FIXME: give these 'lamps' to enemies instead of the Player.
       @visible_area = DetectionArea.create(:x => self.x, :y => self.y)
       @visible_area.holder = self
-      @visible_area.handle_collide_close = Proc.new { |object| object.noticed_player if object.respond_to? :noticed_player }
-      @visible_area.handle_collide_middle = Proc.new { |object| object.noticed_player if @partial_cover == false and object.respond_to? :noticed_player; object.outside_notice if @partial_cover and object.respond_to? :outside_notice }
+      @visible_area.handle_collide_close = Proc.new { |object| object.noticed_player if @partial_cover == false and object.respond_to? :noticed_player; object.outside_notice if @partial_cover and object.respond_to? :outside_notice }
+      @visible_area.handle_collide_middle = Proc.new { |object| object.outside_notice if object.respond_to? :outside_notice }
       @visible_area.handle_collide_distant = Proc.new { |object| object.outside_notice if object.respond_to? :outside_notice }
 
       on_input([:holding_left, :holding_a], :move_left)
