@@ -103,6 +103,7 @@ module Leaf
       return if jumping?
       return if @jump_delay
       return if falling?
+      distance += 1 if walking? # FIXME: ideally this should be if walking for some time.
       self.velocity_y = -(distance)
       @jumping = true
       @jump_delay = true
@@ -215,12 +216,12 @@ module Leaf
 
     def hit_hangable
       return nil unless self.is_a? Player
-      return nil unless jumping?
-      look_ahead = 10
+      return nil unless jumping? or hanging?
+      look_ahead = 5
       self.y -= look_ahead
-      margin_of_error = 20
+      margin_of_error = 10
       block = hit_objects.select do |o| 
-        o.is_a? Hangable and o.bb.top.between?(self.bb.top - margin_of_error, self.bb.top + margin_of_error)
+        o.is_a? Hangable and o.bb.bottom.between?(self.bb.top - margin_of_error, self.bb.top + margin_of_error)
       end.last
       self.y += look_ahead
       block
@@ -357,9 +358,7 @@ module Leaf
 
       if ceil = hit_hangable
         hang(ceil)
-      end
-
-      if ceil = hit_ceiling
+      elsif ceil = hit_ceiling
         self.y = ceil.bb.bottom + self.image.height
         self.velocity = 0
       end
@@ -373,7 +372,11 @@ module Leaf
         handle_hit_obstacle(block) 
       end
 
-      finish_climbing if not hanging? and (climbing? and not background_object)
+      if hanging?
+        finish_climbing unless hit_hangable
+      else
+        finish_climbing if climbing? and not background_object
+      end
 
       update_animation
 
