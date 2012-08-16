@@ -222,12 +222,27 @@ module Leaf
       return nil unless self.is_a? Player
       return nil unless jumping? or hanging?
       look_ahead = 5
-      self.y -= look_ahead
       margin_of_error = 10
-      block = hit_objects.select do |o| 
-        o.is_a? Hangable and o.bb.bottom.between?(self.bb.top - margin_of_error, self.bb.top + margin_of_error)
-      end.last
+      self.y -= look_ahead
+      block = hit_objects.select { |o| o.is_a? Hangable and o.bb.bottom.between?(self.bb.top - margin_of_error, self.bb.top + margin_of_error) }.last
       self.y += look_ahead
+      unless block
+        look_ahead = 10
+        if @facing == :right
+          self.x += look_ahead
+        else
+          self.x -= look_ahead
+        end
+        margin_of_error = 25
+        block = hit_objects.select do |o| 
+          o.is_a? Standable and (o.bb.left.between?(self.bb.right - margin_of_error, self.bb.right + margin_of_error) or o.bb.right.between?(self.bb.left - margin_of_error, self.bb.left + margin_of_error))
+        end.last
+        if @facing == :right
+          self.x -= look_ahead
+        else
+          self.x += look_ahead
+        end
+      end
       block
     end
 
@@ -361,8 +376,10 @@ module Leaf
       end
 
       # FIXME: add a way to hang on to the edge of a platform as well as beneath
+      just_hung = false
       if ceil = hit_hangable
         hang(ceil)
+        just_hung = true
       elsif ceil = hit_ceiling
         self.y = ceil.bb.bottom + self.image.height
         self.velocity = 0
@@ -377,7 +394,9 @@ module Leaf
         handle_hit_obstacle(block) 
       end
 
-      if hanging?
+      if just_hung
+        just_hung = false
+      elsif hanging?
         finish_climbing unless hit_hangable
       else
         finish_climbing if climbing? and not background_object
