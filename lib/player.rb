@@ -32,10 +32,13 @@ module Leaf
     end
 
     def up_pressed
+      if edging?
+        climb_up
+      end
       return if hanging?
       object = background_object
       if object and object.is_a? Climbable
-        climb_up(object)
+        climb_up
       else
         jump
       end
@@ -43,7 +46,7 @@ module Leaf
 
     def down_pressed
       object = background_object
-      climb_down(object) if object and climbing?
+      climb_down if object and climbing?
       finish_climbing if hanging?
     end
 

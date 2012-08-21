@@ -3,7 +3,7 @@ module Leaf
     trait :bounding_box, :scale => [0.3, 0.8], :debug => Leaf::DEBUG
     traits :collision_detection, :timer, :velocity
 
-    question_accessor :stopping, :jumping, :walking, :climbing, :hanging
+    question_accessor :stopping, :jumping, :walking, :climbing, :hanging, :edging
     attr_accessor :climb_speed
 
     def setup
@@ -128,7 +128,12 @@ module Leaf
       @acceleration_y = @previous_accel_y
     end
 
-    def hang(object)
+    def edge_hang
+      hang
+      @edging = true
+    end
+
+    def hang
       land if jumping?
       @climbing = true
       @hanging = true
@@ -136,7 +141,7 @@ module Leaf
       stop_totally
     end
 
-    def climb_up(object)
+    def climb_up
       self.y -= 10 unless climbing? # We've got to get off the ground
       land if jumping?
       @climbing = true
@@ -145,7 +150,7 @@ module Leaf
       stop_totally
     end
     
-    def climb_down(object)
+    def climb_down
       land if jumping?
       @climbing = true
       suspend_gravity
@@ -158,6 +163,7 @@ module Leaf
       @distance_climbed = 0
       @climbing = false
       @hanging = false
+      @edging = false
     end
 
 
@@ -220,28 +226,32 @@ module Leaf
 
     def hit_hangable
       return nil unless self.is_a? Player
-      return nil unless jumping? or hanging?
+      return nil unless jumping? or hanging? or edging?
       look_ahead = 5
       margin_of_error = 10
       self.y -= look_ahead
       block = hit_objects.select { |o| o.is_a? Hangable and o.bb.bottom.between?(self.bb.top - margin_of_error, self.bb.top + margin_of_error) }.last
       self.y += look_ahead
-      unless block
-        look_ahead = 10
-        if @facing == :right
-          self.x += look_ahead
-        else
-          self.x -= look_ahead
-        end
-        margin_of_error = 25
-        block = hit_objects.select do |o| 
-          o.is_a? Standable and (o.bb.left.between?(self.bb.right - margin_of_error, self.bb.right + margin_of_error) or o.bb.right.between?(self.bb.left - margin_of_error, self.bb.left + margin_of_error))
-        end.last
-        if @facing == :right
-          self.x -= look_ahead
-        else
-          self.x += look_ahead
-        end
+      block
+    end
+
+    def hit_edge
+      return nil unless self.is_a? Player
+      return nil unless jumping? or hanging? or edging?
+      look_ahead = 10
+      if @facing == :right
+        self.x += look_ahead
+      else
+        self.x -= look_ahead
+      end
+      margin_of_error = 25
+      block = hit_objects.select do |o| 
+        o.is_a? Standable and (o.bb.left.between?(self.bb.right - margin_of_error, self.bb.right + margin_of_error) or o.bb.right.between?(self.bb.left - margin_of_error, self.bb.left + margin_of_error))
+      end.last
+      if @facing == :right
+        self.x -= look_ahead
+      else
+        self.x += look_ahead
       end
       block
     end
@@ -332,7 +342,7 @@ module Leaf
         else
           @image = next_animation_frame(:face, @facing)
         end
-      elsif hanging?
+      elsif hanging? or edging?
         if [self.x, self.y] != @previous_position
           @image = next_animation_frame(:hang, @facing)
         end
@@ -375,10 +385,14 @@ module Leaf
         land
       end
 
-      # FIXME: add a way to hang on to the edge of a platform as well as beneath
+      # FIXME: add a way to climb around the outside of a platform (top to edge,
+      # edge to bottom, etc.)
       just_hung = false
       if ceil = hit_hangable
-        hang(ceil)
+        hang
+        just_hung = true
+      elsif ceil = hit_edge
+        edge_hang
         just_hung = true
       elsif ceil = hit_ceiling
         self.y = ceil.bb.bottom + self.image.height
@@ -389,7 +403,7 @@ module Leaf
         @prevent_falling.call if @prevent_falling
       end
 
-      if block = hit_obstacle?
+      if not hanging? and not edging? and block = hit_obstacle?
         self.x = previous_x
         handle_hit_obstacle(block) 
       end
@@ -397,7 +411,7 @@ module Leaf
       if just_hung
         just_hung = false
       elsif hanging?
-        finish_climbing unless hit_hangable
+        finish_climbing unless hit_hangable or hit_edge
       else
         finish_climbing if climbing? and not background_object
       end
