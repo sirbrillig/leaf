@@ -420,7 +420,8 @@ module Leaf
 
       if game_state.viewport.outside?(self)
         if fallen_off_bottom?
-          handle_fell_off_screen
+          #handle_fell_off_screen
+          self.y = previous_y
         elsif hit_left_screen_edge? or hit_right_screen_edge?
           self.x = previous_x
         else
