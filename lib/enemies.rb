@@ -53,7 +53,6 @@ module Leaf
 
 
     def noticed_player
-      puts "noticed"
       add_movement_state(:noticed)
     end
 

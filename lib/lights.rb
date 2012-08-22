@@ -20,6 +20,7 @@ module Leaf
 
       @tracked_objects = {:close => [], :middle => [], :far => [], :distant => []}
       @show_detection_area = false # For debugging
+      @caching = false
     end
 
     def distant_radius
@@ -74,6 +75,17 @@ module Leaf
       true
     end
 
+    def cached?(object, distance)
+      return false unless @caching
+      @tracked_objects[distance].include? object
+    end
+
+    def cache(object, distance)
+      return nil unless @caching
+      @tracked_objects.each_key { |key| @tracked_objects[key].delete(object) }
+      @tracked_objects[distance] << object
+    end
+
     def draw
       super
       if @show_detection_area
@@ -100,12 +112,14 @@ module Leaf
     end
   end # VisibleArea
 
+
   class DetectionArea < VisibleArea
     def setup
       super
       @image = nil
 #       self.hide! # Not sure if it's better to be visible.
       @show_detection_area = true # For debugging
+      @caching = false 
     end
 
     def update
@@ -124,32 +138,29 @@ module Leaf
         seen = true if object.facing_toward(self)
         # FIXME: not working
       end
+
       case range
       when :far
-        unless @tracked_objects[:far].include? object
-          @tracked_objects.each_key { |key| @tracked_objects[key].delete(object) }
-          @tracked_objects[:far] << object
+        unless cached?(object, :far)
+          cache(object, :far)
           handle_collide_far.call(object) if handle_collide_far
           handle_seen_far.call(object) if seen and handle_seen_far
         end
       when :middle
-        unless @tracked_objects[:middle].include? object
-          @tracked_objects.each_key { |key| @tracked_objects[key].delete(object) }
-          @tracked_objects[:middle] << object
+        unless cached?(object, :middle)
+          cache(object, :middle)
           handle_collide_middle.call(object) if handle_collide_middle
           handle_seen_middle.call(object) if seen and handle_seen_middle
         end
       when :close
-        unless @tracked_objects[:close].include? object
-          @tracked_objects.each_key { |key| @tracked_objects[key].delete(object) }
-          @tracked_objects[:close] << object
+        unless cached?(object, :close)
+          cache(object, :close)
           handle_collide_close.call(object) if handle_collide_close
           handle_seen_close.call(object) if seen and handle_seen_close
         end
       when :distant
-        unless @tracked_objects[:distant].include? object
-          @tracked_objects.each_key { |key| @tracked_objects[key].delete(object) }
-          @tracked_objects[:distant] << object
+        unless cached?(object, :distant)
+          cache(object, :distant)
           handle_collide_distant.call(object) if handle_collide_distant
           handle_seen_distant.call(object) if seen and handle_seen_distant
         end
