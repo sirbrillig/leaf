@@ -243,7 +243,7 @@ module Leaf
       return nil unless self.is_a? Player
       return nil unless jumping? or hanging? or edging?
       look_ahead = 10
-      if @facing == :right
+      if facing_right?
         self.x += look_ahead
       else
         self.x -= look_ahead
@@ -252,7 +252,7 @@ module Leaf
       block = hit_objects.select do |o| 
         o.is_a? Standable and (o.bb.left.between?(self.bb.right - margin_of_error, self.bb.right + margin_of_error) or o.bb.right.between?(self.bb.left - margin_of_error, self.bb.left + margin_of_error))
       end.last
-      if @facing == :right
+      if facing_right?
         self.x -= look_ahead
       else
         self.x += look_ahead
@@ -265,6 +265,17 @@ module Leaf
       block = hit_objects.select do |o|
         o.is_a? Unpassable
       end.last
+    end
+
+    def facing_toward(object)
+      margin_of_error = 25
+      face = false
+      # FIXME: add vertical sight range (test it, anyway)
+      face = true if facing_right? and object.x > self.x #and object.y.between?(self.bb.bottom + margin_of_error, self.bb.top - margin_of_error)
+      face = true if facing_left? and object.x < self.x #and object.y.between?(self.bb.bottom + margin_of_error, self.bb.top - margin_of_error)
+#       puts "facing #{Time.now}" if face
+#       puts "not facing #{Time.now}" if not face
+      face
     end
 
     # Return true if we fell off the bottom of the screen. This will be

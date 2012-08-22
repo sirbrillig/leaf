@@ -4,6 +4,7 @@ module Leaf
     trait :collision_detection
     trait :bounding_circle, :scale => 1.1, :debug => Leaf::DEBUG
     attr_accessor :handle_collide_far, :handle_collide_middle, :handle_collide_close, :handle_collide_distant, :holder
+    attr_accessor :handle_seen_far, :handle_seen_middle, :handle_seen_close, :handle_seen_distant
 
     #FIXME: make light of different shapes, ie: a cone for the guards.
     #FIXME: make different shaped-light use appropriate collision to determine
@@ -110,36 +111,47 @@ module Leaf
     def update
       self.each_collision(Guard, Watcher) do |area, object|
         range = self.range_to(object)
-        update_object_visibility(object, range) if line_of_sight_to(object)
-        delegate_collision_with(object, range)
+        los = line_of_sight_to(object)
+        update_object_visibility(object, range) if los
+        delegate_collision_with(object, range, los)
       end
     end
 
-    def delegate_collision_with(object, range)
+    def delegate_collision_with(object, range, line_of_sight)
+      seen = line_of_sight # Objects without facing are considered to look in all directions.
+      if line_of_sight and object.respond_to? :facing_toward
+        seen = false 
+        seen = true if object.facing_toward(self)
+        # FIXME: not working
+      end
       case range
       when :far
         unless @tracked_objects[:far].include? object
           @tracked_objects.each_key { |key| @tracked_objects[key].delete(object) }
           @tracked_objects[:far] << object
           handle_collide_far.call(object) if handle_collide_far
+          handle_seen_far.call(object) if seen and handle_seen_far
         end
       when :middle
         unless @tracked_objects[:middle].include? object
           @tracked_objects.each_key { |key| @tracked_objects[key].delete(object) }
           @tracked_objects[:middle] << object
           handle_collide_middle.call(object) if handle_collide_middle
+          handle_seen_middle.call(object) if seen and handle_seen_middle
         end
       when :close
         unless @tracked_objects[:close].include? object
           @tracked_objects.each_key { |key| @tracked_objects[key].delete(object) }
           @tracked_objects[:close] << object
           handle_collide_close.call(object) if handle_collide_close
+          handle_seen_close.call(object) if seen and handle_seen_close
         end
       when :distant
         unless @tracked_objects[:distant].include? object
           @tracked_objects.each_key { |key| @tracked_objects[key].delete(object) }
           @tracked_objects[:distant] << object
           handle_collide_distant.call(object) if handle_collide_distant
+          handle_seen_distant.call(object) if seen and handle_seen_distant
         end
       end
     end
