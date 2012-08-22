@@ -4,7 +4,7 @@ module Leaf
 	class Game < Chingu::Window
     def initialize
       fullscreen = false
-      super(1024, 768, fullscreen)
+      super(1900, 900, fullscreen)
     end
 
     def setup

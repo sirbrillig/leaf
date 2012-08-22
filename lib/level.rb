@@ -34,7 +34,7 @@ module Leaf
       on_input(:escape, :exit)
       on_input(:q, :exit)
 
-      self.viewport.game_area = [0, 0, 2048, 768]
+      self.viewport.game_area = [0, 0, 4096, 768]
       load_map
 
       @game_object_map = Chingu::GameObjectMap.new(:game_objects => BackgroundPlatform.all, :grid => @grid)
