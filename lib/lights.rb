@@ -136,7 +136,6 @@ module Leaf
       if line_of_sight and object.respond_to? :facing_toward
         seen = false 
         seen = true if object.facing_toward(self)
-        # FIXME: not working
       end
 
       case range
