@@ -3,7 +3,7 @@ module Leaf
     trait :bounding_box, :scale => [0.3, 0.8], :debug => Leaf::DEBUG
     traits :collision_detection, :timer, :velocity
 
-    question_accessor :stopping, :jumping, :walking, :climbing, :hanging, :edging
+    question_accessor :stopping, :jumping, :walking, :climbing, :hanging, :edging, :running
     attr_accessor :climb_speed
 
     def setup
@@ -70,6 +70,7 @@ module Leaf
       @facing = :left
       return self.x -= self.climb_speed if climbing?
       @walking = true unless jumping?
+      after(0.5.seconds) { self.running = true if walking? and not stopping? and @facing == :left }
       @stopping = false
       @acceleration_x = -0.3
     end
@@ -78,6 +79,7 @@ module Leaf
       @facing = :right
       return self.x += self.climb_speed if climbing?
       @walking = true unless jumping?
+      after(0.5.seconds) { self.running = true if walking? and not stopping? and @facing == :right }
       @stopping = false
       @acceleration_x = 0.3
     end
@@ -87,11 +89,13 @@ module Leaf
       @acceleration_x = 0
       @walking = false
       @stopping = false
+      self.running = false
     end
 
     def stop_moving
       return unless walking?
       return if stopping?
+      self.running = false
       @stopping = true
       @acceleration_x = -@acceleration_x
       # Slow down (a little slower than we accel).
@@ -103,7 +107,7 @@ module Leaf
       return if jumping?
       return if @jump_delay
       return if falling?
-      distance += 1 if walking? # FIXME: ideally this should be if walking for some time.
+      distance += 1 if running?
       self.velocity_y = -(distance)
       @jumping = true
       @jump_delay = true
@@ -420,6 +424,8 @@ module Leaf
 
       if game_state.viewport.outside?(self)
         if fallen_off_bottom?
+          # FIXME: this does not work because jumping up sets your Y coord to a
+          # huge number for some reason.
           #handle_fell_off_screen
           self.y = previous_y
         elsif hit_left_screen_edge? or hit_right_screen_edge?
