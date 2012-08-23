@@ -18,6 +18,7 @@ require 'sprites'
 require 'player'
 require 'level'
 require 'gameover'
+require 'youwin'
 
 if __FILE__ == $0
   Leaf::Game.new.show

@@ -17,6 +17,9 @@ module Leaf
       self.rotation_center = :center
       self.alpha = Leaf::Level::FAR_OBJECT_ALPHA
     end
+
+    def activate(obj)
+    end
   end # BackgroundObject
 
   class Tree < BackgroundObject
@@ -51,5 +54,18 @@ module Leaf
       super
       @image = Gosu::Image["media/lamp.png"]
     end
+  end # Lamp
+
+  class WinArea < BackgroundObject
+    def setup
+      super
+      @image = Gosu::Image["media/arch.png"]
+    end
+
+    def activate(player)
+      return unless player.is_a? Player
+      player.game_state.complete_level
+    end
   end
+
 end # Leaf

@@ -38,7 +38,12 @@ module Leaf
       load_map
 
       @game_object_map = Chingu::GameObjectMap.new(:game_objects => BackgroundPlatform.all, :grid => @grid)
-      @background_object_map = Chingu::GameObjectMap.new(:game_objects => Tree.all, :grid => @grid)
+      @background_object_map = Chingu::GameObjectMap.new(:game_objects => Tree.all + WinArea.all, :grid => @grid)
+    end
+
+    def complete_level
+      destroy_all_objects 
+      switch_game_state(YouWin)
     end
 
     def destroy_all_objects

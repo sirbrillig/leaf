@@ -418,6 +418,8 @@ module Leaf
         @prevent_falling.call if @prevent_falling
       end
 
+      background_obj = self.background_object
+
       if not hanging? and not edging? and block = hit_obstacle?
         self.x = previous_x
         handle_hit_obstacle(block) 
@@ -428,8 +430,10 @@ module Leaf
       elsif hanging?
         finish_climbing unless hit_hangable or hit_edge
       else
-        finish_climbing if climbing? and not background_object
+        finish_climbing if climbing? and not background_obj
       end
+
+      background_obj.activate(self) if background_obj
 
       update_animation
 
