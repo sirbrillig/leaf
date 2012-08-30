@@ -4,7 +4,7 @@ module Leaf
     traits :collision_detection, :timer, :velocity
 
     question_accessor :stopping, :jumping, :walking, :climbing, :hanging, :edging, :running
-    attr_accessor :climb_speed
+    attr_accessor :climb_speed, :facing
 
     def setup
       @animation = Animation.new(:file => "media/blank.png", :size => 50)

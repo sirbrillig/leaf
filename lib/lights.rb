@@ -118,7 +118,7 @@ module Leaf
       super
       @image = nil
 #       self.hide! # Not sure if it's better to be visible.
-      @show_detection_area = true # For debugging
+      @show_detection_area = false # For debugging
       @caching = false 
     end
 

@@ -34,6 +34,13 @@ module Leaf
       on_input([:released_left, :released_a], :stop_moving)
       on_input([:holding_up, :holding_w], :up_pressed)
       on_input([:holding_down, :holding_s], :down_pressed)
+      on_input(:space, :fire_pressed)
+    end
+
+    def fire_pressed
+      bomb = SmokeBomb.create(:x => self.x, :y => self.y)
+      bomb.start_object = self
+      bomb.activate
     end
 
     def up_pressed
