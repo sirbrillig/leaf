@@ -67,6 +67,8 @@ module Leaf
 
 
     def move_left
+      return land if edging? and facing_right?
+      return if edging?
       @facing = :left
       return self.x -= self.climb_speed if climbing?
       @walking = true unless jumping?
@@ -76,6 +78,8 @@ module Leaf
     end
 
     def move_right
+      return land if edging? and facing_left?
+      return if edging?
       @facing = :right
       return self.x += self.climb_speed if climbing?
       @walking = true unless jumping?
@@ -242,13 +246,13 @@ module Leaf
     def hit_edge
       return nil unless self.is_a? Player
       return nil unless jumping? or hanging? or edging?
-      look_ahead = 10
+      look_ahead = 5
       if facing_right?
         self.x += look_ahead
       else
         self.x -= look_ahead
       end
-      margin_of_error = 25
+      margin_of_error = 15
       block = hit_objects.select do |o| 
         o.is_a? Standable and (o.bb.left.between?(self.bb.right - margin_of_error, self.bb.right + margin_of_error) or o.bb.right.between?(self.bb.left - margin_of_error, self.bb.left + margin_of_error))
       end.last
@@ -323,7 +327,7 @@ module Leaf
     # This will automatically be checked during normal movement and the method
     # #handle_hit_obstacle will be called, so you can handle the event there.
     def hit_obstacle?
-      future_distance = 10
+      future_distance = 5
       self.y -= 2 # Prevent hitting the floor.
       # Check left
       self.x -= future_distance
