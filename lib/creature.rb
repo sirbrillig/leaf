@@ -4,7 +4,7 @@ module Leaf
     traits :collision_detection, :timer, :velocity
 
     question_accessor :stopping, :jumping, :walking, :climbing, :hanging, :edging, :running
-    attr_accessor :climb_speed, :facing
+    attr_accessor :climb_speed, :facing, :running_jump_velocity, :running_time
 
     def setup
       @animation = Animation.new(:file => "media/blank.png", :size => 50)
@@ -30,7 +30,9 @@ module Leaf
       self.max_velocity_y = 20
       self.max_velocity_x = 4
       self.rotation_center = :bottom_center
-      self.climb_speed = 1
+      self.climb_speed = 1.2
+      self.running_jump_velocity = 13
+      self.running_time = 0.4
     end
 
     def speed=(spd)
@@ -72,7 +74,7 @@ module Leaf
       @facing = :left
       return self.x -= self.climb_speed if climbing?
       @walking = true unless jumping?
-      after(0.5.seconds) { self.running = true if walking? and not stopping? and @facing == :left }
+      after(self.running_time.seconds) { self.running = true if walking? and not stopping? and @facing == :left }
       @stopping = false
       @acceleration_x = -0.3
     end
@@ -83,7 +85,7 @@ module Leaf
       @facing = :right
       return self.x += self.climb_speed if climbing?
       @walking = true unless jumping?
-      after(0.5.seconds) { self.running = true if walking? and not stopping? and @facing == :right }
+      after(self.running_time.seconds) { self.running = true if walking? and not stopping? and @facing == :right }
       @stopping = false
       @acceleration_x = 0.3
     end
@@ -111,7 +113,7 @@ module Leaf
       return if jumping?
       return if @jump_delay
       return if falling?
-      distance += 1 if running?
+      distance = self.running_jump_velocity if running?
       self.velocity_y = -(distance)
       @jumping = true
       @jump_delay = true
