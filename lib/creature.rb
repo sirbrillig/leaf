@@ -59,6 +59,10 @@ module Leaf
       self.velocity_y < 0
     end
 
+    def standing?
+      not (jumping? or hanging? or climbing? or edging?)
+    end
+
     # Return true if we're moving backwards or uncontrollably.
     def sliding?
       return true if facing_right? and self.velocity_x < 0
@@ -188,48 +192,59 @@ module Leaf
       game_state.background_object_map.collisions_with(self).first
     end
 
-    #FIXME: deal with platforms that are at an angle, if possible.
-
     # Return the Platform we're standing on or nil.
     def standing_on_platform
       return nil if falling? or jumping?
-      look_ahead = 10
-      self.y += look_ahead
-      block = hit_objects.select {|o| o.is_a? Standable}.first
-      self.y -= look_ahead
-      block
+      what_object_hit_me_on_the :side => :bottom, :restrict => Standable, :look_ahead => 10, :margin_of_error => 25
     end
 
     # Like standing_on_platform but to be used when falling.
     def hit_floor
       return nil if rising?
-      look_ahead = 10
-      self.y += look_ahead
-      margin_of_error = 20
-      block = hit_objects.select do |o| 
-        o.is_a? Standable and o.bb.top.between?(self.bb.bottom - margin_of_error, self.bb.bottom + margin_of_error)
-      end.last
-      self.y -= look_ahead
-      block
+      what_object_hit_me_on_the :side => :bottom, :restrict => Standable, :look_ahead => 10, :margin_of_error => 25
     end
 
     def hit_step
       return nil unless walking?
       return nil if jumping?
-      look_ahead = 10
-      if @facing == :right
-        self.x += look_ahead
-      else
-        self.x -= look_ahead
+      what_object_hit_me_on_the :side => self.facing, :restrict => Standable, :look_ahead => 10, :margin_of_error => 25
+    end
+
+    # example usage: which_object_hit_me_on_the :side => :left, :restrict => Hangable, :look_ahead => 10, :margin_of_error => 25
+    def what_object_hit_me_on_the(options)
+      options[:look_ahead] ||= -10
+      options[:margin_of_error] ||= 20
+      options[:restrict] ||= Class
+      axis = :x
+      object_edge = :left
+      case options[:side]
+      when :left
+        options[:look_ahead] = -options[:look_ahead].abs
+        object_edge = :right
+      when :right
+        options[:look_ahead] = options[:look_ahead].abs
+        object_edge = :left
+      when :top
+        axis = :y
+        options[:look_ahead] = -options[:look_ahead].abs
+        object_edge = :bottom
+      when :bottom
+        axis = :y
+        options[:look_ahead] = options[:look_ahead].abs
+        object_edge = :top
       end
-      margin_of_error = 25
-      block = hit_objects.select do |o| 
-        o.is_a? Standable and o.bb.top.between?(self.bb.bottom - margin_of_error, self.bb.bottom + margin_of_error)
-      end.last
-      if @facing == :right
-        self.x -= look_ahead
+      if axis == :y
+        self.y += options[:look_ahead]
       else
-        self.x += look_ahead
+        self.x += options[:look_ahead]
+      end
+      block = hit_objects.select do |o| 
+        o.is_a? options[:restrict] and o.bb.send(object_edge).between?(self.bb.send(options[:side]) - options[:margin_of_error], self.bb.send(options[:side]) + options[:margin_of_error]) 
+      end.first # Note: should this be first or last?
+      if axis == :y
+        self.y -= options[:look_ahead]
+      else
+        self.x -= options[:look_ahead]
       end
       block
     end
@@ -237,33 +252,13 @@ module Leaf
     def hit_hangable
       return nil unless self.is_a? Player
       return nil unless jumping? or hanging? or edging?
-      look_ahead = 5
-      margin_of_error = 10
-      self.y -= look_ahead
-      block = hit_objects.select { |o| o.is_a? Hangable and o.bb.bottom.between?(self.bb.top - margin_of_error, self.bb.top + margin_of_error) }.last
-      self.y += look_ahead
-      block
+      what_object_hit_me_on_the :side => :top, :restrict => Hangable, :look_ahead => 5, :margin_of_error => 10
     end
 
     def hit_edge
       return nil unless self.is_a? Player
       return nil unless jumping? or hanging? or edging?
-      look_ahead = 5
-      if facing_right?
-        self.x += look_ahead
-      else
-        self.x -= look_ahead
-      end
-      margin_of_error = 15
-      block = hit_objects.select do |o| 
-        o.is_a? Standable and (o.bb.left.between?(self.bb.right - margin_of_error, self.bb.right + margin_of_error) or o.bb.right.between?(self.bb.left - margin_of_error, self.bb.left + margin_of_error))
-      end.last
-      if facing_right?
-        self.x -= look_ahead
-      else
-        self.x += look_ahead
-      end
-      block
+      what_object_hit_me_on_the :side => self.facing, :restrict => Hangable, :look_ahead => 5, :margin_of_error => 15
     end
 
     def hit_ceiling
@@ -279,8 +274,6 @@ module Leaf
       # FIXME: add vertical sight range (test it, anyway)
       face = true if facing_right? and object.x > self.x #and object.y.between?(self.bb.bottom + margin_of_error, self.bb.top - margin_of_error)
       face = true if facing_left? and object.x < self.x #and object.y.between?(self.bb.bottom + margin_of_error, self.bb.top - margin_of_error)
-#       puts "facing #{Time.now}" if face
-#       puts "not facing #{Time.now}" if not face
       face
     end
 
@@ -331,17 +324,10 @@ module Leaf
     def hit_obstacle?
       future_distance = 5
       self.y -= 2 # Prevent hitting the floor.
-      # Check left
-      self.x -= future_distance
-      block_left = hit_objects.select {|o| o.is_a? Unpassable}.first
-      self.x += future_distance
-      # Check right
-      self.x += future_distance
-      block_right = hit_objects.select {|o| o.is_a? Unpassable}.first
-      self.x -= future_distance
+      left_thing = what_object_hit_me_on_the :side => :right, :restrict => Unpassable, :look_ahead => 5, :margin_of_error => 25
+      right_thing = what_object_hit_me_on_the :side => :left, :restrict => Unpassable, :look_ahead => 5, :margin_of_error => 25
       self.y += 2
-      return block_left if block_left
-      return block_right if block_right
+      left_thing || right_thing
     end
 
     # Return true if we support movement states and we're aware of something
@@ -372,6 +358,7 @@ module Leaf
           @image = next_animation_frame(:climb)
         end
       elsif @facing != @previous_facing
+        # FIXME: when landing, we need to have a static :face image returned.
         if alert?
           @image = next_animation_frame(:face_alert, @facing)
         else
