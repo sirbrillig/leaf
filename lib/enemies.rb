@@ -53,6 +53,8 @@ module Leaf
 
 
     def noticed_player
+      # FIXME: add more dramatic notification, eg: screen shake, things turn
+      # red, etc.
       add_movement_state(:noticed)
     end
 

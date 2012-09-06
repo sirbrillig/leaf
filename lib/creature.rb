@@ -1,5 +1,7 @@
 module Leaf
   class Creature < Chingu::GameObject
+    # FIXME: use image manip to flip images
+    # FIXME: allow horizontal image maps as well as vertical?
     trait :bounding_box, :scale => [0.3, 0.8], :debug => Leaf::DEBUG
     traits :collision_detection, :timer, :velocity
 

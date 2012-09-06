@@ -35,10 +35,11 @@ module Leaf
   end # Power
 
 
-  class SmokeBomb < Power
+  class Bomb < Power
     def setup
       configure('smokebomb.png')
       @max_explode_radius = 60
+      @waver = true
     end
 
     def activate
@@ -46,29 +47,53 @@ module Leaf
     end
 
     def explode
-      @explosion = @max_explode_radius / 1.3
+      @explosion_size = @max_explode_radius / 1.3
       @explode_out = true
-      during(2.second) do
+      during(1.second) do
         if @explode_out 
-          @explosion += 10 
-          @explode_out = false if @explosion > @max_explode_radius
+          @explosion_size += 10 
+          @explode_out = false if @explosion_size > @max_explode_radius
         else
-          @explosion -= 10 
+          @explosion_size -= 10 
         end
       end
+      self.then { self.destroy! }
     end
 
     def draw
       super
-      if @explosion
-        game_state.draw_circle(self.x, self.y, @explosion, Gosu::Color::WHITE)
-        self.destroy! if @explosion < 1
+      if @explosion_size
+        waver_size = 5
+        @explosion_size_waver = @explosion_size + waver_size if @waver
+        @explosion_size_waver = @explosion_size - waver_size unless @waver
+        game_state.draw_circle(self.x, self.y, @explosion_size + 5 + waver_size, Gosu::Color::WHITE, Level::OVERLAY_LAYER, :additive)
+        game_state.draw_circle(self.x, self.y, @explosion_size_waver, Gosu::Color::WHITE, Level::OVERLAY_LAYER, :additive)
+        self.destroy! if @explosion_size < 1
       end
     end
 
     def hit_object(object)
       self.acceleration = self.velocity = 0
       explode
+    end
+  end
+
+  class SmokeBomb < Bomb
+    # FIXME: LOS should be blocked by smoke.
+    def setup
+      super
+      @max_explode_radius = 150
+    end
+
+    def explode
+      @explosion_size = 1
+      during(2.seconds) do
+        @explosion_size += 1
+      end
+      self.then do
+        after(5.seconds) { self.destroy! }
+      end
+      every(0.2.seconds) { @waver = !@waver }
     end
   end
 end
