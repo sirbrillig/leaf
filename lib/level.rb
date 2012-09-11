@@ -1,5 +1,6 @@
 module Leaf
   class Level < Chingu::GameState
+    # FIXME: add HUD
     traits :timer, :viewport
     attr_reader :player, :game_object_map, :background_object_map
 

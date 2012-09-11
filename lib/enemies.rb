@@ -13,6 +13,7 @@ module Leaf
       @headed_left = true
       @started = false
       @hidden = true
+      @blind = false
       self.alpha = 255
 
       @prevent_falling = Proc.new { turn_around }
@@ -28,6 +29,11 @@ module Leaf
       play_next_movement if @started
       kill_players
       @hidden = true
+    end
+
+    def blind
+      @blind = true
+      # FIXME: blind needs to disable LOS
     end
 
     def kill_players

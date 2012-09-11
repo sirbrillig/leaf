@@ -34,34 +34,15 @@ module Leaf
     end
   end # Power
 
-
-  class Bomb < Power
+  
+  class Explosion < Chingu::GameObject
+    traits :bounding_circle, :collision_detection
+    attr_accessor :explosion_size, :waver
     def setup
-      configure('smokebomb.png')
-      @max_explode_radius = 60
       @waver = true
     end
 
-    def activate
-      jump_forward
-    end
-
-    def explode
-      @explosion_size = @max_explode_radius / 1.3
-      @explode_out = true
-      during(1.second) do
-        if @explode_out 
-          @explosion_size += 10 
-          @explode_out = false if @explosion_size > @max_explode_radius
-        else
-          @explosion_size -= 10 
-        end
-      end
-      self.then { self.destroy! }
-    end
-
     def draw
-      super
       if @explosion_size
         waver_size = 5
         @explosion_size_waver = @explosion_size + waver_size if @waver
@@ -72,11 +53,48 @@ module Leaf
       end
     end
 
+    def update
+      each_collision(Guard) { |o| o.blind }
+    end
+  end # Explosion
+
+
+  class Bomb < Power
+    def setup
+      configure('smokebomb.png')
+      @max_explode_radius = 60
+      @explosion = nil
+    end
+
+    def activate
+      jump_forward
+    end
+
+    def explode
+      @explosion = Explosion.create(:x => self.x, :y => self.y)
+      @explosion.explosion_size = @max_explode_radius / 1.3
+      @explode_out = true
+      during(1.second) do
+        if @explode_out 
+          @explosion.explosion_size += 10 
+          @explode_out = false if @explosion.explosion_size > @max_explode_radius
+        else
+          @explosion.explosion_size -= 10 
+        end
+      end
+      self.then { @explosion.destroy! if @explosion; self.destroy! }
+    end
+
+    def draw
+      super
+      @explosion.draw if @explosion
+    end
+
     def hit_object(object)
       self.acceleration = self.velocity = 0
       explode
     end
-  end
+  end # Bomb
 
   class SmokeBomb < Bomb
     # FIXME: LOS should be blocked by smoke.
@@ -86,14 +104,15 @@ module Leaf
     end
 
     def explode
-      @explosion_size = 1
+      @explosion = Explosion.create(:x => self.x, :y => self.y)
+      @explosion.explosion_size = 1
       during(2.seconds) do
-        @explosion_size += 1
+        @explosion.explosion_size += 1
       end
       self.then do
-        after(5.seconds) { self.destroy! }
+        after(5.seconds) { @explosion.destroy! if @explosion; self.destroy! }
       end
-      every(0.2.seconds) { @waver = !@waver }
+      every(0.2.seconds) { @explosion.waver = !@explosion.waver }
     end
   end
 end
