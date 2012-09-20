@@ -52,10 +52,6 @@ module Leaf
         self.destroy! if @explosion_size < 1
       end
     end
-
-    def update
-      each_collision(Guard) { |o| o.blind }
-    end
   end # Explosion
 
 
