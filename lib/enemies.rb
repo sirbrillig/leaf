@@ -112,7 +112,7 @@ module Leaf
 
     def load_animation
       @animation = Animation.new(:file => "media/guard.png", :size => 50)
-      @animation.frame_names = {:face_right => 0..1, :face_left => 2..3, :face_alert_right => 4..5, :face_alert_left => 6..7}
+      @animation.frame_names = {:stand => 0..1, :alert => 4..5}
     end
 
     def start_movement
@@ -139,7 +139,7 @@ module Leaf
 
     def load_animation
       @animation = Animation.new(:file => "media/watcher.png", :size => 50)
-      @animation.frame_names = {:face_right => 0..1, :face_left => 2..3, :face_alert_right => 0..1, :face_alert_left => 2..3, :jump_left => 2..3, :jump_right => 0..1, :stopping_right => 0..1, :stopping_left => 2..3}
+      @animation.frame_names = {:stand => 0..1, :alert => 0..1, :jump => 2..3, :stopping => 0..1 }
     end
   end # Watcher
 

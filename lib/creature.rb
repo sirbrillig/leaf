@@ -1,6 +1,5 @@
 module Leaf
   class Creature < Chingu::GameObject
-    # FIXME: use image manip to flip images
     # FIXME: allow horizontal image maps as well as vertical?
     trait :bounding_box, :scale => [0.3, 0.8], :debug => Leaf::DEBUG
     traits :collision_detection, :timer, :velocity
@@ -28,6 +27,7 @@ module Leaf
       @facing = :right
 
       self.zorder = Leaf::Level::SPRITES_LAYER
+      self.factor_x = 1
       self.acceleration_y = 0.5
       self.max_velocity_y = 20
       self.max_velocity_x = 4
@@ -342,18 +342,18 @@ module Leaf
 
     def update_animation
       if stopping?
-        @image = next_animation_frame(:stopping, @facing)
+        @image = next_animation_frame(:stopping)
       elsif jumping?
-        @image = next_animation_frame(:jump, @facing)
+        @image = next_animation_frame(:jump)
       elsif walking? and not climbing?
         if alert?
-          @image = next_animation_frame(:face_alert, @facing)
+          @image = next_animation_frame(:alert)
         else
-          @image = next_animation_frame(:face, @facing)
+          @image = next_animation_frame(:stand)
         end
       elsif hanging? or edging?
         if [self.x, self.y] != @previous_position
-          @image = next_animation_frame(:hang, @facing)
+          @image = next_animation_frame(:hang)
         end
       elsif climbing?
         if [self.x, self.y] != @previous_position
@@ -362,20 +362,22 @@ module Leaf
       elsif @facing != @previous_facing
         # FIXME: when landing, we need to have a static :face image returned.
         if alert?
-          @image = next_animation_frame(:face_alert, @facing)
+          @image = next_animation_frame(:alert)
         else
-          @image = next_animation_frame(:face, @facing)
+          @image = next_animation_frame(:stand)
         end
       end
       @previous_facing = @facing
       @previous_position = [self.x, self.y]
     end
 
-    def next_animation_frame(tag, facing=nil)
-      tag = "#{tag}_#{facing}".to_sym if facing
-      return @animation.next unless @animation[tag]
-      return @animation[tag] if @animation[tag].is_a? Gosu::Image
-      return @animation[tag].next
+    def next_animation_frame(tag)
+      image = @animation.next unless @animation[tag]
+      image = @animation[tag] if @animation[tag].is_a? Gosu::Image
+      image = @animation[tag].next if image.nil?
+      self.factor_x = -1 if facing_left?
+      self.factor_x = 1 if facing_right?
+      image
     end
 
 
