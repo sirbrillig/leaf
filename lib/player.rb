@@ -5,13 +5,13 @@ module Leaf
 
     def setup
       super
-      @animation = Animation.new(:file => "media/player2.png", :size => 50)
+      @animation = Animation.new(:file => "media/sprite3_default.png", :width => 40, :height => 64)
       @animation.frame_names = {
-        :stand => 0..1,
-        :climb => 4..5, 
-        :jump => 0..1, 
-        :hang => 4..5, 
-        :stopping => 0..1
+        :stand => 0..2,
+        :climb => 3..4,
+        :jump => 3..4,
+        :hang => 3..4,
+        :stopping => 0..2,
       }
       @image = @animation.first
       @partial_cover = false
