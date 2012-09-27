@@ -36,25 +36,16 @@ module Leaf
 
   
   class Explosion < Chingu::GameObject
-    traits :bounding_circle, :collision_detection
-    attr_accessor :explosion_size, :waver
+    traits :bounding_box, :collision_detection, :timer
     def setup
-      @waver = true
+      self.rotation_center = :bottom_center
+      @animation = Animation.new(:file => "media/explosion.png", :width => 128, :height => 128, :loop => false)
+      self.image = @animation.first
+      after(2.seconds) { self.destroy! }
     end
 
-    def draw
-      if @explosion_size
-        waver_size = 5
-        @explosion_size_waver = @explosion_size + waver_size if @waver
-        @explosion_size_waver = @explosion_size - waver_size unless @waver
-        game_state.draw_circle(self.x, self.y, @explosion_size + 5 + waver_size, Gosu::Color::WHITE, Level::OVERLAY_LAYER, :additive)
-        game_state.draw_circle(self.x, self.y, @explosion_size_waver, Gosu::Color::WHITE, Level::OVERLAY_LAYER, :additive)
-        self.destroy! if @explosion_size < 1
-      end
-    end
-
-    def radius
-      (@explosion_size + 5) * 10 || 0
+    def update
+      self.image = @animation.next
     end
   end # Explosion
 
@@ -97,22 +88,13 @@ module Leaf
   end # Bomb
 
   class SmokeBomb < Bomb
-    # FIXME: LOS should be blocked by smoke.
     def setup
       super
-      @max_explode_radius = 150
     end
 
     def explode
       @explosion = Explosion.create(:x => self.x, :y => self.y)
-      @explosion.explosion_size = 1
-      during(5.seconds) do
-        @explosion.explosion_size += 1 unless @explosion.explosion_size >= @max_explode_radius
-      end
-      self.then do
-        after(5.seconds) { @explosion.destroy! if @explosion; self.destroy! }
-      end
-      every(0.2.seconds) { @explosion.waver = !@explosion.waver }
+      self.destroy!
     end
   end
 end
