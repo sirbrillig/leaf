@@ -112,7 +112,7 @@ module Leaf
 
     def load_animation
       @animation = Animation.new(:file => "media/guard.png", :size => 50)
-      @animation.frame_names = {:stand => 0, :walk => 0..1, :alert => 4..5}
+      @animation.frame_names = {:stand => 0, :walk => 0..1, :alert => 4..5, :stopping => 0..1 }
     end
 
     def start_movement

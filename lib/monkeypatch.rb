@@ -51,7 +51,7 @@ class Chingu::GameObjectMap
       if @map[x] and @map[x][y] and @map[x][y] != origin and @map[x][y] != dest and @map[x][y].is_a? Leaf::BlocksVision
         yield @map[x][y] 
       elsif
-        Leaf::Explosion.all.select { |e| yield if e.collides?(Leaf::SpriteRect.new(:x => x, :y => y, :width => @grid[1], :height => @grid[1])) }
+        Leaf::Explosion.all.select { |e| yield if e.collision_at?(x,y) }
       end
 
       if error > 0
@@ -65,14 +65,6 @@ class Chingu::GameObjectMap
   end
 end # GameObjectMap
 
-module Leaf
-  class SpriteRect < Chingu::GameObject
-    traits :collision_detection, :bounding_box
-    def bounding_box
-      Chingu::Rect.new(self.x, self.y, 50)
-    end
-  end
-end
 
 class Class
   def question_accessor(*args)

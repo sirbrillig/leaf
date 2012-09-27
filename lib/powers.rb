@@ -52,6 +52,10 @@ module Leaf
         self.destroy! if @explosion_size < 1
       end
     end
+
+    def radius
+      (@explosion_size + 5) * 10 || 0
+    end
   end # Explosion
 
 
@@ -102,8 +106,8 @@ module Leaf
     def explode
       @explosion = Explosion.create(:x => self.x, :y => self.y)
       @explosion.explosion_size = 1
-      during(2.seconds) do
-        @explosion.explosion_size += 1
+      during(5.seconds) do
+        @explosion.explosion_size += 1 unless @explosion.explosion_size >= @max_explode_radius
       end
       self.then do
         after(5.seconds) { @explosion.destroy! if @explosion; self.destroy! }
