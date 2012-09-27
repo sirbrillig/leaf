@@ -61,7 +61,7 @@ module Leaf
       object = background_object
       climb_down if object and climbing?
       return climb_down if edging?
-      finish_climbing if hanging?
+      land if hanging?
     end
 
     def delete_other_players

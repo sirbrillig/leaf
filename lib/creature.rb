@@ -1,7 +1,6 @@
 module Leaf
   class Creature < Chingu::GameObject
-    # FIXME: allow horizontal image maps as well as vertical?
-    trait :bounding_box, :scale => [0.3, 0.8], :debug => Leaf::DEBUG
+    trait :bounding_box, :scale => [0.4, 1], :debug => Leaf::DEBUG
     traits :collision_detection, :timer, :velocity
 
     question_accessor :stopping, :jumping, :walking, :climbing, :hanging, :edging, :running
@@ -115,8 +114,11 @@ module Leaf
 
     def land
       @jumping = false
+      @hanging = false
+      @edging = false
+      @climbing = false
       @velocity_y = 0
-      finish_climbing
+      restore_gravity
     end
 
     def suspend_gravity
@@ -159,14 +161,6 @@ module Leaf
       suspend_gravity
       self.y += 2
       stop_totally
-    end
-
-    def finish_climbing
-      restore_gravity
-      @distance_climbed = 0
-      @climbing = false
-      @hanging = false
-      @edging = false
     end
 
 
@@ -378,14 +372,15 @@ module Leaf
       stop_totally if @velocity_x != 0 and @velocity_x.between?(-0.2, 0.2)
       stop_totally if sliding?
 
+      # Allows us to climb stairs automatically (without jumping).
       if floor = hit_step
-        self.y = floor.bb.top - 1
+        self.y = floor.bb.top + 1
         land
       end
 
+      # This will be called constantly while on the ground, which is fine.
       if floor = hit_floor
-        # This will be called constantly while on the ground, which is fine.
-        self.y = floor.bb.top - 1
+        self.y = floor.bb.top + 1
         land
       end
 
@@ -417,9 +412,9 @@ module Leaf
       if just_hung
         just_hung = false
       elsif hanging?
-        finish_climbing unless hit_hangable or hit_edge
+        land unless hit_hangable or hit_edge
       else
-        finish_climbing if climbing? and not background_obj
+        land if climbing? and not background_obj
       end
 
       background_obj.activate(self) if background_obj
