@@ -5,13 +5,14 @@ module Leaf
 
     def setup
       super
-      @animation = Animation.new(:file => "media/sprite3_default.png", :width => 40, :height => 64)
+      @animation = Animation.new(:file => "media/ninja_sheet.png", :width => 64, :height => 64)
       @animation.frame_names = {
-        :stand => 0..2,
-        :climb => 3..4,
-        :jump => 3..4,
-        :hang => 3..4,
-        :stopping => 0..2,
+        :stand => 0,
+        :walk => 1..3,
+        :climb => 5..6,
+        :jump => 4,
+        :hang => 7..8,
+        :stopping => 1..3,
       }
       @image = @animation.first
       @partial_cover = false

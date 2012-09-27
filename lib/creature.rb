@@ -9,19 +9,6 @@ module Leaf
 
     def setup
       @animation = Animation.new(:file => "media/blank.png", :size => 50)
-      @animation.frame_names = {
-        :face_right => 0..1, 
-        :face_left => 2..3, 
-        :face_alert_right => 0..1, 
-        :face_alert_left => 2..3, 
-        :climb => 4..5, 
-        :jump_left => 4..5, 
-        :jump_right => 4..5, 
-        :stopping_right => 0..1, 
-        :stopping_left => 2..3,
-        :hang_left => 4..5, 
-        :hang_right => 4..5
-      }
       @image = @animation.first
 
       @facing = :right
@@ -349,23 +336,28 @@ module Leaf
         if alert?
           @image = next_animation_frame(:alert)
         else
-          @image = next_animation_frame(:stand)
+          @image = next_animation_frame(:walk)
         end
-      elsif hanging? or edging?
+      elsif hanging? and not edging?
         if [self.x, self.y] != @previous_position
           @image = next_animation_frame(:hang)
+        end
+      elsif edging?
+        if [self.x, self.y] != @previous_position
+          @image = next_animation_frame(:climb)
         end
       elsif climbing?
         if [self.x, self.y] != @previous_position
           @image = next_animation_frame(:climb)
         end
       elsif @facing != @previous_facing
-        # FIXME: when landing, we need to have a static :face image returned.
         if alert?
           @image = next_animation_frame(:alert)
         else
           @image = next_animation_frame(:stand)
         end
+      else
+          @image = next_animation_frame(:stand)
       end
       @previous_facing = @facing
       @previous_position = [self.x, self.y]
