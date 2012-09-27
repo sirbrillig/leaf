@@ -4,7 +4,7 @@ module Leaf
     traits :collision_detection, :timer, :velocity
 
     question_accessor :stopping, :jumping, :walking, :climbing, :hanging, :edging, :running
-    attr_accessor :climb_speed, :facing, :running_jump_velocity, :running_time
+    attr_accessor :climb_speed, :facing, :running_jump_velocity, :running_time, :walk_speed
 
     def setup
       @animation = Animation.new(:file => "media/blank.png", :size => 50)
@@ -19,6 +19,7 @@ module Leaf
       self.max_velocity_x = 4
       self.rotation_center = :bottom_center
       self.climb_speed = 1.2
+      self.walk_speed = 0.3 # FIXME: this... seems to not work.
       self.running_jump_velocity = 13
       self.running_time = 0.4
     end
@@ -68,7 +69,7 @@ module Leaf
       @walking = true unless jumping?
       after(self.running_time.seconds) { self.running = true if walking? and not stopping? and @facing == :left }
       @stopping = false
-      @acceleration_x = -0.3
+      @acceleration_x = -self.walk_speed
     end
 
     def move_right
@@ -79,7 +80,7 @@ module Leaf
       @walking = true unless jumping?
       after(self.running_time.seconds) { self.running = true if walking? and not stopping? and @facing == :right }
       @stopping = false
-      @acceleration_x = 0.3
+      @acceleration_x = self.walk_speed
     end
 
     def stop_totally
@@ -129,8 +130,9 @@ module Leaf
     end
 
     def restore_gravity
-      return unless @acceleration_y == 0
+      return unless @acceleration_y == 0 and @previous_accel_y > 0
       @acceleration_y = @previous_accel_y
+      @previous_accel_y = 0
     end
 
     def edge_hang
@@ -374,13 +376,13 @@ module Leaf
 
       # Allows us to climb stairs automatically (without jumping).
       if floor = hit_step
-        self.y = floor.bb.top + 1
+        self.y = floor.bb.top - 1
         land
       end
 
       # This will be called constantly while on the ground, which is fine.
       if floor = hit_floor
-        self.y = floor.bb.top + 1
+        self.y = floor.bb.top - 1
         land
       end
 
