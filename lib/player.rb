@@ -5,6 +5,7 @@ module Leaf
 
     def setup
       super
+      self.speed = 6
       @animation = Animation.new(:file => "media/ninja_sheet.png", :width => 64, :height => 64)
       @animation.frame_names = {
         :stand => 0,
