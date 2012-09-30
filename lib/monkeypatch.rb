@@ -23,6 +23,7 @@ class Chingu::GameObjectMap
   end
 
   def each_object_between(origin, dest)
+    # Note: x and y here are a Grid location, not pixel coordinates.
     start_x = (origin.bb.x/ @grid[0]).to_i
     stop_x =  (dest.bb.x/ @grid[0]).to_i
     start_y = (origin.bb.y/ @grid[1]).to_i
@@ -33,7 +34,7 @@ class Chingu::GameObjectMap
     x = start_x
     y = start_y
     n = 1 + diff_x + diff_y
-    x_inc = 1
+    x_inc = 1 #FIXME: do fewer checks
     x_inc = -1 if start_x > stop_x
     y_inc = 1
     y_inc = -1 if start_y > stop_y
@@ -50,8 +51,10 @@ class Chingu::GameObjectMap
       @checked_squares << [x,y]
       if @map[x] and @map[x][y] and @map[x][y] != origin and @map[x][y] != dest and @map[x][y].is_a? Leaf::BlocksVision
         yield @map[x][y] 
-      elsif
-        Leaf::Explosion.all.select { |e| yield if e.collision_at?(x,y) }
+      else
+        x_pixels = x * @grid[0]
+        y_pixels = y * @grid[0]
+        Leaf::Explosion.all.select { |e| yield if e.collision_at?(x_pixels,y_pixels) }
       end
 
       if error > 0

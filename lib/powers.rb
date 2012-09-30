@@ -36,7 +36,8 @@ module Leaf
 
   
   class Explosion < Chingu::GameObject
-    traits :bounding_box, :collision_detection, :timer
+    trait :bounding_box, :debug => true
+    traits :collision_detection, :timer
     def setup
       self.rotation_center = :bottom_center
       @animation = Animation.new(:file => "media/explosion.png", :width => 128, :height => 128, :loop => false)
