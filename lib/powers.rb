@@ -11,7 +11,7 @@ module Leaf
     end
 
     def jump_forward
-      self.x, self.y = start_object.x, start_object.y
+      self.x, self.y = start_object.x, start_object.y-15
       self.acceleration_y = 0.5
       self.max_velocity_y = 15
       self.y -= 20
