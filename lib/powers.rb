@@ -36,13 +36,14 @@ module Leaf
 
   
   class Explosion < Chingu::GameObject
-    trait :bounding_box, :debug => true
+    trait :bounding_box
     traits :collision_detection, :timer
     def setup
       self.rotation_center = :bottom_center
       @animation = Animation.new(:file => "media/explosion.png", :width => 128, :height => 128, :loop => false)
+      @animation.delay = 200
+      @animation.on_frame(15) { self.destroy! }
       self.image = @animation.first
-      after(2.seconds) { self.destroy! }
     end
 
     def update

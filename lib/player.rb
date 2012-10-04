@@ -1,11 +1,11 @@
 module Leaf
 
   class Player < Creature
-    PARTIAL_COVER_ALPHA = 160
+    PARTIAL_COVER_ALPHA = 170
 
     def setup
       super
-      self.speed = 6
+      self.speed = 5.5
       @animation = Animation.new(:file => "media/ninja_sheet.png", :width => 64, :height => 64)
       @animation.frame_names = {
         :stand => 0,
