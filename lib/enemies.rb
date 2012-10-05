@@ -13,7 +13,6 @@ module Leaf
       @headed_left = true
       @started = false
       @hidden = true
-      @blind = false
       self.alpha = 255
 
       @prevent_falling = Proc.new { turn_around }
@@ -29,11 +28,6 @@ module Leaf
       play_next_movement if @started
       kill_players
       @hidden = true
-    end
-
-    def blind
-      @blind = true
-      # FIXME: blind needs to disable LOS
     end
 
     def kill_players
@@ -102,10 +96,12 @@ module Leaf
         look_left_for random_period
         look_right_for random_period
         look_right_for 0.5.seconds
+        #FIXME: add alert state separate from noticed.
         if_noticed do
           set_speed_to 2
           ignore_falling
-          walk_toward_player_for 0.2.seconds
+          walk_toward_target(game_state.player) #FIXME: why does passing this fail to pass anything? ah, because of context when this block was created?
+#           walk_toward_player_for 0.2.seconds
         end
       end
     end

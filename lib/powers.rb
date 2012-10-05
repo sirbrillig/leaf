@@ -44,6 +44,7 @@ module Leaf
       @animation.delay = 200
       @animation.on_frame(15) { self.destroy! }
       self.image = @animation.first
+      #FIXME: the explosion should alert guards
     end
 
     def update

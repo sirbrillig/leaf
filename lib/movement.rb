@@ -123,6 +123,24 @@ module Leaf
       record_behavior(behavior)
     end
 
+    def walk_toward_target(target)
+      ms = 0.2.seconds
+      behavior = MovementBehavior.create do
+        if target.x > self.x
+          move_right
+        else
+          move_left
+        end
+      end
+      if @recording_behavior == :noticed #FIXME: what if this is during alert?
+        behavior.at_end { stop_moving if not movement_states.include? :noticed }
+      else
+        behavior.at_end { stop_moving }
+      end
+      behavior.completed_after(ms)
+      record_behavior(behavior)
+    end
+
     # You can pass :random_period instead of an integer milliseconds and it will
     # choose a time between 0-3 seconds.
     def walk_toward_player_for(ms)
