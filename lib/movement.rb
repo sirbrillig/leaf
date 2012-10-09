@@ -124,6 +124,10 @@ module Leaf
     end
 
     def walk_toward_target(target)
+      #FIXME: remember, these are being set up (called) way before they are
+      #activated. We need some way to set a target dynamically when the behavior
+      #is run.
+      raise "Must pass a target that responds to #x; Invalid target: #{target.inspect}" unless target.respond_to? :x
       ms = 0.2.seconds
       behavior = MovementBehavior.create do
         if target.x > self.x
