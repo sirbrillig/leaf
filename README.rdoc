@@ -1,0 +1,6 @@
+= Leaf
+= (working title)
+
+A stealth platformer. Imagine something like Super Mario or Metroid, but you can't kill anyone. 
+
+Written in Ruby using the Chingu and Gosu frameworks.
