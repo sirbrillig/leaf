@@ -5,7 +5,7 @@ require 'chingu'
 include Chingu
 include Gosu
 
-require 'edit'
+#require 'edit'
 require 'helpers'
 require 'monkeypatch'
 require 'game'
