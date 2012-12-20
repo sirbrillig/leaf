@@ -42,6 +42,9 @@ end
 
 class Chingu::GameObjectMap
   attr_accessor :checked_squares
+
+  # Return an array of GameObjects in this grid map that collide with the given
+  # GameObject (which is not on the grid). 
   def collisions_with(game_object)
     start_x = (game_object.bb.left / @grid[0]).to_i
     stop_x =  (game_object.bb.right / @grid[0]).to_i

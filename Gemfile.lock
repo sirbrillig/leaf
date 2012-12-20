@@ -1,6 +1,7 @@
 GIT
-  remote: ../chingu
-  revision: 38d6071c01e822ef4d30aa720c4d97e65d294c84
+  remote: git://github.com/sirbrillig/chingu
+  revision: ad4762e798bbf8d02381e2d0f302c7bbe27b55f9
+  branch: line-of-sight
   specs:
     chingu (0.9rc9)
       gosu (>= 0.7.45)
