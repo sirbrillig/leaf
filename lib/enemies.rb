@@ -71,7 +71,7 @@ module Leaf
 
     # Override to set @animation.
     def load_animation
-      @animation = Animation.new(:file => "media/blank.png", :size => 50)
+      @animation = Chingu::Animation.new(:file => "media/blank.png", :size => 50)
     end
 
     # Override to provide custom init code.
@@ -100,14 +100,14 @@ module Leaf
         if_noticed do
           set_speed_to 2
           ignore_falling
-          walk_toward_target(game_state.player) #FIXME: why does passing this fail to pass anything? ah, because of context when this block was created?
+          #walk_toward_target(game_state.player) #FIXME: why does passing this fail to pass anything? ah, because of context when this block was created?
 #           walk_toward_player_for 0.2.seconds
         end
       end
     end
 
     def load_animation
-      @animation = Animation.new(:file => "media/guard.png", :size => 50)
+      @animation = Chingu::Animation.new(:file => "media/guard.png", :size => 50)
       @animation.frame_names = {:stand => 0, :walk => 0..1, :alert => 4..5, :stopping => 0..1 }
     end
 
@@ -134,7 +134,7 @@ module Leaf
     end
 
     def load_animation
-      @animation = Animation.new(:file => "media/watcher.png", :size => 50)
+      @animation = Chingu::Animation.new(:file => "media/watcher.png", :size => 50)
       @animation.frame_names = {:stand => 0, :walk => 0..1, :alert => 0..1, :jump => 2..3, :stopping => 0..1 }
     end
   end # Watcher

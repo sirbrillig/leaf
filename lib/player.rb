@@ -6,7 +6,7 @@ module Leaf
     def setup
       super
       self.speed = 5.5
-      @animation = Animation.new(:file => "media/ninja_sheet.png", :width => 64, :height => 64)
+      @animation = Chingu::Animation.new(:file => "media/ninja_sheet.png", :width => 64, :height => 64)
       @animation.frame_names = {
         :stand => 0,
         :walk => 1..3,

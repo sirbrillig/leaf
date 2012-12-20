@@ -7,7 +7,7 @@ module Leaf
     attr_accessor :climb_speed, :facing, :running_jump_velocity, :running_time, :walk_accel
 
     def setup
-      @animation = Animation.new(:file => "media/blank.png", :size => 50)
+      @animation = Chingu::Animation.new(:file => "media/blank.png", :size => 50)
       @image = @animation.first
 
       @facing = :right

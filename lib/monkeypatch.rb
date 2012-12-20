@@ -4,6 +4,42 @@ module Chingu::Traits::BoundingCircle
   end
 end
 
+class Chingu::GameState
+  # Frustratingly, this should be fixed by replacing it as I have in
+  # Chingu::GameObject. No luck.
+  def load_game_objects(options = {})
+    file = options[:file] || self.filename + ".yml"
+    debug = options[:debug]
+    except = Array(options[:except]) || []
+
+    require 'yaml'
+
+    puts "* Loading game objects from #{file}" if debug
+    if File.exists?(file)
+      objects = YAML.load_file(file)
+      objects.each do |object|
+        object.each_pair do |klassname, attributes|
+          begin
+            klass = Object
+            names = klassname.split('::')
+            names.each do |name|
+              klass = klass.const_defined?(name) ? klass.const_get(name) : klass.const_missing(name)
+            end
+            unless klass.class == "GameObject" && !except.include?(klass)
+              puts "Creating #{klassname.to_s}: #{attributes.to_s}" if debug
+              object = klass.create(attributes)
+              object.options[:created_with_editor] = true if object.options
+            end
+          rescue => e
+            puts "Couldn't create class '#{klassname}' because: #{e}"
+            raise
+          end
+        end
+      end
+    end
+  end
+end
+
 class Chingu::GameObjectMap
   attr_accessor :checked_squares
   def collisions_with(game_object)

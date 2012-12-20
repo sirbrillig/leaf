@@ -1,0 +1,18 @@
+GIT
+  remote: ../chingu
+  revision: 38d6071c01e822ef4d30aa720c4d97e65d294c84
+  specs:
+    chingu (0.9rc9)
+      gosu (>= 0.7.45)
+      gosu (>= 0.7.45)
+
+GEM
+  remote: http://rubygems.org/
+  specs:
+    gosu (0.7.45)
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  chingu!
