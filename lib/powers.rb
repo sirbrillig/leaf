@@ -40,7 +40,7 @@ module Leaf
     traits :collision_detection, :timer
     def setup
       self.rotation_center = :bottom_center
-      @animation = Animation.new(:file => "media/explosion.png", :width => 128, :height => 128, :loop => false)
+      @animation = Chingu::Animation.new(:file => "media/explosion.png", :width => 128, :height => 128, :loop => false)
       @animation.delay = 200
       @animation.on_frame(15) { self.destroy! }
       self.image = @animation.first
