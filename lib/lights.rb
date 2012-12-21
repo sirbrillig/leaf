@@ -5,6 +5,7 @@ module Leaf
     trait :bounding_circle, :scale => 1.1, :debug => Leaf::DEBUG
     attr_accessor :handle_collide_far, :handle_collide_middle, :handle_collide_close, :handle_collide_distant, :holder
     attr_accessor :handle_seen_far, :handle_seen_middle, :handle_seen_close, :handle_seen_distant
+    attr_accessor :targets
 
     #FIXME: make light of different shapes, ie: a cone for the guards.
     #FIXME: make different shaped-light use appropriate collision to determine
@@ -47,7 +48,7 @@ module Leaf
     # Simulate a bounding_box by using the dimensions of the circle.
     def bb
       @cached_rect if @cached_rect
-      @cached_rect = Rect.new(self.x - self.radius, self.y - self.radius, self.radius * 2, self.radius * 2)
+      @cached_rect = Chingu::Rect.new(self.x - self.radius, self.y - self.radius, self.radius * 2, self.radius * 2)
     end
 
     # Return the range area (:close, :middle, :far) of the object.
@@ -71,8 +72,11 @@ module Leaf
     # Return true if we have line-of-sight to object.
     def line_of_sight_to(object)
       @holder ||= self
-      game_state.game_object_map.each_object_between(@holder, object) { return false } 
-      true
+      @targets ||= []
+      @targets.clear
+      @targets << object unless @targets.include? object
+      return false if game_state.game_object_map.object_between?(@holder, object, only: Leaf::BlocksVision)
+      return true
     end
 
     def cached?(object, distance)
@@ -88,6 +92,14 @@ module Leaf
 
     def draw
       super
+      if true #Leaf::DEBUG
+        @targets and @targets.each do |target| 
+          game_state.game_object_map.grid_spaces_between(@holder, target).each do |sq| 
+            break if game_state.game_object_map.game_object_at(sq[0], sq[1]).is_a? Leaf::BlocksVision
+            game_state.draw_rect(Chingu::Rect.new(sq[0] * game_state.grid[0], sq[1] * game_state.grid[1], 10, 10), Gosu::Color::GREEN, Leaf::Level::LIGHTED_LAYER)
+          end
+        end
+      end
       if @show_detection_area
         game_state.draw_circle(self.x, self.y, close_radius, Gosu::Color.new(0xff00ff00))
         game_state.draw_circle(self.x, self.y, middle_radius, Gosu::Color.new(0xff00ff00))

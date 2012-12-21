@@ -2,7 +2,7 @@ module Leaf
   class Level < Chingu::GameState
     # FIXME: add HUD
     traits :timer, :viewport
-    attr_reader :player, :game_object_map, :background_object_map
+    attr_reader :player, :game_object_map, :background_object_map, :grid
 
     OVERLAY_LAYER = 200
     SPRITES_LAYER = 100
@@ -71,12 +71,6 @@ module Leaf
     def draw
       @parallax.draw
       super
-      if Leaf::DEBUG and @game_object_map.checked_squares
-#       if @game_object_map.checked_squares
-        # Draw line-of-sight
-        @game_object_map.checked_squares.each { |sq| self.draw_rect(Chingu::Rect.new((sq[0] * @grid[0] - self.viewport.x), sq[1] * @grid[1], 10, 10), Gosu::Color::GREEN, Leaf::Level::LIGHTED_LAYER) }
-        @game_object_map.checked_squares.clear
-      end
     end
 
     def died
