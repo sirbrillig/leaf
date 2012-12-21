@@ -76,6 +76,7 @@ module Leaf
       @targets.clear
       @targets << object unless @targets.include? object
       return false if game_state.game_object_map.object_between?(@holder, object, only: Leaf::BlocksVision)
+      Leaf::Explosion.each { |exp| return false if game_state.game_object_map.object_between?(@holder, object, target: exp) } # Not very efficient.
       return true
     end
 
