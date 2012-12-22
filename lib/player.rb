@@ -78,6 +78,7 @@ module Leaf
       object = background_object
       @partial_cover = false
       @partial_cover = true if object and climbing?
+      @partial_cover = true if not walking? # Automatically hide if we are not moving.
       if @partial_cover
         unless @old_alpha
           @old_alpha = self.alpha
