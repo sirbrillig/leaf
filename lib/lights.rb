@@ -7,10 +7,6 @@ module Leaf
     attr_accessor :handle_seen_far, :handle_seen_middle, :handle_seen_close, :handle_seen_distant
     attr_accessor :targets
 
-    #FIXME: make light of different shapes, ie: a cone for the guards.
-    #FIXME: make different shaped-light use appropriate collision to determine
-    #what happens.
-
     def setup
       self.zorder = Leaf::Level::LIGHTED_LAYER
       self.rotation_center = :center

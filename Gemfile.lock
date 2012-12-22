@@ -1,6 +1,6 @@
 GIT
   remote: git://github.com/sirbrillig/chingu
-  revision: 136fdb480a9b1ab4a1732078961b8978b2ae9ec7
+  revision: 9d99e6e3e208f4cc87c6da4e4e2b533f32821018
   branch: line-of-sight
   specs:
     chingu (0.9rc9)

@@ -101,7 +101,7 @@ module Leaf
           set_speed_to 2
           ignore_falling
           #walk_toward_target(game_state.player) #FIXME: why does passing this fail to pass anything? ah, because of context when this block was created?
-#           walk_toward_player_for 0.2.seconds
+          walk_toward_player_for 0.2.seconds
         end
       end
     end
